@@ -6,6 +6,8 @@ The idea is to create a digital space where people can share his previous work v
 
 To run the app localy in your machine, you should create a env.local file, with all the global variables specifies on the env.local.example file.
 
+Also we recomend to use VSCode with ESLint and Prettier pluggins installed to follow along with our airbnb coding patterns.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Local enviroment
