@@ -6,7 +6,8 @@ import {
   GoogleLoginButton,
 } from 'react-social-login-buttons';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Container } from '@material-ui/core';
+import { Box } from '@material-ui/core';
+import EmailLoginButton from '../../components/UI/Buttons/EmailLoginButton';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -33,6 +34,10 @@ const AuthenticationPage = () => {
     console.log('Login whit google not implemented');
   }
 
+  const loginWithEmail = () => {
+    console.log('Login whit email not implemented');
+  }
+
   return (
     <Box>
       <Box style={{ marginBottom: 20 }}>
@@ -43,6 +48,9 @@ const AuthenticationPage = () => {
       </Box>
       <Box style={{ marginBottom: 20 }}>
         <GoogleLoginButton onClick={loginWithGoogle} />
+      </Box>
+      <Box style={{ marginBottom: 20 }}>
+        <EmailLoginButton onClick={loginWithEmail} />
       </Box>
     </Box>
   )
