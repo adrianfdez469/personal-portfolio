@@ -1,9 +1,9 @@
 import React from 'react';
 import { providers as providersFunc } from 'next-auth/client';
-import Login from '../../views/auth/login';
+import { LoginView } from '../../views';
 
 // eslint-disable-next-line react/prop-types
-const SignIn = ({ providers }) => <Login providers={{ ...providers }} />;
+const SignIn = ({ providers }) => <LoginView providers={{ ...providers }} />;
 
 SignIn.getInitialProps = async (context) => ({
   providers: await providersFunc(context),
