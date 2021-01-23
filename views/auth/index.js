@@ -43,46 +43,48 @@ const AuthenticationPage = ({ providers }) => {
         >
           Sign in with
         </Typography>
-        <TextField
-          className={classes.textField}
-          id="input-with-icon-textfield"
-          placeholder="Email"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <AccountCircleOutlined /* color="primary" */ />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <TextField
-          className={classes.textField}
-          id="input-with-icon-textfield"
-          placeholder="Password"
-          type={showPass ? 'text' : 'password'}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LockOutlined /* color="primary" */ />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPass ? (
-                    <Visibility /* color="primary" */ />
-                  ) : (
-                    <VisibilityOff /* color="primary" */ />
-                  )}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        <form className={classes.form}>
+          <TextField
+            className={classes.textField}
+            placeholder="Email"
+            autoComplete="username"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircleOutlined /* color="primary" */ />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            className={classes.textField}
+            placeholder="Password"
+            autoComplete="current-password"
+            type={showPass ? 'text' : 'password'}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockOutlined /* color="primary" */ />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPass ? (
+                      <Visibility /* color="primary" */ />
+                    ) : (
+                      <VisibilityOff /* color="primary" */ />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </form>
       </Box>
 
       <Box my={2} className={classes.separator}>
