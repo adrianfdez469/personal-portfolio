@@ -15,9 +15,6 @@ export default function myComponent() {
           <Link href="/auth/signin?callbackUrl=http://localhost:3000/">
             <a>Signin</a>
           </Link>
-          {/* <button onClick={signIn} type="button">
-            Sign in
-          </button> */}
         </>
       )}
       {session && (
