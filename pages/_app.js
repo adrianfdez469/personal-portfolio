@@ -3,21 +3,20 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../themes/default.theme';
-
+import { Provider } from 'next-auth/client';
+import theme from '../themes/theme.default';
 
 const MyApp = (props) => {
-
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
+    // eslint-disable-next-line no-undef
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
-
 
   return (
     <>
@@ -28,15 +27,21 @@ const MyApp = (props) => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <Provider session={pageProps.session}>
+          {/* Put the basic layout here to share between pages */}
+          <Component {...pageProps} />
+        </Provider>
       </ThemeProvider>
     </>
-  )
+  );
 };
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired,
+  pageProps: PropTypes.shape({
+    statusCode: PropTypes.number,
+    session: PropTypes.string,
+  }).isRequired,
 };
 
 export default MyApp;
