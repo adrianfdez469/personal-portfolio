@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Provider } from 'next-auth/client';
-import { dark as theme } from '../themes';
+import { ligth as theme } from '../themes';
 
 const MyApp = (props) => {
   const { Component, pageProps } = props;
