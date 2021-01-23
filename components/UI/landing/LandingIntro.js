@@ -52,7 +52,7 @@ const LandingIntro = () => {
             </Typography>
           </Grid>
           <Grid item className={classes.second}>
-            <Link href="/api/auth/signin" passHref>
+            <Link href="/auth/signin?callbackUrl=http://localhost:3000/" passHref>
               <Button variant="contained" color="primary" component="a">
                 Login
               </Button>
