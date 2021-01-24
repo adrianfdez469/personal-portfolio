@@ -32,7 +32,13 @@ const options = {
     signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
   },
   callbacks: {
-    jwt: async (token) => Promise.resolve(token),
+    jwt: async (token /* , user, account, profile, isNewUser */) =>
+      /* console.log(token);
+      console.log(user);
+      console.log(account);
+      console.log(profile);
+      */
+      Promise.resolve(token),
   },
   secret: process.env.NEXTAUTH_SHA_SECRET,
 };
