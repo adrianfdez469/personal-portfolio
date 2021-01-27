@@ -30,6 +30,8 @@ import { othersObj, OthersForm } from './Steps/othersStep';
 // styles
 import { useViewStyles } from './styles';
 
+// TODO: Prepare for responsive view
+
 const Steps = [syncObj, basicInfoObj, galleryObj, skillsObj, collaboratorsObj, linksObj, othersObj];
 
 const initialState = {
