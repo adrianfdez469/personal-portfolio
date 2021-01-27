@@ -115,9 +115,8 @@ const InputTextSelect = (props) => {
         ref={anchorRef}
         onFocus={() => {
           setTimeout(() => {
-            const size = (inputData && inputData.text ? inputData.text : '').length;
             textFieldRef.current.selectionStart = 0;
-            textFieldRef.current.selectionEnd = size;
+            textFieldRef.current.selectionEnd = 9999999;
           }, 0);
         }}
         inputRef={textFieldRef}

@@ -1,3 +1,4 @@
+// libs
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -17,9 +18,8 @@ import {
   Box,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+// componets
 import Transition from '../Transition';
-import { useViewStyles } from './styles';
-
 import { syncObj, SyncForm } from './Steps/synchronizationStep';
 import { basicInfoObj, BasicInfoForm } from './Steps/basicInfoStep';
 import { galleryObj, GalleryForm } from './Steps/gallery';
@@ -27,6 +27,8 @@ import { skillsObj, SkillsForm } from './Steps/skillsStep';
 import { collaboratorsObj, CollaboratorsForm } from './Steps/collaborators';
 import { linksObj, LinksForm } from './Steps/linksStep';
 import { othersObj, OthersForm } from './Steps/othersStep';
+// styles
+import { useViewStyles } from './styles';
 
 const Steps = [syncObj, basicInfoObj, galleryObj, skillsObj, collaboratorsObj, linksObj, othersObj];
 
