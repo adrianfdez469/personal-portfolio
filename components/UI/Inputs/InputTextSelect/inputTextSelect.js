@@ -15,16 +15,14 @@ import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import { escapeRegExp } from '../../../../libs/StringParser';
 
-// TODO: Cuando se aprieta la tecla de flecha hacia abajo enfocar el menu para poder navegar por el, y volver hacia el input
-// TODO: Poner el espacio del menu flotante del mismo ancho del field y ver si se le puede dar un poco mas de estilo
-// TODO: Declarar un limite de items a mostrar en el menu, despues de eso hacer scroll
-
+const ITEM_HEIGHT = 48;
 const InputTextSelect = (props) => {
   // constants
-  const { onAdd, optionsList, excludedOptions } = props;
+  const { onAdd, optionsList, excludedOptions, textFieldProps } = props;
   // hooks
   const [inputData, setInputData] = useState(null);
   const [open, setOpen] = useState(false);
+  const [menuFocused, setMenuFocused] = useState(false);
   const textFieldRef = useRef(null);
   const anchorRef = useRef(null);
 
@@ -43,6 +41,7 @@ const InputTextSelect = (props) => {
     setInputData(lang);
     textFieldRef.current.focus();
     setOpen(false);
+    setMenuFocused(false);
   };
 
   const addHandler = () => {
@@ -63,6 +62,15 @@ const InputTextSelect = (props) => {
   const onPressKeyHandler = (event) => {
     if (event.key === 'Enter') {
       addHandler();
+    } else if (event.key === 'ArrowDown') {
+      setMenuFocused(true);
+    }
+  };
+  const onMenuPressKeyHandler = (event) => {
+    if (event.key === 'ArrowUp') {
+      event.stopPropagation();
+      setMenuFocused(false);
+      textFieldRef.current.focus();
     }
   };
 
@@ -82,7 +90,12 @@ const InputTextSelect = (props) => {
     .map((optList, index) => {
       if (index === 0) {
         return (
-          <MenuItem key={optList.id} onClick={() => selectMenuItemHandler(optList)}>
+          <MenuItem
+            autoFocus={menuFocused}
+            key={optList.id}
+            onKeyDown={(event) => onMenuPressKeyHandler(event)}
+            onClick={() => selectMenuItemHandler(optList)}
+          >
             {optList.text}
           </MenuItem>
         );
@@ -100,8 +113,14 @@ const InputTextSelect = (props) => {
         value={inputData && inputData.text ? inputData.text : ''}
         onChange={changeInputHandler}
         ref={anchorRef}
+        onFocus={() => {
+          setTimeout(() => {
+            const size = (inputData && inputData.text ? inputData.text : '').length;
+            textFieldRef.current.selectionStart = 0;
+            textFieldRef.current.selectionEnd = size;
+          }, 0);
+        }}
         inputRef={textFieldRef}
-        onBlur={() => setOpen(false)}
         onKeyUp={(event) => {
           onPressKeyHandler(event);
         }}
@@ -122,7 +141,7 @@ const InputTextSelect = (props) => {
             ),
           }
         }
-        {...props}
+        {...textFieldProps}
       />
       <Popper
         open={open}
@@ -137,7 +156,13 @@ const InputTextSelect = (props) => {
             {...TransitionProps}
             style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
           >
-            <Paper style={{ width: menuItems.length > 0 ? anchorRef.current.offsetWidth : 0 }}>
+            <Paper
+              style={{
+                width: menuItems.length > 0 ? anchorRef.current.offsetWidth : 0,
+                maxHeight: ITEM_HEIGHT * 4.5,
+                overflow: 'auto',
+              }}
+            >
               <ClickAwayListener onClickAway={() => {}}>
                 <MenuList id="menu-list-grow">{menuItems}</MenuList>
               </ClickAwayListener>
