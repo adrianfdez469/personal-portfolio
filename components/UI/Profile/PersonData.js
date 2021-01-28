@@ -10,7 +10,7 @@ import {
   EditOutlined,
 } from '@material-ui/icons';
 
-import { AvatarPhoto } from '../Avatar/AvatarPhoto';
+import AvatarPhoto from '../Avatar/AvatarPhoto';
 
 const useStyle = makeStyles((theme) => ({
   box: {
