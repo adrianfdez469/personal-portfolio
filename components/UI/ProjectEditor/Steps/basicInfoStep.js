@@ -53,6 +53,7 @@ export const BasicInfoForm = (props) => {
               margin="dense"
               onChange={handleNameChange}
               value={name}
+              variant="outlined"
             />
             <KeyboardDatePicker
               clearable
@@ -60,6 +61,7 @@ export const BasicInfoForm = (props) => {
               label="Fecha inicio"
               helperText="Fecha de comienzo del proyecto"
               format="dd/MM/yyyy"
+              inputVariant="outlined"
               value={initialDate}
               onChange={handleInitialDateChange}
               KeyboardButtonProps={{
@@ -72,6 +74,7 @@ export const BasicInfoForm = (props) => {
               label="Fecha fin"
               helperText="Fecha de finalización del proyecto"
               format="dd/MM/yyyy"
+              inputVariant="outlined"
               value={endDate}
               onChange={handleEndDateChange}
               KeyboardButtonProps={{
@@ -88,6 +91,7 @@ export const BasicInfoForm = (props) => {
             margin="dense"
             value={description}
             onChange={handleDescriptionChange}
+            variant="outlined"
           />
         </MuiPickersUtilsProvider>
       </Box>

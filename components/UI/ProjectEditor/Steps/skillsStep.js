@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Chip } from '@material-ui/core';
+import InputTextSelect from 'react-material-selectable-inputtext';
 import ProjectStep from './ProjectStep';
-import InputTextSelect from '../../Inputs/InputTextSelect/inputTextSelect';
 // Internal libs
+// import InputTextSelect from '../../Inputs/InputTextSelect/inputTextSelect';
 import { existsObjWithPropValue } from '../../../../libs/helpers';
 // Styles
 import { useSkillsStyles, useStepsStyles } from '../styles';
@@ -89,7 +90,9 @@ export const SkillsForm = (props) => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <InputTextSelect
               textFieldProps={{
-                placeholder: 'Lenguajes',
+                label: 'Lenguajes',
+                variant: 'outlined',
+                margin: 'dense',
               }}
               // helperText="Adiciona los lenguajes de programación utilizados"
               optionsList={allProgrammingLangs}
@@ -113,7 +116,9 @@ export const SkillsForm = (props) => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <InputTextSelect
               textFieldProps={{
-                placeholder: 'Tecnologías',
+                label: 'Tecnologías',
+                variant: 'outlined',
+                margin: 'dense',
               }}
               // helperText="Adiciona las tecnologías utilizadas"
               optionsList={allTechnologies}

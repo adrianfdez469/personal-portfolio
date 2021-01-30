@@ -47,3 +47,11 @@ export const useSkillsStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+export const useLinksStyles = makeStyles((theme) => ({
+  media: {
+    height: 151,
+    width: 151,
+    // paddingTop: '56.25%',
+  },
+}));

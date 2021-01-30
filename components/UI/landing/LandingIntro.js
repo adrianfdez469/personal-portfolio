@@ -4,6 +4,8 @@ import { Button, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 
+import ProjectEditor from '../ProjectEditor/layout';
+
 const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
@@ -57,9 +59,13 @@ const LandingIntro = () => {
                 Login
               </Button>
             </Link>
+            <Button variant="contained" color="primary">
+              Add Project
+            </Button>
           </Grid>
         </Paper>
       </Grid>
+      <ProjectEditor open={false} handleClose={() => {}} />
     </>
   );
 };
