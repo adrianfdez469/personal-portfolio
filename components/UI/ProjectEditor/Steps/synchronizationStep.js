@@ -19,9 +19,6 @@ export const SyncForm = (props) => {
         <Typography align="center" variant="overline" style={{ display: 'block' }}>
           Si tienes tu proyecto en GitHub o GitLab sincronizalo y muestranos lo que haz logrado!
         </Typography>
-        <Typography align="center" variant="body2">
-          Si no lo tienes no te preocupes, continúa con los próximos pasos.
-        </Typography>
       </Box>
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <GitHubIcon fontSize="large" style={{ margin: 'auto' }} />

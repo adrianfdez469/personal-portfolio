@@ -13,11 +13,17 @@ import {
   Container,
   IconButton,
   Stepper,
+  MobileStepper,
   Step,
   StepButton,
   Box,
+  useMediaQuery,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import SaveIcon from '@material-ui/icons/Save';
+
 // componets
 import Transition from '../Transition';
 import { syncObj, SyncForm } from './Steps/synchronizationStep';
@@ -28,7 +34,7 @@ import { collaboratorsObj, CollaboratorsForm } from './Steps/collaborators';
 import { linksObj, LinksForm } from './Steps/linksStep';
 import { othersObj, OthersForm } from './Steps/othersStep';
 // styles
-import { useViewStyles } from './styles';
+import { useMainViewSyles } from './styles';
 
 // TODO: Prepare for responsive view
 
@@ -80,9 +86,9 @@ const reducer = (state, action) => {
 
 const LayoutView = (props) => {
   const { open: openDialog, handleClose } = props;
-
   // Hooks
-  const classes = useViewStyles();
+  const classes = useMainViewSyles();
+  const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleNext = () => {
@@ -92,6 +98,85 @@ const LayoutView = (props) => {
   const handlePrev = () => {
     dispatch({ type: 'PREV_STEP' });
   };
+
+  const mainContent = (
+    <>
+      {greaterMdSize ? (
+        <Stepper activeStep={state.activeStep} alternativeLabel className={classes.stepper}>
+          {Steps.map((step) => (
+            <Step key={step.label}>
+              <StepButton>{step.label}</StepButton>
+            </Step>
+          ))}
+        </Stepper>
+      ) : (
+        <MobileStepper
+          activeStep={state.activeStep}
+          steps={Steps.length}
+          variant="dots"
+          position="bottom"
+          classes={{
+            dot: classes.dotMobileStepper,
+            dotActive: classes.dotActiveMobileStepper,
+            root: classes.rootMobileStepper,
+          }}
+          backButton={
+            <IconButton onClick={handlePrev} color="primary" disabled={state.activeStep === 0}>
+              <ArrowBackIosIcon />
+            </IconButton>
+          }
+          nextButton={
+            <IconButton
+              onClick={handleNext}
+              color="primary"
+              disabled={state.activeStep === Steps.length}
+            >
+              {state.activeStep === Steps.length - 1 ? <SaveIcon /> : <ArrowForwardIosIcon />}
+            </IconButton>
+          }
+        >
+          {Steps.map((step) => (
+            <Step key={step.label}>
+              <StepButton>{step.label}</StepButton>
+            </Step>
+          ))}
+        </MobileStepper>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <SyncForm stepId={Steps[state.activeStep].id} />
+        <BasicInfoForm stepId={Steps[state.activeStep].id} />
+        <GalleryForm stepId={Steps[state.activeStep].id} />
+        <SkillsForm stepId={Steps[state.activeStep].id} />
+        <CollaboratorsForm stepId={Steps[state.activeStep].id} />
+        <LinksForm stepId={Steps[state.activeStep].id} />
+        <OthersForm stepId={Steps[state.activeStep].id} />
+      </div>
+
+      {greaterMdSize && (
+        <Box className={classes.buttonsContainer}>
+          <Button
+            onClick={handlePrev}
+            color="primary"
+            disabled={state.activeStep === 0}
+            variant="outlined"
+            style={{ width: '100px', margin: '5px' }}
+          >
+            ATRAS
+          </Button>
+          <Button
+            onClick={handleNext}
+            color="primary"
+            disabled={state.activeStep === Steps.length}
+            variant="outlined"
+            style={{ width: '100px', margin: '5px' }}
+          >
+            {state.activeStep === Steps.length - 1 ? 'GUARDAR' : 'SIGUIENTE'}
+          </Button>
+        </Box>
+      )}
+    </>
+  );
 
   return (
     <Dialog fullScreen open={openDialog} onClose={handleClose} TransitionComponent={Transition}>
@@ -106,48 +191,22 @@ const LayoutView = (props) => {
         </Toolbar>
       </AppBar>
 
-      <DialogContent>
-        <Container maxWidth="md">
-          <Paper elevation={3} className={classes.paper}>
-            <Stepper activeStep={state.activeStep} alternativeLabel className={classes.stepper}>
-              {Steps.map((step) => (
-                <Step key={step.label}>
-                  <StepButton>{step.label}</StepButton>
-                </Step>
-              ))}
-            </Stepper>
-
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <SyncForm stepId={Steps[state.activeStep].id} />
-              <BasicInfoForm stepId={Steps[state.activeStep].id} />
-              <GalleryForm stepId={Steps[state.activeStep].id} />
-              <SkillsForm stepId={Steps[state.activeStep].id} />
-              <CollaboratorsForm stepId={Steps[state.activeStep].id} />
-              <LinksForm stepId={Steps[state.activeStep].id} />
-              <OthersForm stepId={Steps[state.activeStep].id} />
-            </div>
-
-            <Box className={classes.buttonsContainer}>
-              <Button
-                onClick={handlePrev}
-                color="primary"
-                disabled={state.activeStep === 0}
-                variant="outlined"
-                style={{ width: '100px', margin: '5px' }}
-              >
-                ATRAS
-              </Button>
-              <Button
-                onClick={handleNext}
-                color="primary"
-                disabled={state.activeStep === Steps.length}
-                variant="outlined"
-                style={{ width: '100px', margin: '5px' }}
-              >
-                {state.activeStep === Steps.length - 1 ? 'GUARDAR' : 'SIGUIENTE'}
-              </Button>
-            </Box>
+      <DialogContent className={classes.dialog}>
+        {!greaterMdSize && (
+          <Paper square elevation={0} className={classes.mobileStepHeader}>
+            <Typography align="center" color="primary">
+              {Steps[state.activeStep].label}
+            </Typography>
           </Paper>
+        )}
+        <Container maxWidth="lg">
+          {greaterMdSize ? (
+            <Paper elevation={3} className={classes.paper}>
+              {mainContent}
+            </Paper>
+          ) : (
+            <>{mainContent}</>
+          )}
         </Container>
       </DialogContent>
       <DialogActions />

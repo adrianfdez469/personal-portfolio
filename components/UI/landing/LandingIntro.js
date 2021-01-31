@@ -65,7 +65,7 @@ const LandingIntro = () => {
           </Grid>
         </Paper>
       </Grid>
-      <ProjectEditor open={false} handleClose={() => {}} />
+      <ProjectEditor open handleClose={() => {}} />
     </>
   );
 };

@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import { Box, Typography, Grid, TextField } from '@material-ui/core';
+import { Box, Typography, Grid, TextField, useMediaQuery } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 // Components
 import ProjectStep from './ProjectStep';
@@ -20,6 +20,7 @@ export const BasicInfoForm = (props) => {
   const [initialDate, setInitialDate] = useState(prevInitialDate || null);
   const [endDate, setEndDate] = useState(prevEndDate || null);
   const [description, setDescription] = useState(prevDescription || '');
+  const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
 
   // handlers
   const handleNameChange = (event) => {
@@ -54,6 +55,7 @@ export const BasicInfoForm = (props) => {
               onChange={handleNameChange}
               value={name}
               variant="outlined"
+              fullWidth={!greaterMdSize}
             />
             <KeyboardDatePicker
               clearable
@@ -67,6 +69,7 @@ export const BasicInfoForm = (props) => {
               KeyboardButtonProps={{
                 'aria-label': 'change start date',
               }}
+              fullWidth={!greaterMdSize}
             />
             <KeyboardDatePicker
               clearable
@@ -80,18 +83,19 @@ export const BasicInfoForm = (props) => {
               KeyboardButtonProps={{
                 'aria-label': 'change end date',
               }}
+              fullWidth={!greaterMdSize}
             />
           </Grid>
           <TextField
             label="Descripción"
             helperText="Escriba una breve descripción sobre el proyecto"
-            fullWidth
             multiline
             required
             margin="dense"
             value={description}
             onChange={handleDescriptionChange}
             variant="outlined"
+            fullWidth
           />
         </MuiPickersUtilsProvider>
       </Box>

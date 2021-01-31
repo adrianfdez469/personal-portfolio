@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-export const useViewStyles = makeStyles((theme) => ({
+export const useMainViewSyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
   },
@@ -24,6 +24,27 @@ export const useViewStyles = makeStyles((theme) => ({
   },
   stepper: {
     padding: theme.spacing(1),
+  },
+  rootMobileStepper: {
+    backgroundColor: theme.palette.background.paper,
+  },
+  dotMobileStepper: {
+    backgroundColor: theme.palette.grey[500],
+  },
+  dotActiveMobileStepper: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  dialog: {
+    [theme.breakpoints.down('800')]: {
+      padding: 0,
+    },
+  },
+  mobileStepHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 50,
+    paddingLeft: theme.spacing(4),
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 
