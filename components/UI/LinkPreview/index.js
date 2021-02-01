@@ -58,6 +58,7 @@ const reducer = (state, action) => {
 
 const LinkPreview = (props) => {
   // constants
+  const { setLink, ...rest } = props;
   const abortController = useRef(new AbortController());
   // hooks
   const [{ link, error, validUrl, preview, processing, typing }, dispatch] = useReducer(
@@ -84,7 +85,7 @@ const LinkPreview = (props) => {
   }, [processing, link]);
   useEffect(() => {
     if (!typing && validUrl) {
-      props.setLink(link);
+      setLink(link);
       fetch(`/api/linkpreview`, {
         method: 'POST',
         headers: {
@@ -152,7 +153,7 @@ const LinkPreview = (props) => {
         margin="dense"
         className={styles.linkField}
         fullWidth={!greaterMdSize}
-        {...props}
+        {...rest}
       />
       {previewView}
     </div>
