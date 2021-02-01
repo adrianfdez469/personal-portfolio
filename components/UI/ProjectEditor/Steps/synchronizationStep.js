@@ -16,7 +16,7 @@ export const SyncForm = (props) => {
   return (
     <Box className={classes.mainContent} hidden={stepId !== SYNC}>
       <Box className={classes.stepDescriptor}>
-        <Typography align="center" variant="overline" style={{ display: 'block' }}>
+        <Typography align="center" variant="overline" className={classes.stepDescriptionText}>
           Si tienes tu proyecto en GitHub o GitLab sincronizalo y muestranos lo que haz logrado!
         </Typography>
       </Box>

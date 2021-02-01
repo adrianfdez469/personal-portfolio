@@ -15,7 +15,6 @@ export default async (req, res) => {
 
   try {
     const data = await getPreviewData(url);
-
     const compactedData = {
       ...data,
       title: data.title.slice(0, 35),

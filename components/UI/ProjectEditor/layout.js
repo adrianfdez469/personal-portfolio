@@ -153,7 +153,7 @@ const LayoutView = (props) => {
         <OthersForm stepId={Steps[state.activeStep].id} />
       </div>
 
-      {greaterMdSize && (
+      {greaterMdSize ? (
         <Box className={classes.buttonsContainer}>
           <Button
             onClick={handlePrev}
@@ -174,6 +174,8 @@ const LayoutView = (props) => {
             {state.activeStep === Steps.length - 1 ? 'GUARDAR' : 'SIGUIENTE'}
           </Button>
         </Box>
+      ) : (
+        <div className={classes.mobileBottonSpacer} />
       )}
     </>
   );

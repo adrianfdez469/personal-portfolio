@@ -80,12 +80,12 @@ export const SkillsForm = (props) => {
   return (
     <Box className={stepStyles.mainContent} hidden={stepId !== SKILLS}>
       <Box className={stepStyles.stepDescriptor}>
-        <Typography align="center" variant="overline" style={{ display: 'block' }}>
+        <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           Que habilidades pusiste en práctica para desarrollar tu proyecto.
         </Typography>
       </Box>
 
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div className={styles.divContainer}>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <InputTextSelect

@@ -23,7 +23,7 @@ export const OthersForm = (props) => {
   return (
     <Box className={classes.mainContent} hidden={stepId !== OTHERS}>
       <Box className={classes.stepDescriptor}>
-        <Typography align="center" variant="overline" style={{ display: 'block' }}>
+        <Typography align="center" variant="overline" className={classes.stepDescriptionText}>
           Hay alguna otra información que desees compartir? Hazlo aquí!
         </Typography>
       </Box>

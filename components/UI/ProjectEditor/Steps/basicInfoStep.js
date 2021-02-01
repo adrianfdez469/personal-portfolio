@@ -38,7 +38,7 @@ export const BasicInfoForm = (props) => {
 
   return (
     <Box className={classes.mainContent} hidden={stepId !== BASIC_INFO_STEP}>
-      <Typography align="center" variant="overline" style={{ display: 'block' }}>
+      <Typography align="center" variant="overline" className={classes.stepDescriptionText}>
         Completa la información sobre el proyecto
       </Typography>
       <Box>
@@ -49,7 +49,7 @@ export const BasicInfoForm = (props) => {
           <Grid container justify="space-between" alignItems="flex-end">
             <TextField
               label="Nombre"
-              helperText="Escriba el nombre del proyecto"
+              helperText="Nombre del proyecto"
               required
               margin="dense"
               onChange={handleNameChange}
@@ -88,7 +88,7 @@ export const BasicInfoForm = (props) => {
           </Grid>
           <TextField
             label="Descripción"
-            helperText="Escriba una breve descripción sobre el proyecto"
+            helperText="Breve descripción sobre el proyecto"
             multiline
             required
             margin="dense"

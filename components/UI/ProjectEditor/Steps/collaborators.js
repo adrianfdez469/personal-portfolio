@@ -15,7 +15,7 @@ export const CollaboratorsForm = (props) => {
   return (
     <Box className={classes.mainContent} hidden={stepId !== COLLABORATORS}>
       <Box className={classes.stepDescriptor}>
-        <Typography align="center" variant="overline" style={{ display: 'block' }}>
+        <Typography align="center" variant="overline" className={classes.stepDescriptionText}>
           Tabajaste solo? Quiénes colaboraron contigo?
         </Typography>
       </Box>

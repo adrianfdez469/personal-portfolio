@@ -43,8 +43,11 @@ export const useMainViewSyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     height: 50,
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(3),
     backgroundColor: theme.palette.background.paper,
+  },
+  mobileBottonSpacer: {
+    height: theme.spacing(6),
   },
 }));
 
@@ -55,9 +58,24 @@ export const useStepsStyles = makeStyles((theme) => ({
   stepDescriptor: {
     marginBottom: theme.spacing(2),
   },
+  stepDescriptionText: {
+    display: 'block',
+    [theme.breakpoints.down('800')]: {
+      lineHeight: theme.spacing(0.2),
+      textTransform: 'none',
+      textAlign: 'left',
+    },
+  },
 }));
 
 export const useSkillsStyles = makeStyles((theme) => ({
+  divContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    [theme.breakpoints.down(800)]: {
+      flexDirection: 'column',
+    },
+  },
   chipsContainer: {
     display: 'flex',
     justifyContent: 'center',
