@@ -31,6 +31,8 @@ export const OthersForm = (props) => {
         <TextField
           label="Descripción del proyecto"
           fullWidth
+          variant="outlined"
+          rows="5"
           multiline
           required
           margin="dense"
