@@ -11,10 +11,13 @@ export const useMainViewSyles = makeStyles((theme) => ({
   paper: {
     margin: theme.spacing(2),
     padding: theme.spacing(2),
+    height: '80vh',
   },
   buttonsContainer: {
     display: 'flex',
     justifyContent: 'center',
+    position: 'sticky',
+    top: '90%',
   },
   stepDescriptionContainer: {
     display: 'flex',
@@ -87,10 +90,9 @@ export const useSkillsStyles = makeStyles((theme) => ({
   },
 }));
 
-export const useLinksStyles = makeStyles((theme) => ({
+export const useLinksStyles = makeStyles(() => ({
   media: {
     height: 151,
     width: 151,
-    // paddingTop: '56.25%',
   },
 }));
