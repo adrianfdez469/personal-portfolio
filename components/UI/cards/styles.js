@@ -47,7 +47,7 @@ export default makeStyles((theme) => ({
     width: '90%',
   },
   cardFrontBarButton: {
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.palette.background.default,
     marginRight: '0.5em',
     marginLeftt: '0.5em',
     '&:hover': {
