@@ -1,34 +1,9 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Button, Grid, Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
+import useStyles from './styles';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    flexGrow: 1,
-    minHeight: 400,
-  },
-  paper: {
-    background: 'rgba(205, 205, 205, 0.6)',
-    borderRadius: 20,
-    color: 'white',
-    textShadow: '1px 1px #000000',
-    zIndex: 100,
-    // opacity: 0.5,
-  },
-  second: {
-    marginBottom: 12,
-    marginLeft: 12,
-    marginRight: 12,
-  },
-  first: {
-    marginTop: 12,
-    marginBottom: 12,
-    marginLeft: 12,
-    marginRight: 12,
-  },
-}));
 const LandingIntro = () => {
   const classes = useStyles();
   return (
