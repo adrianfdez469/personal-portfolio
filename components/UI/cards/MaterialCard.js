@@ -1,72 +1,3 @@
-// import {
-//   Avatar,
-//   Button,
-//   Card,
-//   CardActionArea,
-//   CardActions,
-//   CardContent,
-//   CardMedia,
-//   Typography,
-// } from '@material-ui/core';
-// // import styles from './styles.scss';
-// import { React, useState } from 'react';
-// import useStyles from './styles';
-
-// const classnames = require('classnames');
-
-// const MaterialCards = () => {
-//   const classes = useStyles();
-//   const [detailVisible, setDetailVisible] = useState(false);
-
-//   const mediaClass = classnames({
-//     aboutCardMedia: !detailVisible,
-//   });
-
-//   const contentClass = classnames({
-//     aboutCardContent: true,
-//     aboutCardContentShow: !detailVisible,
-//   });
-
-//   let content = '';
-//   if (true) {
-//     content = (
-//       <CardContent className={classes[contentClass]}>
-//         <div className={classes.aboutCardBack}>
-//           <Avatar alt="Remy Sharp" src="/images/1.jpg" className={classes.aboutCardLargeImg} />
-
-//           <Typography gutterBottom variant="h5" component="h2">
-//             Lizard
-//           </Typography>
-//           <Typography variant="body2" color="textSecondary" component="p">
-//             Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-//             across all continents except Antarctica
-//           </Typography>
-//         </div>
-//       </CardContent>
-//     );
-//   }
-
-//   return (
-//     <Card className={classes.aboutCardRoot}>
-//       <CardMedia className={classes[mediaClass]} image="/images/1.jpg" />
-//       {content}
-//       <CardActions>
-//         <Button
-//           size="small"
-//           color="primary"
-//           onClick={() => {
-//             setDetailVisible(!detailVisible);
-//           }}
-//         >
-//           Details
-//         </Button>
-//       </CardActions>
-//     </Card>
-//   );
-// };
-
-// export default MaterialCards;
-
 import { Container, Divider, Grid, Grow, IconButton, Paper, Typography } from '@material-ui/core';
 import {
   ArrowForwardIosRounded,
@@ -76,9 +7,10 @@ import {
   Facebook,
 } from '@material-ui/icons';
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import useStyles from './styles';
 
-const MaterialCard = (props) => {
+const MaterialCard = ({ frontImage, frontBarText, backHeading, backText }) => {
   const classes = useStyles();
   const [showDetail, setshowDetail] = useState(false);
 
@@ -97,7 +29,7 @@ const MaterialCard = (props) => {
     <Paper className={classes.cardSize}>
       <Grow in={!showDetail}>
         <div id="front" className={classes.cardFront}>
-          <img className={classes.cardFrontImage} alt="avatar" src={props.frontImage} />
+          <img className={classes.cardFrontImage} alt="avatar" src={frontImage} />
         </div>
       </Grow>
       <Paper id="bar" className={className}>
@@ -110,7 +42,7 @@ const MaterialCard = (props) => {
         >
           <Grid item xs={10}>
             <Typography variant="h6" noWrap align="center" className={classes.cardFrontBarText}>
-              {props.frontBarText}
+              {frontBarText}
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -125,7 +57,7 @@ const MaterialCard = (props) => {
           <Grid container direction="column" justify="space-between" alignItems="center">
             <Grid item>
               <Typography variant="h4" align="center">
-                {props.backHeading}
+                {backHeading}
               </Typography>
             </Grid>
             {/* <Grid item> */}
@@ -133,7 +65,7 @@ const MaterialCard = (props) => {
             <Grid item>
               <Divider orientation="horizontal" variant="middle" />
               <Typography align="center" className={classes.cardBackText}>
-                {props.backText}
+                {backText}
               </Typography>
             </Grid>
           </Grid>
@@ -166,3 +98,10 @@ const MaterialCard = (props) => {
   );
 };
 export default MaterialCard;
+
+MaterialCard.propTypes = {
+  frontImage: PropTypes.string.isRequired,
+  frontBarText: PropTypes.string.isRequired,
+  backHeading: PropTypes.string.isRequired,
+  backText: PropTypes.string.isRequired,
+};

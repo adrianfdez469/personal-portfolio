@@ -23,9 +23,7 @@ const LandingFooter = () => {
           color="primary"
           style={{ marginBottom: '1.5em', paddingLeft: '1em' }}
         >
-          {' '}
           PERSONAL PORTFOLIO™
-{' '}
         </Typography>
         <Typography variant="h5" align="center">
           FOLLOW US HERE
@@ -81,9 +79,7 @@ const LandingFooter = () => {
           </Grid>
         </Grid>
         <Typography align="center" style={{ marginTop: '1.5em' }}>
-          {' '}
           copyright ® 2021
-{' '}
         </Typography>
       </Container>
     </Paper>

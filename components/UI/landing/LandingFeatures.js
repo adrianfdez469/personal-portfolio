@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  Grid,
-  Typography,
-  Paper,
-  Container,
-  Hidden,
-  Box,
-  Divider,
-  useTheme,
-} from '@material-ui/core';
+import { Grid, Typography, Paper, Container, Hidden, Box, Divider } from '@material-ui/core';
 import useStyles from './styles';
 
 const LandingFeatures = () => {
-  const theme = useTheme();
   const classes = useStyles();
   return (
     <Paper className={classes.featuresBack}>

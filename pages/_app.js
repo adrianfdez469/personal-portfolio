@@ -5,7 +5,7 @@ import { Provider } from 'next-auth/client';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { ligth as theme } from '../themes';
+import { orange as theme } from '../themes';
 
 const MyApp = (props) => {
   const { Component, pageProps } = props;
