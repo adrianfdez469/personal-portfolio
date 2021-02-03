@@ -32,6 +32,9 @@ const LandingIntro = () => {
                 Login
               </Button>
             </Link>
+            <Button variant="contained" color="primary">
+              Add Project
+            </Button>
           </Grid>
         </Paper>
       </Grid>
