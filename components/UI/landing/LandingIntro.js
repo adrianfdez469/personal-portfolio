@@ -1,13 +1,34 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Button, Grid, Paper } from '@material-ui/core';
+import { Box, Button, Grid, IconButton, Paper } from '@material-ui/core';
 import Link from 'next/link';
+import { Brightness7, Language } from '@material-ui/icons';
 import useStyles from './styles';
 
 const LandingIntro = () => {
   const classes = useStyles();
   return (
     <>
+      <Box align="end">
+        <IconButton>
+          <Language />
+        </IconButton>
+        <IconButton>
+          <Brightness7 />
+        </IconButton>
+        {/* <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item>
+        <IconButton>
+        <Language />
+      </IconButton>
+        </Grid>
+        </Grid>       */}
+      </Box>
       <Grid
         container
         className={classes.root}
