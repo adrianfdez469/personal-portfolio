@@ -1,6 +1,6 @@
-import { Box, Container, Grid, Paper } from '@material-ui/core';
+import { Box, Container, Grid } from '@material-ui/core';
 import React from 'react';
-import { MaterialCard } from '..';
+import MaterialCard from '../cards/MaterialCard';
 import useStyles from './styles';
 
 const LandingAbout = () => {

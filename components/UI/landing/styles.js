@@ -25,7 +25,7 @@ export default makeStyles((theme) => ({
     marginRight: 12,
   },
   featuresBack: {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     minHeight: '60em',
     clipPath: 'polygon(0 5%, 100% 1%, 100% 95%, 0% 99%)',
     paddingTop: '70px',
@@ -75,7 +75,7 @@ export default makeStyles((theme) => ({
     marginBottom: '3em',
   },
   footerStyle: {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     paddingTop: '3em',
     minHeight: '27em',
     clipPath: 'polygon(0 10%, 100% 0, 100% 100%, 0 100%)',
