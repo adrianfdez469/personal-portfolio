@@ -3,7 +3,6 @@ import React from 'react';
 import clsx from 'clsx';
 
 import {
-  makeStyles,
   Card,
   CardHeader,
   CardMedia,
@@ -18,48 +17,7 @@ import {
 import { ThumbUpAltOutlined, ShareOutlined, EditOutlined } from '@material-ui/icons';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-const useStyle = makeStyles((theme) => ({
-  card: {
-    width: '22.54rem',
-    flexWrap: 'wrap',
-    overflow: 'hidden',
-    margin: '1.0rem 1.0rem 1.0rem 0.2rem',
-  },
-  box: {
-    margin: 'auto',
-    display: 'flex',
-    width: '100%',
-    maxWidth: '95.0rem',
-  },
-  gridList: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    width: '100%',
-  },
-  media: {
-    paddingTop: '40%',
-    width: '90%',
-    margin: 'auto',
-    objectFit: 'cover',
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  mediaNew: {
-    paddingTop: '80%',
-  },
-  description: {
-    textAlign: 'justify',
-  },
-}));
+import { useProjectBoxStyles } from './styles';
 
 const list = [
   { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
@@ -70,7 +28,7 @@ const list = [
 ];
 
 const ProjectBox = (props) => {
-  const classes = useStyle();
+  const classes = useProjectBoxStyles();
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -81,8 +39,8 @@ const ProjectBox = (props) => {
     <div>
       <div className={classes.box}>
         <div className={classes.gridList}>
-          {list.map((element) => (
-            <>
+          {list.map((element, index) => (
+            <div key={index} className={classes.listBox}>
               <Card className={classes.card}>
                 <CardHeader
                   avatar={
@@ -139,7 +97,7 @@ const ProjectBox = (props) => {
                   </CardContent>
                 </Collapse>
               </Card>
-            </>
+            </div>
           ))}
         </div>
       </div>
