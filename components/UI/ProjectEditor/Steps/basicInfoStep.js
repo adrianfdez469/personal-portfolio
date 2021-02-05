@@ -90,6 +90,7 @@ export const BasicInfoForm = (props) => {
             label="Descripción"
             helperText="Breve descripción sobre el proyecto"
             multiline
+            rows="5"
             required
             margin="dense"
             value={description}
