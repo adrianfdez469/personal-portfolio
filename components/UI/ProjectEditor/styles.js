@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { fade } from '@material-ui/core/styles';
 
 export const useMainViewSyles = makeStyles((theme) => ({
   appBar: {
@@ -11,7 +12,7 @@ export const useMainViewSyles = makeStyles((theme) => ({
   paper: {
     margin: theme.spacing(2),
     padding: theme.spacing(2),
-    height: '80vh',
+    minHeight: '80vh',
   },
   buttonsContainer: {
     display: 'flex',
@@ -90,9 +91,32 @@ export const useSkillsStyles = makeStyles((theme) => ({
   },
 }));
 
-export const useLinksStyles = makeStyles(() => ({
+export const useLinksStyles = makeStyles({
   media: {
     height: 151,
     width: 151,
+  },
+});
+
+export const useGalleryStyles = makeStyles((theme) => ({
+  uploadImgContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  uploadImgWrapper: {
+    position: 'relative',
+  },
+  uploadImgCloseButon: {
+    position: 'absolute',
+    right: theme.spacing(-1.5),
+    top: theme.spacing(-1.5),
+    color: fade(theme.palette.getContrastText(theme.palette.background.paper), 0.5),
+    backgroundColor: theme.palette.background.paper,
+    '&:hover': {
+      color: fade(theme.palette.getContrastText(theme.palette.background.paper), 0.8),
+      backgroundColor: theme.palette.background.paper,
+    },
   },
 }));

@@ -9,7 +9,7 @@
   "globals": {
     "fetch": false,
     "AbortController": false,
-    "document": false,
+    "document": false
   },
   "rules": {
     "prettier/prettier": [
