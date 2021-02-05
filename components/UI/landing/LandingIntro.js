@@ -1,40 +1,34 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Button, Grid, Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Button, Grid, IconButton, Paper } from '@material-ui/core';
 import Link from 'next/link';
+import { Brightness7, Language } from '@material-ui/icons';
+import useStyles from './styles';
 
-import ProjectEditor from '../ProjectEditor/layout';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    flexGrow: 1,
-    minHeight: 400,
-  },
-  paper: {
-    background: 'rgba(205, 205, 205, 0.6)',
-    borderRadius: 20,
-    color: 'white',
-    textShadow: '1px 1px #000000',
-    zIndex: 100,
-    // opacity: 0.5,
-  },
-  second: {
-    marginBottom: 12,
-    marginLeft: 12,
-    marginRight: 12,
-  },
-  first: {
-    marginTop: 12,
-    marginBottom: 12,
-    marginLeft: 12,
-    marginRight: 12,
-  },
-}));
 const LandingIntro = () => {
   const classes = useStyles();
   return (
     <>
+      <Box align="end">
+        <IconButton>
+          <Language />
+        </IconButton>
+        <IconButton>
+          <Brightness7 />
+        </IconButton>
+        {/* <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item>
+        <IconButton>
+        <Language />
+      </IconButton>
+        </Grid>
+        </Grid>       */}
+      </Box>
       <Grid
         container
         className={classes.root}
@@ -59,13 +53,9 @@ const LandingIntro = () => {
                 Login
               </Button>
             </Link>
-            <Button variant="contained" color="primary">
-              Add Project
-            </Button>
           </Grid>
         </Paper>
       </Grid>
-      <ProjectEditor open handleClose={() => {}} />
     </>
   );
 };
