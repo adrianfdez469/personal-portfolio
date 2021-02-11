@@ -29,13 +29,14 @@ export const OthersForm = (props) => {
       </Box>
       <Box>
         <TextField
-          label="Descripción del proyecto"
+          label=""
           fullWidth
           variant="outlined"
           rows="5"
           multiline
           required
           margin="dense"
+          helperText="Comparte tus experiencias u otra información que desees"
           value={otherText}
           onChange={changeOtherHandlers}
         />
