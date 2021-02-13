@@ -81,35 +81,44 @@ model Link {
 }
 
 model Skill {
-  id        Int            @id @default(autoincrement())
-  name      String
-  category  SkillCatergory @default(OTHER)
-  projectId Int
-  projects  Project        @relation(fields: [projectId], references: [id])
+  id       Int             @id @default(autoincrement())
+  name     String
+  category SkillCatergory  @default(OTHER)
+  projects ProjectSkills[]
 
+  @@unique([name, category])
   @@map(name: "skills")
 }
 
 model Project {
-  id               Int       @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   name             String
   description      String?
-  initialDate      DateTime? @map("initial_date")
-  finalDate        DateTime? @map("end_date")
-  otherInfo        String?   @map("other_info")
-  userId           Int       @map("userid")
-  projectLinkId    Int       @map("project_link_id")
-  projectDevLinkId Int       @map("project_devlink_id")
-  user             User      @relation(fields: [userId], references: [id])
-  projectLink      Link      @relation("projectlink", fields: [projectLinkId], references: [id])
-  projectDevLink   Link      @relation("projectDevLinkId", fields: [projectDevLinkId], references: [id])
-  skills           Skill[]
+  initialDate      DateTime?       @map("initial_date")
+  finalDate        DateTime?       @map("end_date")
+  otherInfo        String?         @map("other_info")
+  userId           Int             @map("userid")
+  projectLinkId    Int?            @map("project_link_id")
+  projectDevLinkId Int?            @map("project_devlink_id")
+  user             User            @relation(fields: [userId], references: [id])
+  projectLink      Link?           @relation("projectlink", fields: [projectLinkId], references: [id])
+  projectDevLink   Link?           @relation("projectDevLinkId", fields: [projectDevLinkId], references: [id])
+  skills           ProjectSkills[]
 
   // imgages
   // syncWith -- github/gitlab
 
-
   @@map(name: "projects")
+}
+
+model ProjectSkills {
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  skill     Skill   @relation(fields: [skillId], references: [id])
+  skillId   Int
+
+  @@id([projectId, skillId])
+  @@map(name: "project_skills")
 }
 
 enum SkillCatergory {
