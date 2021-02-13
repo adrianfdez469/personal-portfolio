@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
-import limax from 'limax';
 import prisma from '../../../prisma/prisma.instance';
+import { getHashSlug } from '../../../libs/slugGenerator';
 
 export default (req, res) =>
   NextAuth(req, res, {
@@ -48,15 +48,14 @@ export default (req, res) =>
     events: {
       async createUser(user) {
         if (user && user.id) {
-          const time = new Date().getTime();
           let slug = '';
           if (user.name && user.name !== '') {
-            slug = `${limax(user.name)}-${time}`;
+            slug = getHashSlug(user.name);
           } else if (user.email && user.email !== '') {
             const email = user.email.split('@')[0];
-            slug = `${limax(email)}-${time}`;
+            slug = getHashSlug(email);
           } else {
-            slug = `user-${time}`;
+            slug = getHashSlug();
           }
 
           await prisma.user.update({
