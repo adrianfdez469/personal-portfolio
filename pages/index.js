@@ -6,7 +6,6 @@ import Landing from '../views/landing/Landing';
 export default function myComponent() {
   const [session, loading] = useSession();
   const router = useRouter();
-  console.log(session);
   if (loading) {
     return <h1>Loading</h1>;
   }
