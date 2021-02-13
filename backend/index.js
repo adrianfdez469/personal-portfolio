@@ -1,4 +1,3 @@
 // GraphQl
-import executableSchema from './gql';
-
-export default executableSchema;
+export { default as typeDefs } from './gql/typeDefs';
+export { default as resolvers } from './gql/resolvers';

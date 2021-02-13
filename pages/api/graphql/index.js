@@ -1,8 +1,9 @@
 import { ApolloServer } from 'apollo-server-micro';
-import executableSchema from '../../../backend';
+import { resolvers, typeDefs } from '../../../backend';
 
 const apolloServer = new ApolloServer({
-  schema: executableSchema,
+  typeDefs,
+  resolvers,
 });
 const handler = apolloServer.createHandler({ path: '/api/graphql' });
 
