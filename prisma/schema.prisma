@@ -90,6 +90,15 @@ model Skill {
   @@map(name: "skills")
 }
 
+model Image {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  projectId Int?
+  Project   Project? @relation(fields: [projectId], references: [id])
+
+  @@map(name: "images")
+}
+
 model Project {
   id               Int             @id @default(autoincrement())
   name             String
@@ -104,9 +113,7 @@ model Project {
   projectLink      Link?           @relation("projectlink", fields: [projectLinkId], references: [id])
   projectDevLink   Link?           @relation("projectDevLinkId", fields: [projectDevLinkId], references: [id])
   skills           ProjectSkills[]
-
-  // imgages
-  // syncWith -- github/gitlab
+  images           Image[]
 
   @@map(name: "projects")
 }

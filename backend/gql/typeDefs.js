@@ -10,6 +10,12 @@ const typeDefs = gql`
     ${types}
   }
 
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+
   type Link {
     id: ID!
     url: String!
@@ -22,6 +28,10 @@ const typeDefs = gql`
     name: String!
     category: SkillTypes
   }
+  type Image {
+    id: ID!
+    imageUrl: String!
+  }
   type Project {
     id: ID!
     name: String!
@@ -32,6 +42,7 @@ const typeDefs = gql`
     projectLink: Link
     projectDevLink: Link
     otherInfo: String
+    images: [Image!]
   }
   type User {
     id: ID!
@@ -89,6 +100,7 @@ const typeDefs = gql`
     projectLink: LinkParams
     projectDevLink: LinkParams
     otherInfo: String
+    imageIds: [ID!]
   }
   input UserParams {
     name: String
@@ -102,6 +114,8 @@ const typeDefs = gql`
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
+    #singleUpload(file: Upload!): File!
+    singleUpload(file: Upload!): ID!
     createProject(project: ProjectParams!): SaveProjectMutationResponse!
     updateProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
   }

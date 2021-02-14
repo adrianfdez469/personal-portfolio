@@ -1,5 +1,6 @@
 import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
+import saveFile from '../../libs/saveFile';
 
 const resolvers = {
   MutationResponse: {
@@ -41,11 +42,27 @@ const resolvers = {
           skill: null,
         }));
     },
+    singleUpload: (parent, args) =>
+      args.file.then((file) => {
+        // Contents of Upload scalar: https://github.com/jaydenseric/graphql-upload#class-graphqlupload
+        // file.createReadStream() is a readable node stream that contains the contents of the uploaded file
+        // node stream api: https://nodejs.org/api/stream.html
+        // file
+        saveFile(file)
+          .then((url) =>
+            prisma.image.create({
+              data: {
+                imageUrl: url,
+              },
+            })
+          )
+          .then((image) => image.id);
+      }),
     createProject: async (parent, args) => {
       try {
         const { project } = args;
         // const { skills } = project;
-        const { projectLink, projectDevLink, skills } = project;
+        const { projectLink, projectDevLink, skills, imageIds } = project;
 
         let skillIds = null;
         let createdProjectLink = null;
@@ -68,12 +85,24 @@ const resolvers = {
                   if (skill.id) {
                     resolve(+skill.id);
                   } else {
-                    // TODO: use FindOrCreate
                     prisma.skill
-                      .create({
-                        data: { name: skill.name, category: skill.category },
+                      .findFirst({
+                        where: {
+                          category: skill.category,
+                          name: skill.name,
+                        },
                       })
-                      .then((sk) => resolve(+sk.id));
+                      .then((existimgSkill) => {
+                        if (existimgSkill) {
+                          resolve(+existimgSkill.id);
+                        } else {
+                          prisma.skill
+                            .create({
+                              data: { name: skill.name, category: skill.category },
+                            })
+                            .then((sk) => resolve(+sk.id));
+                        }
+                      });
                   }
                 })
             )
@@ -106,6 +135,12 @@ const resolvers = {
                 skillId: skill,
               })),
             },
+            ...(imageIds &&
+              imageIds.length > 0 && {
+                images: {
+                  connect: imageIds.map((imgId) => ({ id: +imgId })),
+                },
+              }),
           },
         });
 
@@ -116,7 +151,6 @@ const resolvers = {
           project: createdProject,
         };
       } catch (err) {
-        console.log(err);
         return {
           code: 500,
           success: false,
