@@ -45,6 +45,7 @@ const initialState = {
   data: {
     basicInfoData: null,
     skillsData: null,
+    links: null,
   },
 };
 const actions = {
@@ -104,10 +105,21 @@ const LayoutView = (props) => {
         languages: data.languages.nodes.map((lang) => ({ text: lang.name })),
       }),
     };
+    const links = {
+      devLink: {
+        ...(data.url && { url: data.url }),
+      },
+      proyectLink: {
+        ...(data.deployments.nodes.length > 0 && {
+          url: data.deployments.nodes[0].latestStatus.environmentUrl,
+        }),
+      },
+    };
 
     const fullData = {
       basicInfoData: { ...basicInfoData },
       skillsData: { ...skillsData },
+      links: { ...links },
     };
     dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
   };
@@ -162,7 +174,7 @@ const LayoutView = (props) => {
         <GalleryForm stepId={Steps[state.activeStep].id} />
         <SkillsForm stepId={Steps[state.activeStep].id} data={state.data.skillsData} />
         <CollaboratorsForm stepId={Steps[state.activeStep].id} />
-        <LinksForm stepId={Steps[state.activeStep].id} />
+        <LinksForm stepId={Steps[state.activeStep].id} data={state.data.links} />
         <OthersForm stepId={Steps[state.activeStep].id} />
       </div>
 

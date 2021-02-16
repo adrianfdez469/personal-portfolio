@@ -118,7 +118,7 @@ BasicInfoForm.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    initialDate: PropTypes.string,
+    initialDate: PropTypes.number,
   }),
 };
 BasicInfoForm.defaultProps = {

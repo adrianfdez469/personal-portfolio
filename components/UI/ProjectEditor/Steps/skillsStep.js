@@ -53,7 +53,6 @@ export const SKILLS = 'SKILLS';
 export const SkillsForm = (props) => {
   // constants
   const { stepId, data } = props;
-  console.log(data);
   // hooks
   const styles = useSkillsStyles();
   const stepStyles = useStepsStyles();

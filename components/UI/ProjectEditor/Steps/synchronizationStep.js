@@ -452,9 +452,7 @@ export const SyncForm = (props) => {
             {errorLoadingGithubRepos && (
               <FormLabel error>No se pudieron cargar los repositorios</FormLabel>
             )}
-            {errorLoadingGithubDetailsRespo && (
-              <FormLabel error>No se pueden obtener los detalles del repositorio</FormLabel>
-            )}
+            {errorLoadingGithubDetailsRespo && <FormLabel error>Algo pudo salir mal</FormLabel>}
           </FormControl>
           {loadingGithubRepos && <LinearProgress className={styles.progress} />}
         </Box>

@@ -51,6 +51,16 @@ const reducer = (state, action) => {
         processing: false,
       };
     }
+    case 'SET_LINK': {
+      return {
+        link: action.value,
+        error: false,
+        validUrl: isStringValidUrl(action.value),
+        preview: null,
+        typing: false,
+        processing: isStringValidUrl(state.link),
+      };
+    }
     default:
       return state;
   }
@@ -58,15 +68,16 @@ const reducer = (state, action) => {
 
 const LinkPreview = (props) => {
   // constants
-  const { setLink, ...rest } = props;
+  const { setLink, url, ...rest } = props;
   const abortController = useRef(new AbortController());
+
   // hooks
-  const [{ link, error, validUrl, preview, processing, typing }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ link, error, validUrl, preview, processing, typing }, dispatch] = useReducer(reducer, {
+    ...initialState,
+  });
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const styles = useStyles();
+
   // efects
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -78,11 +89,13 @@ const LinkPreview = (props) => {
       clearTimeout(timeout);
     };
   }, [link]);
+
   useEffect(() => {
     if (processing && typing) {
       abortController.current.abort();
     }
   }, [processing, link]);
+
   useEffect(() => {
     if (!typing && validUrl) {
       setLink(link);
@@ -109,6 +122,13 @@ const LinkPreview = (props) => {
         });
     }
   }, [typing, validUrl, abortController, dispatch]);
+
+  useEffect(() => {
+    if (url) {
+      dispatch({ type: 'SET_LINK', value: url });
+    }
+  }, [url]);
+
   // handlers
   const onChange = (event) => {
     dispatch({
@@ -162,6 +182,10 @@ const LinkPreview = (props) => {
 
 LinkPreview.propTypes = {
   setLink: PropTypes.func.isRequired,
+  url: PropTypes.string,
+};
+LinkPreview.defaultProps = {
+  url: null,
 };
 
 export default LinkPreview;
