@@ -44,6 +44,7 @@ const initialState = {
   activeStep: 0,
   data: {
     basicInfoData: null,
+    skillsData: null,
   },
 };
 const actions = {
@@ -91,16 +92,22 @@ const LayoutView = (props) => {
 
   const setRepoSyncData = (provider, data) => {
     /* console.log(provider);
+     */
     console.log(data);
-*/
     const basicInfoData = {
       ...(data.name && { name: data.name }),
       ...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
       ...(data.description && { description: data.description }),
     };
+    const skillsData = {
+      ...(data.languages.nodes.length > 0 && {
+        languages: data.languages.nodes.map((lang) => ({ text: lang.name })),
+      }),
+    };
 
     const fullData = {
       basicInfoData: { ...basicInfoData },
+      skillsData: { ...skillsData },
     };
     dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
   };
@@ -153,7 +160,7 @@ const LayoutView = (props) => {
         <SyncForm stepId={Steps[state.activeStep].id} selectRepo={setRepoSyncData} />
         <BasicInfoForm stepId={Steps[state.activeStep].id} data={state.data.basicInfoData} />
         <GalleryForm stepId={Steps[state.activeStep].id} />
-        <SkillsForm stepId={Steps[state.activeStep].id} />
+        <SkillsForm stepId={Steps[state.activeStep].id} data={state.data.skillsData} />
         <CollaboratorsForm stepId={Steps[state.activeStep].id} />
         <LinksForm stepId={Steps[state.activeStep].id} />
         <OthersForm stepId={Steps[state.activeStep].id} />

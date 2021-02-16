@@ -1,5 +1,5 @@
 // Ext libs
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Chip } from '@material-ui/core';
 import InputTextSelect from 'react-material-selectable-inputtext';
@@ -40,7 +40,8 @@ export const SKILLS = 'SKILLS';
 
 export const SkillsForm = (props) => {
   // constants
-  const { stepId } = props;
+  const { stepId, data } = props;
+  console.log(data);
   // hooks
   const styles = useSkillsStyles();
   const stepStyles = useStepsStyles();
@@ -76,6 +77,13 @@ export const SkillsForm = (props) => {
       setTechnologies((state) => [...state, tech]);
     }
   };
+
+  // effects
+  useEffect(() => {
+    if (data && data.languages && data.languages.length > 0) {
+      setProgrammingLangs(data.languages);
+    }
+  }, [data]);
 
   return (
     <Box className={stepStyles.mainContent} hidden={stepId !== SKILLS}>
@@ -145,6 +153,16 @@ export const SkillsForm = (props) => {
 
 SkillsForm.propTypes = {
   stepId: PropTypes.string.isRequired,
+  data: PropTypes.shape({
+    languages: PropTypes.arrayOf(
+      PropTypes.shape({
+        text: PropTypes.string.isRequired,
+      })
+    ),
+  }),
+};
+SkillsForm.defaultProps = {
+  data: null,
 };
 
 export const skillsObj = new ProjectStep(SKILLS, 'Habilidades');
