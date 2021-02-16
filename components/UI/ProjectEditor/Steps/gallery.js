@@ -30,7 +30,7 @@ export const GalleryForm = (props) => {
 
   return (
     <Box className={stepStyles.mainContent} hidden={stepId !== GALLERY}>
-      <Box className={stepStyles.stepDescriptor}>
+      <Box>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           Muestra tus resultados con imágenes
         </Typography>

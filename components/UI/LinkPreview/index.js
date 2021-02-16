@@ -57,8 +57,6 @@ const reducer = (state, action) => {
         error: false,
         validUrl: isStringValidUrl(action.value),
         preview: null,
-        typing: false,
-        processing: isStringValidUrl(state.link),
       };
     }
     default:

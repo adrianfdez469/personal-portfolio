@@ -118,6 +118,7 @@ export const useGalleryStyles = makeStyles((theme) => ({
       color: fade(theme.palette.getContrastText(theme.palette.background.paper), 0.8),
       backgroundColor: theme.palette.background.paper,
     },
+    zIndex: 999,
   },
 }));
 
