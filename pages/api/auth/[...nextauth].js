@@ -32,6 +32,7 @@ export default (req, res) =>
     },
     // Optional SQL or MongoDB database to persist users
     database: `${process.env.POSTGRES_CONNECTION_URI}`,
+    session: { jwt: true },
     jwt: {
       signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     },
@@ -39,10 +40,18 @@ export default (req, res) =>
       async redirect(url, baseUrl) {
         return baseUrl;
       },
-      async session(session, user) {
+      async session(session, token) {
         const resultSession = { ...session };
-        resultSession.slug = user.slug;
+        resultSession.accessToken = token.accessToken;
         return resultSession;
+      },
+      async jwt(token, user, account) {
+        const newToken = token;
+        // Add access_token to the token right after signin
+        if (account && account.accessToken) {
+          newToken.accessToken = account.accessToken;
+        }
+        return newToken;
       },
     },
     events: {

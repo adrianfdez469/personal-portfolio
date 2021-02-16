@@ -4,6 +4,7 @@ import { resolvers, typeDefs } from '../../../backend';
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => ({ req }),
 });
 const handler = apolloServer.createHandler({ path: '/api/graphql' });
 
