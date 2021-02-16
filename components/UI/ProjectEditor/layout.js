@@ -46,6 +46,7 @@ const initialState = {
     basicInfoData: null,
     skillsData: null,
     links: null,
+    collaborators: null,
   },
 };
 const actions = {
@@ -115,11 +116,23 @@ const LayoutView = (props) => {
         }),
       },
     };
+    const collaborators =
+      data.mentionableUsers.nodes.length === 0
+        ? null
+        : data.mentionableUsers.nodes.map((collaborator) => ({
+            name: collaborator.name,
+            avatarUrl: collaborator.avatarUrl,
+            url: collaborator.url,
+            bio: collaborator.bio,
+            email: collaborator.email,
+            isOwner: data.owner.login === collaborator.login,
+          }));
 
     const fullData = {
       basicInfoData: { ...basicInfoData },
       skillsData: { ...skillsData },
       links: { ...links },
+      collaborators,
     };
     dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
   };
@@ -173,7 +186,10 @@ const LayoutView = (props) => {
         <BasicInfoForm stepId={Steps[state.activeStep].id} data={state.data.basicInfoData} />
         <GalleryForm stepId={Steps[state.activeStep].id} />
         <SkillsForm stepId={Steps[state.activeStep].id} data={state.data.skillsData} />
-        <CollaboratorsForm stepId={Steps[state.activeStep].id} />
+        <CollaboratorsForm
+          stepId={Steps[state.activeStep].id}
+          collaborators={state.data.collaborators}
+        />
         <LinksForm stepId={Steps[state.activeStep].id} data={state.data.links} />
         <OthersForm stepId={Steps[state.activeStep].id} />
       </div>

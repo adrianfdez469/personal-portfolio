@@ -132,11 +132,6 @@ export const useSyncStyles = makeStyles((theme) => ({
     height: theme.spacing(4),
     marginRight: theme.spacing(1),
   },
-  flexCenter: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
   progress: {
     width: '100%',
     // height: theme.spacing(0.),
@@ -150,9 +145,23 @@ export const useSyncStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    marginTop: theme.spacing(2),
     [theme.breakpoints.up(800)]: {
       marginLeft: theme.spacing(5),
       marginRight: theme.spacing(5),
     },
+  },
+}));
+
+export const useCollaboratorsStyles = makeStyles((theme) => ({
+  smallAvatar: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    marginRight: theme.spacing(1),
+  },
+  accordionDetails: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
 }));

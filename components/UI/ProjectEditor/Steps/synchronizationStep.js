@@ -14,6 +14,7 @@ import {
   Button,
   LinearProgress,
   FormLabel,
+  Grid,
 } from '@material-ui/core';
 import { getSession } from 'next-auth/client';
 // Components
@@ -52,13 +53,16 @@ const getReposQuery = (first) => `
     }
   }`;
 const getRepoData = (owner, name) => `
-query { 
+query {
   repository(owner: "${owner}", name: "${name}" ) {
     id
     name
     description
     shortDescriptionHTML(limit:150)
     openGraphImageUrl
+    owner {
+      login
+    }
     primaryLanguage {
       name
       color
@@ -244,12 +248,12 @@ export const SyncForm = (props) => {
     errorLoadingGithubDetailsRespo,
     buttonGitlabSelected,
 
-    /* loadingGitlabRepos,
-    errorLoadingGitlabRepos,
+    // loadingGitlabRepos,
+    // errorLoadingGitlabRepos,
     selectedGitlabRepo,
-    gitlabRepos,
-    detailsGitlabRepoSelected,
-    errorLoadingGitlabDetailsRespo, */
+    // gitlabRepos,
+    // detailsGitlabRepoSelected,
+    // errorLoadingGitlabDetailsRespo,
   } = state;
 
   // styles
@@ -360,8 +364,8 @@ export const SyncForm = (props) => {
         </Typography>
       </Box>
 
-      <Box className={styles.flexCenter}>
-        <Box m={2}>
+      <Grid container justify="center" spacing={4}>
+        <Grid item>
           <Button
             variant={buttonGithubSelected ? 'contained' : 'outlined'}
             size="large"
@@ -380,9 +384,9 @@ export const SyncForm = (props) => {
               </Typography>
             </Box>
           </Button>
-        </Box>
+        </Grid>
 
-        <Box m={2}>
+        <Grid item>
           <Button
             variant={buttonGitlabSelected ? 'contained' : 'outlined'}
             size="large"
@@ -401,8 +405,8 @@ export const SyncForm = (props) => {
               </Typography>
             </Box>
           </Button>
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
 
       {buttonGithubSelected && (
         <Box className={styles.formcontrolWrapper}>
