@@ -1,6 +1,6 @@
 // Ext libs
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { Box, Typography, Grid, TextField, useMediaQuery } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -13,13 +13,13 @@ export const BASIC_INFO_STEP = 'BASIC_INFO_STEP';
 
 export const BasicInfoForm = (props) => {
   // constants
-  const { stepId, prevName, prevInitialDate, prevEndDate, prevDescription } = props;
+  const { stepId, data } = props;
   // hooks
   const classes = useStepsStyles();
-  const [name, setName] = useState(prevName || '');
-  const [initialDate, setInitialDate] = useState(prevInitialDate || null);
-  const [endDate, setEndDate] = useState(prevEndDate || null);
-  const [description, setDescription] = useState(prevDescription || '');
+  const [name, setName] = useState('');
+  const [initialDate, setInitialDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [description, setDescription] = useState('');
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
 
   // handlers
@@ -35,6 +35,15 @@ export const BasicInfoForm = (props) => {
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
+
+  // effects
+  useEffect(() => {
+    if (data) {
+      if (data.name) setName(data.name);
+      if (data.initialDate) setInitialDate(data.initialDate);
+      if (data.description) setDescription(data.description);
+    }
+  }, [data]);
 
   return (
     <Box className={classes.mainContent} hidden={stepId !== BASIC_INFO_STEP}>
@@ -106,17 +115,18 @@ export const BasicInfoForm = (props) => {
 
 BasicInfoForm.propTypes = {
   stepId: PropTypes.string.isRequired,
-  prevName: PropTypes.string,
-  prevInitialDate: PropTypes.instanceOf(Date),
-  prevEndDate: PropTypes.instanceOf(Date),
-  prevDescription: PropTypes.string,
+  data: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    initialDate: PropTypes.string,
+  }),
 };
-
 BasicInfoForm.defaultProps = {
-  prevName: null,
-  prevInitialDate: null,
-  prevEndDate: null,
-  prevDescription: null,
+  data: {
+    name: '',
+    description: '',
+    initialDate: null,
+  },
 };
 
 export const basicInfoObj = new ProjectStep(BASIC_INFO_STEP, 'Información');
