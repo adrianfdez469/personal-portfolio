@@ -153,8 +153,9 @@ const typeDefs = gql`
   
 
   type Query {
-    users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
+    #users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
     projects(id: IntComparer, name: StringComparer): [Project!]
+    skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
   }
 `;
 

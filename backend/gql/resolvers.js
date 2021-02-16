@@ -10,12 +10,16 @@ const resolvers = {
     },
   },
   Query: {
-    users: (parent, args) =>
+    /* users: (parent, args) =>
       prisma.user.findMany({
         where: { ...args },
-      }),
+      }), */
     projects: (parent, args) =>
       prisma.project.findMany({
+        where: { ...args },
+      }),
+    skills: (parent, args) =>
+      prisma.skill.findMany({
         where: { ...args },
       }),
   },

@@ -9,9 +9,11 @@ import ProjectStep from './ProjectStep';
 import { existsObjWithPropValue } from '../../../../libs/helpers';
 // Styles
 import { useSkillsStyles, useStepsStyles } from '../styles';
+// Constants
+import skillsCategories from '../../../../constants/skillsCategorysConst';
 
 // TODO: Esto es temporal, realmente se deben cargar del backend
-const allProgrammingLangs = [
+/* const allProgrammingLangs = [
   { id: '1', text: 'C#' },
   { id: '2', text: 'JAVA' },
   { id: '3', text: 'JavaScript' },
@@ -23,9 +25,9 @@ const allProgrammingLangs = [
   { id: '9', text: 'COBOL' },
   { id: '10', text: 'PASCAL' },
   { id: '11', text: 'PEARL' },
-];
+]; */
 // TODO: Esto es temporal, realmente se deben cargar del backend
-const allTechnologies = [
+/* const allTechnologies = [
   { id: '1', text: 'ReactJs' },
   { id: '2', text: 'NodeJs' },
   { id: '3', text: 'GraphQL' },
@@ -34,7 +36,17 @@ const allTechnologies = [
   { id: '6', text: 'React Hooks' },
   { id: '7', text: 'Spring Boot' },
   { id: '8', text: '.Net' },
-];
+]; */
+
+const getSkillsQuery = () => `
+    query {
+      skills{
+        id
+        name
+        category
+      }
+    }
+  `;
 
 export const SKILLS = 'SKILLS';
 
@@ -47,6 +59,8 @@ export const SkillsForm = (props) => {
   const stepStyles = useStepsStyles();
   const [programmingLangs, setProgrammingLangs] = useState([]);
   const [technologies, setTechnologies] = useState([]);
+  const [allProgrammingLangs, setAllProgrammingLangs] = useState([]);
+  const [allTechnologies, setAllTechnologies] = useState([]);
 
   // hadlers
   const handleDelLang = (pl) => {
@@ -78,12 +92,57 @@ export const SkillsForm = (props) => {
     }
   };
 
-  // effects
+  // effects setting loaded data from repo
   useEffect(() => {
     if (data && data.languages && data.languages.length > 0) {
       setProgrammingLangs(data.languages);
     }
   }, [data]);
+
+  // loading skils
+  useEffect(() => {
+    fetch('/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: getSkillsQuery(),
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        const error = new Error('Cant load skills');
+        throw error;
+      })
+      .then((repdata) => {
+        const [languages, tecnologies] = repdata.data.skills.reduce(
+          (acum, skill) => {
+            if (skill.category === skillsCategories.PROG_LANG) {
+              acum[0].push({
+                id: skill.id,
+                text: skill.name,
+              });
+            }
+            if (skill.category === skillsCategories.PROG_TECH) {
+              acum[1].push({
+                id: skill.id,
+                text: skill.name,
+              });
+            }
+            return acum;
+          },
+          [[], []]
+        );
+        setAllProgrammingLangs(languages);
+        setAllTechnologies(tecnologies);
+      })
+      .catch(() => {
+        // TODO: handle exception
+      });
+  }, []);
 
   return (
     <Box className={stepStyles.mainContent} hidden={stepId !== SKILLS}>
