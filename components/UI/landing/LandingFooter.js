@@ -79,7 +79,7 @@ const LandingFooter = () => {
           </Grid>
         </Grid>
         <Typography align="center" style={{ marginTop: '1.5em' }}>
-          copyright ® 2021
+          copyright SAR designs ® 2021
         </Typography>
       </Container>
     </Paper>
