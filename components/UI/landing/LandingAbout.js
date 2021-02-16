@@ -1,4 +1,4 @@
-import { Box, Container, Grid } from '@material-ui/core';
+import { Box, Container, Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import MaterialCard from '../cards/MaterialCard';
 import useStyles from './styles';
@@ -21,6 +21,11 @@ const LandingAbout = () => {
   return (
     <div className={classes.aboutStyle}>
       <Container>
+        <Box align="center">
+          <Typography variant="h4" className={classes.headerText} color="primary">
+            JUST ABOUT US
+          </Typography>
+        </Box>
         <Grid
           container
           direction="row"
