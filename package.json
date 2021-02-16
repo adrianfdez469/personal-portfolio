@@ -19,7 +19,7 @@
     "date-fns": "^2.16.1",
     "graphql": "^15.5.0",
     "limax": "^3.0.0",
-    "link-preview-generator": "0.0.5",
+    "link-preview-generator": "0.0.4",
     "micro": "^9.3.4",
     "next": "^10.0.6",
     "next-auth": "^3.3.0-canary.11",
