@@ -8,7 +8,8 @@
   ],
   "globals": {
     "fetch": false,
-    "AbortController": false
+    "AbortController": false,
+    "document": false
   },
   "rules": {
     "prettier/prettier": [

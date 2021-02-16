@@ -9,20 +9,21 @@
   },
   "dependencies": {
     "@date-io/date-fns": "v1",
+    "@daym3l/react-profile-image": "1.3.1",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/pickers": "^3.2.10",
-    "date-fns": "^2.16.1",
+    "@prisma/client": "^2.16.1",
+    "apollo-server-micro": "^2.19.2",
     "clsx": "^1.1.1",
-    "eslint": "7.2.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-prettier": "^3.3.1",
+    "date-fns": "^2.16.1",
+    "graphql": "^15.5.0",
+    "limax": "^3.0.0",
     "link-preview-generator": "^0.0.4",
-    "next": "10.0.5",
-    "next-auth": "^3.1.0",
-    "prettier": "^2.2.1",
+    "micro": "^9.3.4",
+    "next": "^10.0.6",
+    "next-auth": "^3.3.0-canary.11",
+    "pg": "^8.5.1",
     "prop-types": "^15.7.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -32,9 +33,16 @@
     "sharp": "^0.27.1"
   },
   "devDependencies": {
+    "eslint": "^7.19.0",
     "eslint-config-airbnb": "18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "7.21.5",
-    "eslint-plugin-react-hooks": "4.0.0"
+    "eslint-plugin-react-hooks": "4.0.0",
+    "prettier": "^2.2.1",
+    "prisma": "^2.16.1"
   }
 }
