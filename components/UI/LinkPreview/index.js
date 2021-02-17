@@ -150,7 +150,7 @@ const LinkPreview = (props) => {
           <img
             src={preview.img || '/static/images/default_image_background.jpg'}
             alt={preview.title}
-            width={50}
+            width={preview.img ? 50 : 180}
           />
         </div>
         <div style={{ overflow: 'auto' }}>
