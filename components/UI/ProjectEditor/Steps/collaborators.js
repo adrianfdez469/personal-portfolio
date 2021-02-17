@@ -50,6 +50,9 @@ export const CollaboratorsForm = (props) => {
     }
   }, [collaborators]);
 
+  // TODO: Add a remove button
+  // TODO: Disable the Save Button if no name is entered
+
   return (
     <Box className={stepStyles.mainContent} hidden={stepId !== COLLABORATORS}>
       <Box className={stepStyles.stepDescriptor}>
