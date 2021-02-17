@@ -147,7 +147,11 @@ const LinkPreview = (props) => {
     previewView = (
       <div className={styles.prevDataContainer}>
         <div className={styles.image}>
-          <img src={preview.img} alt={preview.title} width={50} />
+          <img
+            src={preview.img || '/static/images/default_image_background.jpg'}
+            alt={preview.title}
+            width={50}
+          />
         </div>
         <div style={{ overflow: 'auto' }}>
           <Typography variant="button" display="block" className={styles.typografy}>
