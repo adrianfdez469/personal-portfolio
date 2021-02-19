@@ -30,14 +30,6 @@ import { usePersonDataStyles } from './styles';
 const PersonData = (props) => {
   const { edit } = props;
   const classes = usePersonDataStyles();
-  const language = useRecoilValue(atomButtonLanguage);
-  const [title, setTitle] = useState(null);
-
-  useEffect(() => {
-    if (language) {
-      setTitle(language);
-    }
-  }, [language]);
 
   return (
     <>
