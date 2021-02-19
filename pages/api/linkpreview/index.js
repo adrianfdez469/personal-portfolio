@@ -1,43 +1,32 @@
-import { getLinkPreview } from 'link-preview-js';
+import got from 'got';
 
-const getPreviewData = async (url) => {
+const metascraperFn = require('metascraper');
+const metascraperTitleFn = require('metascraper-title');
+const metascraperDescriptionFn = require('metascraper-description');
+const metascraperLogoFn = require('metascraper-logo');
+const metascraperLogoFaviconFn = require('metascraper-logo-favicon');
+const metascraperImageFn = require('metascraper-image');
+
+const metascraper = metascraperFn([
+  metascraperTitleFn(),
+  metascraperDescriptionFn(),
+  metascraperLogoFn(),
+  metascraperLogoFaviconFn(),
+  metascraperImageFn(),
+]);
+
+const getPreviewData = async (targetUrl) => {
   try {
-    const data = await getLinkPreview(url);
-    let [img] = data.images;
+    const { body: html, url } = await got(targetUrl);
+    const metadata = await metascraper({ html, url });
 
-    if (!img && data.favicons.length > 0) {
-      [img] = await Promise.all(
-        data.favicons.map(
-          (favicon) =>
-            new Promise((resolve) =>
-              getLinkPreview(favicon).then((favIconData) => {
-                if (
-                  ['image/png', 'image/jpeg', 'image/jpg'].some(
-                    (extension) => favIconData.contentType === extension
-                  )
-                ) {
-                  resolve({ favicon, isImage: true });
-                } else {
-                  resolve({ favicon, isImage: false });
-                }
-              })
-            )
-        )
-      ).then((responses) =>
-        responses
-          .filter((resp) => resp.isImage)
-          .slice(0, 1)
-          .map((obj) => obj.favicon)
-      );
-    }
-
-    const resultObj = {
-      title: data.title,
-      description: data.description,
-      img,
+    const data = {
+      title: metadata.title,
+      description: metadata.description,
+      img: metadata.logo || metadata.image,
     };
 
-    return resultObj;
+    return data;
   } catch (error) {
     error.message = 'Error while getting the preview data';
     throw error;
