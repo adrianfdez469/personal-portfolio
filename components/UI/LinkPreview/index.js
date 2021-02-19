@@ -1,7 +1,7 @@
 // TODO: En la vista movil, alinear las imagenes y los textos a la izquierda
 
 import React, { useReducer, useRef, useEffect, useCallback } from 'react';
-import { TextField, CircularProgress, Typography, useMediaQuery } from '@material-ui/core';
+import { TextField, CircularProgress, Typography, useMediaQuery, Hidden } from '@material-ui/core';
 import PropTypes from 'prop-types';
 // Internal libs
 import { isStringValidUrl } from '../../../libs/helpers';
@@ -79,15 +79,12 @@ const reducer = (state, action) => {
 const LinkPreview = (props) => {
   // constants
   const { setLink, url, ...rest } = props;
-  const abortController = useRef(/* new AbortController() */);
+  const abortController = useRef();
 
   // hooks
-  const [{ link, error, /* validUrl, */ preview, processing, typing }, dispatch] = useReducer(
-    reducer,
-    {
-      ...initialState,
-    }
-  );
+  const [{ link, error, preview, processing, typing }, dispatch] = useReducer(reducer, {
+    ...initialState,
+  });
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const styles = useStyles();
 
@@ -169,13 +166,18 @@ const LinkPreview = (props) => {
   if (preview !== null) {
     previewView = (
       <div className={styles.prevDataContainer}>
-        <div className={styles.image}>
-          <img
-            src={preview.imageUrl || '/static/images/default_image_background.jpg'}
-            alt={preview.title}
-            width={preview.imageUrl ? 50 : 180}
-          />
-        </div>
+        <Hidden xsDown>
+          <div
+            className={styles.image}
+            style={{ overflow: !preview.imageUrl ? 'hidden' : 'visible' }}
+          >
+            <img
+              src={preview.imageUrl || '/static/images/default_image_background.jpg'}
+              alt={preview.title}
+              width={preview.imageUrl ? 50 : 180}
+            />
+          </div>
+        </Hidden>
         <div style={{ overflow: 'auto' }}>
           <Typography variant="button" display="block" className={styles.typografy}>
             {preview.title}

@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(6.25),
     height: theme.spacing(6.25),
     marginRight: theme.spacing(1),
-    overflow: 'hidden',
+    // overflow: 'hidden',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
