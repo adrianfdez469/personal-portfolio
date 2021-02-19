@@ -1,6 +1,6 @@
 // TODO: En la vista movil, alinear las imagenes y los textos a la izquierda
 
-import React, { useReducer, useRef, useEffect } from 'react';
+import React, { useReducer, useRef, useEffect, useCallback } from 'react';
 import { TextField, CircularProgress, Typography, useMediaQuery } from '@material-ui/core';
 import PropTypes from 'prop-types';
 // Internal libs
@@ -8,13 +8,25 @@ import { isStringValidUrl } from '../../../libs/helpers';
 // styles
 import useStyles from './styles';
 
+const getLinkPrevQuery = (url) => `
+  query {
+    link(url:"${url}") {
+      id
+      url
+      title
+      description
+      imageUrl
+    }
+  }
+`;
+
 const initialState = {
   error: false,
   processing: false,
   link: '',
   preview: null,
   typing: false,
-  validUrl: false,
+  // validUrl: false,
   timeout: null,
 };
 
@@ -22,18 +34,26 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'START_TYPING':
       return {
+        ...state,
+        typing: true,
+      };
+    case 'CHANGE_LINK':
+      return {
+        ...state,
         link: action.value,
         error: false,
-        validUrl: isStringValidUrl(action.value),
         preview: null,
         processing: false,
-        typing: true,
       };
     case 'STOP_TYPING':
       return {
         ...state,
         typing: false,
-        processing: isStringValidUrl(state.link),
+      };
+    case 'START_LOADING':
+      return {
+        ...state,
+        processing: true,
       };
     case 'PREVIEW_ERROR': {
       return {
@@ -51,14 +71,6 @@ const reducer = (state, action) => {
         processing: false,
       };
     }
-    case 'SET_LINK': {
-      return {
-        link: action.value,
-        error: false,
-        validUrl: isStringValidUrl(action.value),
-        preview: null,
-      };
-    }
     default:
       return state;
   }
@@ -67,42 +79,34 @@ const reducer = (state, action) => {
 const LinkPreview = (props) => {
   // constants
   const { setLink, url, ...rest } = props;
-  const abortController = useRef(new AbortController());
+  const abortController = useRef(/* new AbortController() */);
 
   // hooks
-  const [{ link, error, validUrl, preview, processing, typing }, dispatch] = useReducer(reducer, {
-    ...initialState,
-  });
+  const [{ link, error, /* validUrl, */ preview, processing, typing }, dispatch] = useReducer(
+    reducer,
+    {
+      ...initialState,
+    }
+  );
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const styles = useStyles();
 
-  // efects
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (link !== '') {
-        dispatch({ type: 'STOP_TYPING' });
+  // functions
+  const getData = useCallback(() => {
+    if (isStringValidUrl(link)) {
+      if (abortController.current) {
+        abortController.current.abort();
       }
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [link]);
-
-  useEffect(() => {
-    if (processing && typing) {
-      abortController.current.abort();
-    }
-  }, [processing, link]);
-
-  useEffect(() => {
-    if (!typing && validUrl) {
-      setLink(link);
-      fetch(`/api/linkpreview`, {
+      dispatch({ type: 'START_LOADING' });
+      abortController.current = new AbortController();
+      fetch('/api/graphql', {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url: link }),
+        body: JSON.stringify({
+          query: getLinkPrevQuery(link),
+        }),
         signal: abortController.current.signal,
       })
         .then((resp) => {
@@ -113,24 +117,43 @@ const LinkPreview = (props) => {
         })
         .then((resp) => {
           const { data } = resp;
-          dispatch({ type: 'SET_PREVIEW', data: { ...data } });
+          dispatch({ type: 'SET_PREVIEW', data: { ...data.link } });
         })
         .catch(() => {
           dispatch({ type: 'PREVIEW_ERROR' });
         });
     }
-  }, [typing, validUrl, abortController, dispatch]);
+  }, [link]);
+
+  // efects
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (link !== '') {
+        dispatch({ type: 'STOP_TYPING' });
+      }
+    }, 1500);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [typing, link]);
+
+  useEffect(() => {
+    if (!typing) {
+      getData(link);
+    }
+  }, [typing, link, getData]);
 
   useEffect(() => {
     if (url) {
-      dispatch({ type: 'SET_LINK', value: url });
+      dispatch({ type: 'CHANGE_LINK', value: url });
     }
   }, [url]);
 
   // handlers
   const onChange = (event) => {
+    dispatch({ type: 'START_TYPING' });
     dispatch({
-      type: 'START_TYPING',
+      type: 'CHANGE_LINK',
       value: event.target.value,
     });
   };
@@ -148,9 +171,9 @@ const LinkPreview = (props) => {
       <div className={styles.prevDataContainer}>
         <div className={styles.image}>
           <img
-            src={preview.img || '/static/images/default_image_background.jpg'}
+            src={preview.imageUrl || '/static/images/default_image_background.jpg'}
             alt={preview.title}
-            width={preview.img ? 50 : 180}
+            width={preview.imageUrl ? 50 : 180}
           />
         </div>
         <div style={{ overflow: 'auto' }}>

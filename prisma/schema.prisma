@@ -70,7 +70,7 @@ model VerificationRequest {
 // logic tables
 model Link {
   id               Int      @id @default(autoincrement())
-  url              String
+  url              String   @unique
   title            String?
   description      String?
   imageUrl         String?

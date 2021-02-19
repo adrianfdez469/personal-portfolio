@@ -1,6 +1,7 @@
 import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
 import saveFile from '../../libs/saveFile';
+import getPreviewData from '../../libs/metascraper';
 
 const resolvers = {
   MutationResponse: {
@@ -22,6 +23,25 @@ const resolvers = {
       prisma.skill.findMany({
         where: { ...args },
       }),
+    link: (parent, args) => {
+      const { url } = args;
+      return prisma.link
+        .findFirst({
+          where: {
+            url,
+          },
+        })
+        .then((link) => {
+          if (link) {
+            return {
+              ...link,
+              img: link.imageUrl,
+            };
+          }
+          return getPreviewData(url);
+        })
+        .catch((err) => console.log(err));
+    },
   },
   Mutation: {
     createSkill: (parent, args) => {

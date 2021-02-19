@@ -156,6 +156,8 @@ const typeDefs = gql`
     #users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
     projects(id: IntComparer, name: StringComparer): [Project!]
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
+
+    link(url: String): Link!
   }
 `;
 

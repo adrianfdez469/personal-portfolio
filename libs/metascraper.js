@@ -21,11 +21,13 @@ const getPreviewData = async (targetUrl) => {
     const metadata = await metascraper({ html, url });
 
     const data = {
-      title: metadata.title,
-      description: metadata.description,
-      img: metadata.logo || metadata.image,
+      ...(metadata.title && { title: metadata.title.slice(0, 35) }),
+      ...(metadata.description && { description: metadata.description.slice(0, 150) }),
+      // img: metadata.logo || metadata.image,
+      id: -1,
+      url,
+      imageUrl: metadata.logo || metadata.image,
     };
-
     return data;
   } catch (error) {
     error.message = 'Error while getting the preview data';
@@ -33,19 +35,4 @@ const getPreviewData = async (targetUrl) => {
   }
 };
 
-export default async (req, res) => {
-  const { url } = JSON.parse(req.body);
-
-  try {
-    const data = await getPreviewData(url);
-    const compactedData = {
-      ...data,
-      ...(data.title && { title: data.title.slice(0, 35) }),
-      ...(data.description && { description: data.description.slice(0, 150) }),
-    };
-
-    res.status(200).json({ data: compactedData });
-  } catch (error) {
-    res.status(500).json({ error: true });
-  }
-};
+export default getPreviewData;
