@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up(800)]: {
       flexDirection: 'row',
       height: 100,
+      justifyContent: 'flex-start',
     },
   },
   linkField: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '50%',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'left',
     margin: theme.spacing(2),
   },
   divProcessing: {
@@ -31,7 +32,12 @@ const useStyles = makeStyles((theme) => ({
   image: {
     borderRadius: theme.spacing(0.5),
     width: theme.spacing(6.25),
+    height: theme.spacing(6.25),
     marginRight: theme.spacing(1),
+    // overflow: 'hidden',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     [theme.breakpoints.up(800)]: {
       marginLeft: theme.spacing(1),
     },

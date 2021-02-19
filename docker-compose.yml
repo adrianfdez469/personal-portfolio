@@ -1,0 +1,10 @@
+services:
+  postgresdb:
+    image: postgres
+    env_file: ./.docker.env
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - '5434:5432'
+volumes:
+  data:

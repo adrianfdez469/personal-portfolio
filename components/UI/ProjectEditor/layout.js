@@ -42,41 +42,34 @@ const Steps = [syncObj, basicInfoObj, galleryObj, skillsObj, collaboratorsObj, l
 
 const initialState = {
   activeStep: 0,
-  completeSteps: [],
-  form: {
-    sync: {},
-    info: {
-      name: {
-        value: null,
-        valid: true,
-      },
-      initialDate: {
-        value: null,
-        valid: true,
-      },
-      endDate: {
-        value: null,
-        valid: true,
-      },
-      descripction: {
-        value: null,
-        valid: true,
-      },
-    },
+  data: {
+    basicInfoData: null,
+    skillsData: null,
+    links: null,
+    collaborators: null,
   },
 };
-
+const actions = {
+  NEXT_STEP: 'NEXT_STEP',
+  PREV_STEP: 'PREV_STEP',
+  SET_REPOSITORY_DATA: 'SET_REPOSITORY_DATA',
+};
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'NEXT_STEP':
+    case actions.NEXT_STEP:
       return {
         ...state,
         activeStep: state.activeStep + 1 < Steps.length ? state.activeStep + 1 : state.activeStep,
       };
-    case 'PREV_STEP':
+    case actions.PREV_STEP:
       return {
         ...state,
         activeStep: state.activeStep - 1 < 0 ? state.activeStep : state.activeStep - 1,
+      };
+    case actions.SET_REPOSITORY_DATA:
+      return {
+        ...state,
+        data: action.data,
       };
 
     default:
@@ -92,11 +85,53 @@ const LayoutView = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleNext = () => {
-    dispatch({ type: 'NEXT_STEP' });
+    dispatch({ type: actions.NEXT_STEP });
   };
 
   const handlePrev = () => {
-    dispatch({ type: 'PREV_STEP' });
+    dispatch({ type: actions.PREV_STEP });
+  };
+
+  const setRepoSyncData = (provider, data) => {
+    const basicInfoData = {
+      ...(data.name && { name: data.name }),
+      ...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
+      ...(data.description && { description: data.description }),
+    };
+    const skillsData = {
+      ...(data.languages.nodes.length > 0 && {
+        languages: data.languages.nodes.map((lang) => ({ text: lang.name })),
+      }),
+    };
+    const links = {
+      devLink: {
+        ...(data.url && { url: data.url }),
+      },
+      proyectLink: {
+        ...(data.deployments.nodes.length > 0 && {
+          url: data.deployments.nodes[0].latestStatus.environmentUrl,
+        }),
+      },
+    };
+    const collaborators =
+      data.mentionableUsers.nodes.length === 0
+        ? null
+        : data.mentionableUsers.nodes.map((collaborator) => ({
+            name: collaborator.name,
+            avatarUrl: collaborator.avatarUrl,
+            url: collaborator.url,
+            bio: collaborator.bio,
+            email: collaborator.email,
+            isOwner: data.owner.login === collaborator.login,
+          }));
+
+    const fullData = {
+      basicInfoData: { ...basicInfoData },
+      skillsData: { ...skillsData },
+      links: { ...links },
+      collaborators,
+    };
+    dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
   };
 
   const mainContent = (
@@ -144,12 +179,15 @@ const LayoutView = (props) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <SyncForm stepId={Steps[state.activeStep].id} />
-        <BasicInfoForm stepId={Steps[state.activeStep].id} />
+        <SyncForm stepId={Steps[state.activeStep].id} selectRepo={setRepoSyncData} />
+        <BasicInfoForm stepId={Steps[state.activeStep].id} data={state.data.basicInfoData} />
         <GalleryForm stepId={Steps[state.activeStep].id} />
-        <SkillsForm stepId={Steps[state.activeStep].id} />
-        <CollaboratorsForm stepId={Steps[state.activeStep].id} />
-        <LinksForm stepId={Steps[state.activeStep].id} />
+        <SkillsForm stepId={Steps[state.activeStep].id} data={state.data.skillsData} />
+        <CollaboratorsForm
+          stepId={Steps[state.activeStep].id}
+          collaborators={state.data.collaborators}
+        />
+        <LinksForm stepId={Steps[state.activeStep].id} data={state.data.links} />
         <OthersForm stepId={Steps[state.activeStep].id} />
       </div>
 

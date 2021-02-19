@@ -1,23 +1,21 @@
 import React from 'react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/client';
 import Landing from '../views/landing/Landing';
 
-export const getStaticProps = async (context) => {
-  const { locale } = context;
-  const path = "../i18n/locales/";
+export default function myComponent() {
+  const [session, loading] = useSession();
+  const router = useRouter();
+  if (loading) {
+    return <h1>Loading</h1>;
+  }
+  if (session && session.slug) {
+    router.push(`${router.basePath}/profile/${session.slug}`);
+  }
 
-  const lang = locale === 'es' ? await(await import(`../i18n/locales/es/common.json`)):await(await import(`../i18n/locales/en/common.json`))
-
-  return {
-    props: {
-      locale: lang.landing,
-    },
-  };
-};
-
-export default function myComponent(props) {
   return (
     <>
-      <Landing locale = {props.locale}/>
+      <Landing />
     </>
   );
 }

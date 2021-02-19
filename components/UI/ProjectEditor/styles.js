@@ -118,5 +118,50 @@ export const useGalleryStyles = makeStyles((theme) => ({
       color: fade(theme.palette.getContrastText(theme.palette.background.paper), 0.8),
       backgroundColor: theme.palette.background.paper,
     },
+    zIndex: 999,
+  },
+}));
+
+export const useSyncStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: theme.spacing(32),
+  },
+  smallAvatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    marginRight: theme.spacing(1),
+  },
+  progress: {
+    width: '100%',
+    // height: theme.spacing(0.),
+    // borderRadius: theme.spacing(0.2),
+    position: 'absolute',
+    bottom: 0,
+  },
+  formcontrolWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    marginTop: theme.spacing(2),
+    [theme.breakpoints.up(800)]: {
+      marginLeft: theme.spacing(5),
+      marginRight: theme.spacing(5),
+    },
+  },
+}));
+
+export const useCollaboratorsStyles = makeStyles((theme) => ({
+  smallAvatar: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    marginRight: theme.spacing(1),
+  },
+  accordionDetails: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
 }));

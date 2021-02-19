@@ -3,7 +3,10 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 export default makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    minHeight: 400,
+    minHeight: '100vh',
+  },
+  heading: {
+    fontWeight: 'bold',
   },
   paper: {
     background: 'rgba(205, 205, 205, 0.6)',
@@ -70,9 +73,22 @@ export default makeStyles((theme) => ({
   featureCardText: {
     marginTop: '1em',
   },
+  featuresCardHover: {
+    // '&:hover': {
+    //   transform: 'scale(1.02) translate(0px, -8px)',
+    //   transition: 'all 300ms ease-in-out 0s',
+    // },
+  },
   aboutStyle: {
     height: 'auto',
     marginBottom: '3em',
+  },
+  headerText: {
+    // '-webkit-text-stroke-width': '0.01em',
+    // '-webkit-text-stroke-color': theme.palette.primary.main,
+    fontWeight: 'bold',
+    // color: 'rgba(205, 205, 205, 0)',
+    color: theme.palette.primary.main,
   },
   footerStyle: {
     backgroundColor: theme.palette.background.paper,
