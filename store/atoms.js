@@ -5,7 +5,7 @@ export const atomLocale = atom({
   default: '',
 });
 
-export const other = atom({
-  key: 'other',
+export const atomButtonLanguage = atom({
+  key: 'buttonLanguage',
   default: '',
 });
