@@ -1,7 +1,7 @@
 // TODO: En la vista movil, alinear las imagenes y los textos a la izquierda
 
 import React, { useReducer, useRef, useEffect, useCallback } from 'react';
-import { TextField, CircularProgress, Typography, useMediaQuery, Hidden } from '@material-ui/core';
+import { TextField, CircularProgress, Typography, useMediaQuery } from '@material-ui/core';
 import PropTypes from 'prop-types';
 // Internal libs
 import { isStringValidUrl } from '../../../libs/helpers';
@@ -86,6 +86,7 @@ const LinkPreview = (props) => {
     ...initialState,
   });
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
+  const greaterXxsSize = useMediaQuery((theme) => theme.breakpoints.up('400'));
   const styles = useStyles();
 
   // functions
@@ -166,7 +167,7 @@ const LinkPreview = (props) => {
   if (preview !== null) {
     previewView = (
       <div className={styles.prevDataContainer}>
-        <Hidden xsDown>
+        {greaterXxsSize && (
           <div
             className={styles.image}
             style={{ overflow: !preview.imageUrl ? 'hidden' : 'visible' }}
@@ -177,7 +178,7 @@ const LinkPreview = (props) => {
               width={preview.imageUrl ? 50 : 180}
             />
           </div>
-        </Hidden>
+        )}
         <div style={{ overflow: 'auto' }}>
           <Typography variant="button" display="block" className={styles.typografy}>
             {preview.title}

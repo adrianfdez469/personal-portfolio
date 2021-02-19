@@ -93,9 +93,6 @@ const LayoutView = (props) => {
   };
 
   const setRepoSyncData = (provider, data) => {
-    /* console.log(provider);
-     */
-    console.log(data);
     const basicInfoData = {
       ...(data.name && { name: data.name }),
       ...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
