@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Paper, Typography, Divider, IconButton, Tooltip } from '@material-ui/core';
 
 import {
@@ -11,45 +11,46 @@ import {
   PostAddOutlined,
 } from '@material-ui/icons';
 
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { atomLocale, atomButtonLanguage } from '../../../store/atoms';
+
 import AvatarPhoto from '../Avatar/AvatarPhoto';
+import {
+  AddProjectButton,
+  LanguageButton,
+  ThemeButton,
+  FeedbackButton,
+  LogoutButton,
+  EditProfileButton,
+  SharedButton,
+} from '..';
+
 import { usePersonDataStyles } from './styles';
 
-const PersonData = () => {
+const PersonData = (props) => {
+  const { edit } = props;
   const classes = usePersonDataStyles();
+  const language = useRecoilValue(atomButtonLanguage);
+  const [title, setTitle] = useState(null);
+
+  useEffect(() => {
+    if (language) {
+      setTitle(language);
+    }
+  }, [language]);
 
   return (
     <>
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <Grid
-            container
-            style={{ height: 'min-content' }}
-            direction="column"
-            src="/images/rejillas11.jpg"
-          >
+          <Grid container style={{ height: 'min-content' }} direction="column">
             <Grid item>
               <Grid container className={classes.headerButton} justify="flex-end">
                 <Grid item style={{ margin: '0.5rem 1.5rem 0.0rem 1.0rem' }}>
-                  <Tooltip title="Editar Perfil">
-                    <IconButton>
-                      <EditOutlined className={classes.buttonBar} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Notificar Problemas">
-                    <IconButton>
-                      <FeedbackOutlined className={classes.buttonBar} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Cambiar Tema">
-                    <IconButton>
-                      <Brightness4Outlined className={classes.buttonBar} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Salir">
-                    <IconButton>
-                      <ExitToAppOutlined className={classes.buttonBar} />
-                    </IconButton>
-                  </Tooltip>
+                  <LanguageButton />
+                  <ThemeButton />
+                  {edit ? <FeedbackButton /> : ''}
+                  {edit ? <LogoutButton /> : ''}
                 </Grid>
               </Grid>
             </Grid>
@@ -59,21 +60,14 @@ const PersonData = () => {
                   <Grid container direction="column">
                     <Grid item>
                       <div style={{ margin: '0.0rem 0.5rem 0.0rem 2.0rem' }}>
-                        <AvatarPhoto src="/images/jarce78.jpg" size="long" />
+                        <AvatarPhoto src="/static/images/jarce78.jpg" size="long" />
                       </div>
                     </Grid>
                     <Grid item>
-                      <div style={{ margin: '0.5rem 1.0rem 1.0rem 4.0rem' }}>
-                        <Tooltip title="Compartir Portafolio">
-                          <IconButton>
-                            <ShareOutlined />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Adicionar Proyecto">
-                          <IconButton>
-                            <PostAddOutlined />
-                          </IconButton>
-                        </Tooltip>
+                      <div style={{ margin: '0.5rem 1.0rem 1.0rem 2.5rem' }}>
+                        {edit ? <EditProfileButton /> : ''}
+                        {edit ? <AddProjectButton /> : ''}
+                        {edit ? <SharedButton /> : ''}
                       </div>
                     </Grid>
                   </Grid>
@@ -95,21 +89,13 @@ const PersonData = () => {
                     <Grid item>
                       <Grid container wrap="nowrap" spacing={0}>
                         <Grid item xs>
-                          <Typography className={classes.containerDataLeft}>
-                            Ing. en Ciencias Informáticas con más de 10 años de experiencia en el
-                            sector. Desarrollador Fullstack. Experiencia en el desarrollo de
-                            sistemas embebidos, soluciones de seguridad y asistentes personales.
-                            Experiencia en el desarrollo de soluciones con inteligencia artificial.
-                          </Typography>
+                          <Typography className={classes.containerDataLeft} />
                         </Grid>
                         <Grid item>
                           <Divider className={classes.divider} orientation="vertical" />
                         </Grid>
                         <Grid item xs style={{ marginLeft: '2.0rem' }}>
-                          <Typography className={classes.containerDataRight}>
-                            C++ - Python - Javascript - Java - Qt - Node - React - Python -
-                            Spring-boost Qt - Node - React - Python - Spring-boost
-                          </Typography>
+                          <Typography className={classes.containerDataRight} />
                         </Grid>
                       </Grid>
                     </Grid>

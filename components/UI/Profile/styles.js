@@ -83,7 +83,8 @@ export const usePersonDataStyles = makeStyles((theme) => ({
 
 export const useProjectBoxStyles = makeStyles((theme) => ({
   card: {
-    width: '22.54rem',
+    maxWidth: '22.54rem',
+    width: '100%',
     flexWrap: 'wrap',
     overflow: 'hidden',
     margin: '1.0rem 1.0rem 1.0rem 0.2rem',

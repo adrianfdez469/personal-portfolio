@@ -1,13 +1,19 @@
 {
     "landing":{
-                "intro":"Welcome to Portafolio!",
-                "introSubtitle":"The place where developers can expose their work to everyone",
-                "buttonLoggin":"Login"
+            "intro":{
+                "titleMessage":"Welcome to Portafolio!",
+                "subtitleMessage":"The place where developers can expose their work to everyone",
+                "buttonMessage":"Login"
+            }
             },
-    "profile":{
-                "editToolTip":"Edit Profile",
-                "themeToolTip":"Change Theme",
-                "logoutToolTip":"Logout"
-    }
+    "button":{
+                "editButton":"Edit Profile",
+                "themeButton":"Change Theme",
+                "logoutButton":"Logout",
+                "languageButton":"Change to Spanish",
+                "addProjectButton":"Add Project",
+                "sharedPortfolioButton":"Share Portfolio",
+                "feedbackButton":"Send Bugs"
+            }   
 }
 
