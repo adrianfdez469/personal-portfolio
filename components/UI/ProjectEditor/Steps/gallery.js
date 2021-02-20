@@ -64,7 +64,7 @@ export const GalleryForm = (props) => {
             <ReactProfileImage
               camera
               returnImage={addImageHandler}
-              defaultImage="/static/images/default_image_background.jpg"
+              defaultImage="/images/no-image-red-2.png"
               clearPreview
               maxImgSize={maxImgSize}
               isNotImgErrorMsg="Solo imagenes"

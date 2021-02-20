@@ -173,9 +173,9 @@ const LinkPreview = (props) => {
             style={{ overflow: !preview.imageUrl ? 'hidden' : 'visible' }}
           >
             <img
-              src={preview.imageUrl || '/static/images/default_image_background.jpg'}
+              src={preview.imageUrl || '/images/no-image-red-2.png'}
               alt={preview.title}
-              width={preview.imageUrl ? 50 : 180}
+              width={50}
             />
           </div>
         )}

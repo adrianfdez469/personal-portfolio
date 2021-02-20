@@ -19,9 +19,9 @@ const typeDefs = gql`
   type Link {
     id: ID!
     url: String!
-    title: String!
-    description: String!
-    imageUrl: String!
+    title: String
+    description: String
+    imageUrl: String
   }
   type Skill {
     id: ID!
