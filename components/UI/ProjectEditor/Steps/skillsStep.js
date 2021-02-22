@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Chip } from '@material-ui/core';
-import InputTextSelect from 'react-material-selectable-inputtext';
+import InputTextSelect from '../../ReactSelect';
 import ProjectStep from './ProjectStep';
 // Internal libs
 // import InputTextSelect from '../../Inputs/InputTextSelect/inputTextSelect';
@@ -11,32 +11,6 @@ import { existsObjWithPropValue } from '../../../../libs/helpers';
 import { useSkillsStyles, useStepsStyles } from '../styles';
 // Constants
 import skillsCategories from '../../../../constants/skillsCategorysConst';
-
-// TODO: Esto es temporal, realmente se deben cargar del backend
-/* const allProgrammingLangs = [
-  { id: '1', text: 'C#' },
-  { id: '2', text: 'JAVA' },
-  { id: '3', text: 'JavaScript' },
-  { id: '4', text: 'C++' },
-  { id: '5', text: 'Dart' },
-  { id: '6', text: 'Php' },
-  { id: '7', text: 'Sql' },
-  { id: '8', text: 'TypeScript' },
-  { id: '9', text: 'COBOL' },
-  { id: '10', text: 'PASCAL' },
-  { id: '11', text: 'PEARL' },
-]; */
-// TODO: Esto es temporal, realmente se deben cargar del backend
-/* const allTechnologies = [
-  { id: '1', text: 'ReactJs' },
-  { id: '2', text: 'NodeJs' },
-  { id: '3', text: 'GraphQL' },
-  { id: '4', text: 'ExpressJs' },
-  { id: '5', text: 'React Redux' },
-  { id: '6', text: 'React Hooks' },
-  { id: '7', text: 'Spring Boot' },
-  { id: '8', text: '.Net' },
-]; */
 
 const getSkillsQuery = () => `
     query {

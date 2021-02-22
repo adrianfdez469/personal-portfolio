@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, IconButton } from '@material-ui/core';
-import ReactProfileImage from '@daym3l/react-profile-image';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import ReactProfileImage from '../../UploadImage';
 // Components
 import ProjectStep from './ProjectStep';
 // Styles
@@ -19,12 +19,48 @@ export const GalleryForm = (props) => {
   const galleryStyles = useGalleryStyles();
   const [images, setImages] = useState([]);
 
-  const addImageHandler = (base64Img, imageFile) => {
+  const addImageHandler = async (base64Img, imageFile) => {
     const imageId = Math.random();
-    setImages([...images, { id: imageId, img: base64Img, file: imageFile }]);
+    setImages([...images, { id: imageId, img: base64Img, file: imageFile, url: null }]);
+
+    const formData = new FormData();
+    formData.append('imageFile', imageFile);
+
+    fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Error');
+      })
+      .then((resp) => {
+        const { url } = resp;
+        setImages((imagesSt) => {
+          const idx = imagesSt.findIndex((img) => img.id === imageId);
+          const newImages = [...imagesSt];
+          newImages[idx].url = url;
+          return newImages;
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const removeImageHandler = (id) => {
+    fetch('/api/deleteupload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        imageUrl: images.find((img) => img.id === id).url,
+      }),
+    });
+
     setImages(images.filter((img) => img.id !== id));
   };
 
