@@ -10,12 +10,6 @@ const typeDefs = gql`
     ${types}
   }
 
-  type File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
-  }
-
   type Link {
     id: ID!
     url: String!
@@ -114,8 +108,6 @@ const typeDefs = gql`
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
-    #singleUpload(file: Upload!): File!
-    singleUpload(file: Upload!): ID!
     createProject(project: ProjectParams!): SaveProjectMutationResponse!
     updateProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
   }

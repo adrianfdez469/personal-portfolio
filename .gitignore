@@ -35,3 +35,7 @@ yarn-error.log*
 .env
 TODOS
 .docker.env
+firebase.json
+
+# Uploads
+public/uploads/*

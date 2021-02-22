@@ -9,7 +9,8 @@
   "globals": {
     "fetch": false,
     "AbortController": false,
-    "document": false
+    "document": false,
+    "FormData": false
   },
   "rules": {
     "prettier/prettier": [

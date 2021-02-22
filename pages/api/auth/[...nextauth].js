@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
 import prisma from '../../../prisma/prisma.instance';
-import { getHashSlug } from '../../../libs/slugGenerator';
+import { getHashSlug } from '../../../libs/generators';
 
 export default (req, res) =>
   NextAuth(req, res, {
