@@ -23,6 +23,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import SaveIcon from '@material-ui/icons/Save';
+import { useRouter } from 'next/router';
 
 // componets
 import Transition from '../../components/UI/Transition';
@@ -81,6 +82,8 @@ const LayoutView = (props) => {
   const classes = useMainViewSyles();
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const [state, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
+  const { profileid } = router.query;
 
   const handleNext = () => {
     dispatch({ type: actions.NEXT_STEP });
