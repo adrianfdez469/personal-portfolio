@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@material-ui/core';
 // Components
-import ProjectStep from './ProjectStep';
-import LinkPreview from '../../LinkPreview';
+import ProjectStep from '../ProjectStep';
+import LinkPreview from '../../../../components/UI/LinkPreview';
 
 // Styles
-import { useStepsStyles } from '../styles';
+import { useStepsStyles } from '../../styles';
 
 export const LINKS = 'LINKS';
 
@@ -19,7 +19,7 @@ export const LinksForm = (props) => {
   const [devLink, setDevLink] = useState(null);
 
   // styles
-  const classes = useStepsStyles();
+  const stepStyles = useStepsStyles();
 
   // effecs
   useEffect(() => {
@@ -34,9 +34,9 @@ export const LinksForm = (props) => {
   }, [data]);
 
   return (
-    <Box className={classes.mainContent} hidden={stepId !== LINKS}>
-      <Box className={classes.stepDescriptor}>
-        <Typography align="center" variant="overline" className={classes.stepDescriptionText}>
+    <Box className={stepStyles.mainContent} hidden={stepId !== LINKS}>
+      <Box className={stepStyles.stepDescriptor}>
+        <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           Puedes mostrar tu trabajo en línea? Compártelo para que otros lo vean.
         </Typography>
       </Box>

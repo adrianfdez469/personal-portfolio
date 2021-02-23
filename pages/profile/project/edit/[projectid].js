@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectEditor from '../components/UI/ProjectEditor/layout';
+import ProjectEditor from '../../../../components/UI/ProjectEditor/layout';
 
 export default function myComponent() {
   return (

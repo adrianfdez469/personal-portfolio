@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, TextField } from '@material-ui/core';
 // Components
-import ProjectStep from './ProjectStep';
+import ProjectStep from '../ProjectStep';
 // Styles
-import { useStepsStyles } from '../styles';
+import { useStepsStyles } from '../../styles';
 
-export const OTHERS = 'OTHERS';
+export const MORE = 'MORE';
 
-export const OthersForm = (props) => {
+export const MoreForm = (props) => {
   // constants
   const { stepId } = props;
   // hooks
@@ -21,7 +21,7 @@ export const OthersForm = (props) => {
 
   const classes = useStepsStyles();
   return (
-    <Box className={classes.mainContent} hidden={stepId !== OTHERS}>
+    <Box className={classes.mainContent} hidden={stepId !== MORE}>
       <Box className={classes.stepDescriptor}>
         <Typography align="center" variant="overline" className={classes.stepDescriptionText}>
           Hay alguna otra información que desees compartir? Hazlo aquí!
@@ -45,8 +45,8 @@ export const OthersForm = (props) => {
   );
 };
 
-OthersForm.propTypes = {
+MoreForm.propTypes = {
   stepId: PropTypes.string.isRequired,
 };
 
-export const othersObj = new ProjectStep(OTHERS, 'Otros');
+export const moreObj = new ProjectStep(MORE, 'Más');

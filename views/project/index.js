@@ -25,20 +25,18 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import SaveIcon from '@material-ui/icons/Save';
 
 // componets
-import Transition from '../Transition';
-import { syncObj, SyncForm } from './Steps/synchronizationStep';
-import { basicInfoObj, BasicInfoForm } from './Steps/basicInfoStep';
-import { galleryObj, GalleryForm } from './Steps/gallery';
-import { skillsObj, SkillsForm } from './Steps/skillsStep';
-import { collaboratorsObj, CollaboratorsForm } from './Steps/collaborators';
-import { linksObj, LinksForm } from './Steps/linksStep';
-import { othersObj, OthersForm } from './Steps/othersStep';
+import Transition from '../../components/UI/Transition';
+import { syncObj, SyncForm } from './steps/synchronization';
+import { basicInfoObj, BasicInfoForm } from './steps/basicInfo';
+import { galleryObj, GalleryForm } from './steps/gallery';
+import { skillsObj, SkillsForm } from './steps/skills';
+import { collaboratorsObj, CollaboratorsForm } from './steps/collaborators';
+import { linksObj, LinksForm } from './steps/links';
+import { moreObj, MoreForm } from './steps/more';
 // styles
 import { useMainViewSyles } from './styles';
 
-// TODO: Prepare for responsive view
-
-const Steps = [syncObj, basicInfoObj, galleryObj, skillsObj, collaboratorsObj, linksObj, othersObj];
+const Steps = [syncObj, basicInfoObj, galleryObj, skillsObj, collaboratorsObj, linksObj, moreObj];
 
 const initialState = {
   activeStep: 0,
@@ -188,7 +186,7 @@ const LayoutView = (props) => {
           collaborators={state.data.collaborators}
         />
         <LinksForm stepId={Steps[state.activeStep].id} data={state.data.links} />
-        <OthersForm stepId={Steps[state.activeStep].id} />
+        <MoreForm stepId={Steps[state.activeStep].id} />
       </div>
 
       {greaterMdSize ? (

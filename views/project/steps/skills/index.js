@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Chip } from '@material-ui/core';
-import InputTextSelect from '../../ReactSelect';
-import ProjectStep from './ProjectStep';
+import InputTextSelect from '../../../../components/UI/ReactSelect';
+import ProjectStep from '../ProjectStep';
 // Internal libs
 // import InputTextSelect from '../../Inputs/InputTextSelect/inputTextSelect';
 import { existsObjWithPropValue } from '../../../../libs/helpers';
 // Styles
-import { useSkillsStyles, useStepsStyles } from '../styles';
+import { useStepsStyles } from '../../styles';
+import useSkillsStyles from './styles';
 // Constants
 import skillsCategories from '../../../../constants/skillsCategorysConst';
 

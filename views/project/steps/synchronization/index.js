@@ -18,11 +18,12 @@ import {
 } from '@material-ui/core';
 import { getSession } from 'next-auth/client';
 // Components
-import ProjectStep from './ProjectStep';
+import ProjectStep from '../ProjectStep';
 // Styles
-import { useStepsStyles, useSyncStyles } from '../styles';
+import { useStepsStyles } from '../../styles';
+import useSyncStyles from './styles';
 // Custom icons
-import GitLabIcon from '../../icons/GitlabIcon';
+import GitLabIcon from '../../../../components/UI/icons/GitlabIcon';
 
 export const SYNC = 'SYNC';
 

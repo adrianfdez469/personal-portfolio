@@ -16,9 +16,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
 // Components
-import ProjectStep from './ProjectStep';
+import ProjectStep from '../ProjectStep';
 // Styles
-import { useStepsStyles, useCollaboratorsStyles } from '../styles';
+import { useStepsStyles } from '../../styles';
+import useCollaboratorsStyles from './styles';
 
 export const COLLABORATORS = 'COLLABORATORS';
 

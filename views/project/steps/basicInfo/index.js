@@ -5,9 +5,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import { Box, Typography, Grid, TextField, useMediaQuery } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 // Components
-import ProjectStep from './ProjectStep';
+import ProjectStep from '../ProjectStep';
 // Styles
-import { useStepsStyles } from '../styles';
+import { useStepsStyles } from '../../styles';
 
 export const BASIC_INFO_STEP = 'BASIC_INFO_STEP';
 
@@ -51,9 +51,6 @@ export const BasicInfoForm = (props) => {
         Completa la información sobre el proyecto
       </Typography>
       <Box>
-        {
-          // TODO: MuiPickersUtilsProvider should as a wrapper of all DatePicker from @material/picker
-        }
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justify="space-between" alignItems="flex-end">
             <TextField

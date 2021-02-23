@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import ReactProfileImage from '../../UploadImage';
+import ReactProfileImage from '../../../../components/UI/UploadImage';
 // Components
-import ProjectStep from './ProjectStep';
+import ProjectStep from '../ProjectStep';
 // Styles
-import { useStepsStyles, useGalleryStyles } from '../styles';
+import { useStepsStyles } from '../../styles';
+import useGalleryStyles from './styles';
+
 // constants
 import { maxImagesCount, maxImgSize } from '../../../../constants/projectImagesConst';
 
