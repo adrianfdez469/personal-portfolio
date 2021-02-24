@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Chip } from '@material-ui/core';
-import InputTextSelect from '../../../../components/UI/ReactSelect';
-import ProjectStep from '../ProjectStep';
 // Internal libs
-// import InputTextSelect from '../../Inputs/InputTextSelect/inputTextSelect';
+import InputTextSelect from '../../../../components/UI/ReactSelect';
 import { existsObjWithPropValue } from '../../../../libs/helpers';
+// Hooks
+import { useLang } from '../../../../store/contexts/langContext';
 // Styles
 import { useStepsStyles } from '../../styles';
 import useSkillsStyles from './styles';
@@ -23,11 +23,9 @@ const getSkillsQuery = () => `
     }
   `;
 
-export const SKILLS = 'SKILLS';
-
-export const SkillsForm = (props) => {
+const SkillsForm = (props) => {
   // constants
-  const { stepId, data } = props;
+  const { show, data } = props;
   // hooks
   const styles = useSkillsStyles();
   const stepStyles = useStepsStyles();
@@ -35,20 +33,21 @@ export const SkillsForm = (props) => {
   const [technologies, setTechnologies] = useState([]);
   const [allProgrammingLangs, setAllProgrammingLangs] = useState([]);
   const [allTechnologies, setAllTechnologies] = useState([]);
+  const { lang } = useLang();
 
   // hadlers
   const handleDelLang = (pl) => {
-    setProgrammingLangs((state) => state.filter((lang) => lang.text !== pl.text));
+    setProgrammingLangs((state) => state.filter((devlang) => devlang.text !== pl.text));
   };
-  const handleAddLanguage = (lang) => {
+  const handleAddLanguage = (devlang) => {
     if (
       !existsObjWithPropValue(
         programmingLangs.map((pl) => ({ ...pl, text: pl.text.toLowerCase().trim() })),
         'text',
-        lang.text.toLowerCase().trim()
+        devlang.text.toLowerCase().trim()
       )
     ) {
-      setProgrammingLangs((state) => [...state, lang]);
+      setProgrammingLangs((state) => [...state, devlang]);
     }
   };
   const handleDelTech = (tech) => {
@@ -119,10 +118,10 @@ export const SkillsForm = (props) => {
   }, []);
 
   return (
-    <Box className={stepStyles.mainContent} hidden={stepId !== SKILLS}>
+    <Box className={stepStyles.mainContent} hidden={!show}>
       <Box className={stepStyles.stepDescriptor}>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-          Que habilidades pusiste en práctica para desarrollar tu proyecto.
+          {lang.skillsStep.header.title}
         </Typography>
       </Box>
 
@@ -131,7 +130,7 @@ export const SkillsForm = (props) => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <InputTextSelect
               textFieldProps={{
-                label: 'Lenguajes',
+                label: lang.skillsStep.form.languagesLabel,
                 variant: 'outlined',
                 margin: 'dense',
               }}
@@ -157,7 +156,7 @@ export const SkillsForm = (props) => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <InputTextSelect
               textFieldProps={{
-                label: 'Tecnologías',
+                label: lang.skillsStep.form.techLabel,
                 variant: 'outlined',
                 margin: 'dense',
               }}
@@ -185,7 +184,7 @@ export const SkillsForm = (props) => {
 };
 
 SkillsForm.propTypes = {
-  stepId: PropTypes.string.isRequired,
+  show: PropTypes.bool,
   data: PropTypes.shape({
     languages: PropTypes.arrayOf(
       PropTypes.shape({
@@ -196,6 +195,6 @@ SkillsForm.propTypes = {
 };
 SkillsForm.defaultProps = {
   data: null,
+  show: false,
 };
-
-export const skillsObj = new ProjectStep(SKILLS, 'Habilidades');
+export default SkillsForm;

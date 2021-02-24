@@ -17,15 +17,13 @@ import {
   Grid,
 } from '@material-ui/core';
 import { getSession } from 'next-auth/client';
-// Components
-import ProjectStep from '../ProjectStep';
+// hooks
+import { useLang } from '../../../../store/contexts/langContext';
 // Styles
 import { useStepsStyles } from '../../styles';
 import useSyncStyles from './styles';
 // Custom icons
 import GitLabIcon from '../../../../components/UI/icons/GitlabIcon';
-
-export const SYNC = 'SYNC';
 
 // TODO: Sacar estas consultas de aqui y ponerlas en un lugar determinado para esto
 const getReposQuery = (first) => `
@@ -230,12 +228,40 @@ const reducer = (state, action) => {
   }
 };
 
-export const SyncForm = (props) => {
-  const { stepId, selectRepo } = props;
+const SyncButton = (props) => {
+  // eslint-disable-next-line react/prop-types
+  const { variant, Icon, handleSelect, text, syncProviderText } = props;
+  return (
+    <Grid item>
+      <Button
+        variant={variant}
+        size="large"
+        startIcon={<Icon fontSize="large" />}
+        onClick={handleSelect}
+      >
+        <Box style={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography
+            variant="body1"
+            style={{ textTransform: 'none', fontSize: 10, textAlign: 'left' }}
+          >
+            {text}
+          </Typography>
+          <Typography variant="button" style={{ fontSize: 14, textAlign: 'left' }}>
+            {syncProviderText}
+          </Typography>
+        </Box>
+      </Button>
+    </Grid>
+  );
+};
+
+const SyncForm = (props) => {
+  const { show, selectRepo } = props;
 
   // hooks
   const [state, dispatch] = useReducer(reducer, initialState);
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
+  const { lang } = useLang();
 
   // constants
   const maxTextLeng = greaterMdSize ? 150 : 35;
@@ -358,71 +384,46 @@ export const SyncForm = (props) => {
   }, [selectedGithubRepo.id]);
 
   return (
-    <Box className={stepStyles.mainContent} hidden={stepId !== SYNC}>
+    <Box className={stepStyles.mainContent} hidden={!show}>
       <Box className={stepStyles.stepDescriptor}>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-          Si tienes tu proyecto en GitHub o GitLab sincronizalo y muestranos lo que haz logrado!
+          {lang.syncStep.header.label}
         </Typography>
       </Box>
 
       <Grid container justify="center" spacing={4}>
-        <Grid item>
-          <Button
-            variant={buttonGithubSelected ? 'contained' : 'outlined'}
-            size="large"
-            startIcon={<GitHubIcon fontSize="large" />}
-            onClick={handleSelectGithubButton}
-          >
-            <Box style={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography
-                variant="body1"
-                style={{ textTransform: 'none', fontSize: 10, textAlign: 'left' }}
-              >
-                Sincroniza con
-              </Typography>
-              <Typography variant="button" style={{ fontSize: 14, textAlign: 'left' }}>
-                Github
-              </Typography>
-            </Box>
-          </Button>
-        </Grid>
-
-        <Grid item>
-          <Button
-            variant={buttonGitlabSelected ? 'contained' : 'outlined'}
-            size="large"
-            startIcon={<GitLabIcon fontSize="large" />}
-            onClick={handleSelectGitlabButton}
-          >
-            <Box style={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography
-                variant="body1"
-                style={{ textTransform: 'none', fontSize: 10, textAlign: 'left' }}
-              >
-                Sincroniza con
-              </Typography>
-              <Typography variant="button" style={{ fontSize: 14, textAlign: 'left' }}>
-                Gitlab
-              </Typography>
-            </Box>
-          </Button>
-        </Grid>
+        <SyncButton
+          variant={buttonGithubSelected ? 'contained' : 'outlined'}
+          Icon={GitHubIcon}
+          handleSelect={handleSelectGithubButton}
+          text={lang.syncStep.body.buttons.common}
+          syncProviderText="Github"
+        />
+        <SyncButton
+          variant={buttonGitlabSelected ? 'contained' : 'outlined'}
+          Icon={GitLabIcon}
+          handleSelect={handleSelectGitlabButton}
+          text={lang.syncStep.body.buttons.common}
+          syncProviderText="Gitlab"
+        />
       </Grid>
 
       {buttonGithubSelected && (
         <Box className={styles.formcontrolWrapper}>
           <FormControl variant="standard" className={styles.formControl} fullWidth>
-            <InputLabel id="github-repos-select">Repositorios de Github</InputLabel>
+            <InputLabel id="github-repos-select">
+              {lang.syncStep.body.select.githubLabel}
+            </InputLabel>
             <Select
               labelId="github-repos-select"
               id="github-repos-select"
               value={selectedGithubRepo || ''}
               onChange={handleSelectGithubRepo}
-              label="Repositorios de Github"
+              label={lang.syncStep.body.select.githubLabel}
               MenuProps={MenuProps}
             >
               <MenuItem value={{ id: null, name: '' }}>
-                <em>Ninguno</em>
+                <em>{lang.syncStep.body.select.selectNone}</em>
               </MenuItem>
               {githubRepos.map((repository) => (
                 <MenuItem value={repository} key={repository.id}>
@@ -455,9 +456,11 @@ export const SyncForm = (props) => {
               ))}
             </Select>
             {errorLoadingGithubRepos && (
-              <FormLabel error>No se pudieron cargar los repositorios</FormLabel>
+              <FormLabel error>{lang.syncStep.body.select.errorLoadingReposMsg}</FormLabel>
             )}
-            {errorLoadingGithubDetailsRespo && <FormLabel error>Algo pudo salir mal</FormLabel>}
+            {errorLoadingGithubDetailsRespo && (
+              <FormLabel error>{lang.syncStep.body.select.errorLoadingDetailsReposMsg}</FormLabel>
+            )}
           </FormControl>
           {loadingGithubRepos && <LinearProgress className={styles.progress} />}
         </Box>
@@ -465,17 +468,19 @@ export const SyncForm = (props) => {
       {buttonGitlabSelected && (
         <Box className={styles.formcontrolWrapper}>
           <FormControl variant="standard" className={styles.formControl} fullWidth>
-            <InputLabel id="gitlab-repos-select">Repositorios de Gitlab</InputLabel>
+            <InputLabel id="gitlab-repos-select">
+              {lang.syncStep.body.select.gitlabLabel}
+            </InputLabel>
             <Select
               labelId="gitlab-repos-select"
               id="gitlab-repos-select"
               value={selectedGitlabRepo || ''}
               // onChange={handleChange}
-              label="Repositorios de Gitlab"
+              label={lang.syncStep.body.select.gitlabLabel}
               MenuProps={MenuProps}
             >
               <MenuItem value={{ id: null, name: '' }}>
-                <em>Ninguno</em>
+                <em>{lang.syncStep.body.select.selectNone}</em>
               </MenuItem>
             </Select>
           </FormControl>
@@ -486,8 +491,11 @@ export const SyncForm = (props) => {
 };
 
 SyncForm.propTypes = {
-  stepId: PropTypes.string.isRequired,
   selectRepo: PropTypes.func.isRequired,
+  show: PropTypes.bool,
+};
+SyncForm.defaultProps = {
+  show: false,
 };
 
-export const syncObj = new ProjectStep(SYNC, 'Sincroniza tu proyecto');
+export default SyncForm;

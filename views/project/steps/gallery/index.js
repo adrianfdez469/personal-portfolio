@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { Box, Typography, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import ReactProfileImage from '../../../../components/UI/UploadImage';
-// Components
-import ProjectStep from '../ProjectStep';
+// Hooks
+import { useLang } from '../../../../store/contexts/langContext';
 // Styles
 import { useStepsStyles } from '../../styles';
 import useGalleryStyles from './styles';
@@ -13,18 +13,20 @@ import useGalleryStyles from './styles';
 // constants
 import { maxImagesCount, maxImgSize } from '../../../../constants/projectImagesConst';
 
-export const GALLERY = 'GALLERY';
-
-export const GalleryForm = (props) => {
-  const { stepId } = props;
+const GalleryForm = (props) => {
+  const { show } = props;
+  // hooks
   const stepStyles = useStepsStyles();
   const galleryStyles = useGalleryStyles();
   const [images, setImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const { lang } = useLang();
 
+  // handlers
   const addImageHandler = async (base64Img, imageFile) => {
     const imageId = Math.random();
     setImages([...images, { id: imageId, img: base64Img, file: imageFile, url: null }]);
-
+    setUploading(true);
     const formData = new FormData();
     formData.append('imageFile', imageFile);
 
@@ -49,6 +51,9 @@ export const GalleryForm = (props) => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setUploading(false);
       });
   };
 
@@ -67,32 +72,34 @@ export const GalleryForm = (props) => {
   };
 
   return (
-    <Box className={stepStyles.mainContent} hidden={stepId !== GALLERY}>
+    <Box className={stepStyles.mainContent} hidden={!show}>
       <Box>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-          Muestra tus resultados con imágenes
+          {lang.galleryStep.header.title}
         </Typography>
         <Typography align="center" color="primary">
           {`${images.length}/${maxImagesCount}`}
         </Typography>
       </Box>
       <div className={galleryStyles.uploadImgContainer}>
-        {images.map((image) => (
+        {images.map((image, idx) => (
           <Box m={2} key={image.id} className={galleryStyles.uploadImgWrapper}>
-            <IconButton
-              aria-label="Delete"
-              size="small"
-              className={galleryStyles.uploadImgCloseButon}
-              onClick={() => removeImageHandler(image.id)}
-            >
-              <HighlightOffIcon fontSize="small" />
-            </IconButton>
+            {uploading && idx === images.length - 1 ? null : (
+              <IconButton
+                aria-label="Delete"
+                size="small"
+                className={galleryStyles.uploadImgCloseButon}
+                onClick={() => removeImageHandler(image.id)}
+              >
+                <HighlightOffIcon fontSize="small" />
+              </IconButton>
+            )}
             <ReactProfileImage
               camera
               returnImage={() => {}}
               defaultImage={image.img}
-              uploadBtnProps={{ disabled: true }}
-              cameraBtnProps={{ disabled: true }}
+              uploadBtnProps={{ disabled: true, label: lang.galleryStep.body.uploadBtn }}
+              cameraBtnProps={{ disabled: true, label: lang.galleryStep.body.cameraBtn }}
               maxImgSize={0}
             />
           </Box>
@@ -105,8 +112,12 @@ export const GalleryForm = (props) => {
               defaultImage="/images/no-image-red-2.png"
               clearPreview
               maxImgSize={maxImgSize}
-              isNotImgErrorMsg="Solo imagenes"
-              sizeErrorMsg="Tamaño máximo 250KB"
+              isNotImgErrorMsg={lang.galleryStep.body.typeErrMsg}
+              sizeErrorMsg={`${lang.galleryStep.body.sizeErrMsg} (${maxImgSize / 1024}Kb)`}
+              uploadBtnProps={{ label: lang.galleryStep.body.uploadBtn }}
+              cameraBtnProps={{ label: lang.galleryStep.body.cameraBtn }}
+              cancelBtnProps={{ label: lang.galleryStep.body.cancelBtn }}
+              takeBtnProps={{ label: lang.galleryStep.body.takeBtn }}
             />
           </Box>
         )}
@@ -116,7 +127,9 @@ export const GalleryForm = (props) => {
 };
 
 GalleryForm.propTypes = {
-  stepId: PropTypes.string.isRequired,
+  show: PropTypes.bool,
 };
-
-export const galleryObj = new ProjectStep(GALLERY, 'Galería');
+GalleryForm.defaultProps = {
+  show: false,
+};
+export default GalleryForm;

@@ -1,0 +1,105 @@
+{
+  "redirecting": "Redireccionando...",
+  "title": "Adicionar projecto",
+  "next": "Siguiente",
+  "back": "Atras",
+  "save": "Guardar",
+  "step": {
+    "syncyLabel": "Sincroniza tu proyecto",
+    "infoLabel": "Información",
+    "galeryLabel": "Galería",
+    "sillsLabel": "Habilidades de desarrollador",
+    "collaboratorsLabel": "Colaboradores",
+    "linksLabel": "Enlaces externos"
+  },
+  "syncStep": {
+    "header": {
+      "label": "Si tienes tu proyecto en GitHub o GitLab sincronizalo y muestra lo que haz logrado!"
+    },
+    "body": {
+      "buttons": {
+        "common": "Sincroniza con"
+      },
+      "select": {
+        "githubLabel": "Repositorios de Github",
+        "gitlabLabel": "Repositorios de Gitlab",
+        "selectNone": "Ninguno",
+        "errorLoadingReposMsg": "No se pudieron cargar los repositorios",
+        "errorLoadingDetailsReposMsg": "Algo pudo salir mal"
+      }
+    }
+  },
+  "infoStep": {
+    "header": {
+      "label": "Complete la información sobre el proyecto"
+    },
+    "form": {
+      "inputName": {
+        "label": "Nombre",
+        "placeholder": "Nombre del proyecto"
+      },
+      "inputDate": {
+        "clearLabel": "Limpiar",
+        "cancelLabel": "Cancelar",
+        "okLabel": "Ok",
+        "formatDate": "dd/mm/yyyy",
+        "invalidDate": "Fecha inválida",
+        "maxDateMessage": "Fecha mayor que la fecha máxima",
+        "minDateMessage": "Fecha menor que la fecha mínima"
+      },
+      "inputIniDate": {
+        "label": "Fecha de inicio"
+      },
+      "inputEndDate": {
+        "label": "Fecha de terminación"
+      },
+      "inputDescription": {
+        "label": "Descripción",
+        "placeholder": "Descripción sobre el proyecto"
+      },
+      "inputMore": {
+        "label": "Más",
+        "placeholder": "Comparte tus experiencias u otra información que crees necesaria"
+      },
+      "inputProjectLink": {
+        "label": "Vínculo del proyecto",
+        "placeholder": "https://www.projecto.com"
+      },
+      "inputProjectDevLink": {
+        "label": "Vínculo de desarrollo",
+        "placeholder": "https://www.codigoprojecto.com"
+      }
+    }
+  },
+  "galleryStep": {
+    "header": {
+      "title": "Muestra tus resultados con imágenes"
+    },
+    "body": {
+      "uploadBtn": "Subir",
+      "cameraBtn": "Camara",
+      "cancelBtn": "Cancelar",
+      "takeBtn": "Tomar",
+      "sizeErrMsg": "Tamaño máximo",
+      "typeErrMsg": "Solo imágenes"
+    }
+  },
+  "skillsStep": {
+    "header": {
+      "title": "Que habilidades pusiste en práctica para desarrollar tu proyecto"
+    },
+    "form": {
+      "languagesLabel": "Lenguajes",
+      "techLabel": "Tecnologías"
+    }
+  },
+  "collaboratorsStep": {
+    "header": {
+      "titile": "¿Trabajaste solo? ¿Quiénes colaboraron contigo?"
+    },
+    "form": {
+      "nameLabel": "Nombre",
+      "emailLabel": "Correo electrónico"
+    }
+  }
+}

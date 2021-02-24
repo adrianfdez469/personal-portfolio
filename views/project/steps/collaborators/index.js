@@ -15,22 +15,20 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
-// Components
-import ProjectStep from '../ProjectStep';
+import { useLang } from '../../../../store/contexts/langContext';
 // Styles
 import { useStepsStyles } from '../../styles';
 import useCollaboratorsStyles from './styles';
 
-export const COLLABORATORS = 'COLLABORATORS';
-
-export const CollaboratorsForm = (props) => {
-  const { stepId, collaborators } = props;
+const CollaboratorsForm = (props) => {
+  const { show, collaborators } = props;
   const stepStyles = useStepsStyles();
   const styles = useCollaboratorsStyles();
   const [profiles, setProfiles] = useState([]);
   const [expanded, setExpanded] = useState(null);
   const inputNameRef = useRef(null);
   const inputEmailRef = useRef(null);
+  const { lang } = useLang();
 
   const handlerAddProfile = () => {
     setProfiles((prevProfiles) => [
@@ -55,10 +53,10 @@ export const CollaboratorsForm = (props) => {
   // TODO: Disable the Save Button if no name is entered
 
   return (
-    <Box className={stepStyles.mainContent} hidden={stepId !== COLLABORATORS}>
+    <Box className={stepStyles.mainContent} hidden={!show}>
       <Box className={stepStyles.stepDescriptor}>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-          Tabajaste solo? Quiénes colaboraron contigo?
+          {lang.collaboratorsStep.header.title}
         </Typography>
       </Box>
 
@@ -82,7 +80,7 @@ export const CollaboratorsForm = (props) => {
             <Grid container spacing={2} style={{ display: profiles.length !== expanded && 'none' }}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Nombre"
+                  label={lang.collaboratorsStep.form.nameLabel}
                   onClick={(event) => event.stopPropagation()}
                   fullWidth
                   inputRef={inputNameRef}
@@ -90,7 +88,7 @@ export const CollaboratorsForm = (props) => {
               </Grid>
               <Grid item xs={12} sm={5}>
                 <TextField
-                  label="Correo"
+                  label={lang.collaboratorsStep.form.emailLabel}
                   onClick={(event) => event.stopPropagation()}
                   fullWidth
                   inputRef={inputEmailRef}
@@ -111,7 +109,6 @@ export const CollaboratorsForm = (props) => {
 };
 
 CollaboratorsForm.propTypes = {
-  stepId: PropTypes.string.isRequired,
   collaborators: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -123,8 +120,11 @@ CollaboratorsForm.propTypes = {
       isOwner: PropTypes.bool,
     })
   ),
+  show: PropTypes.bool,
 };
 CollaboratorsForm.defaultProps = {
   collaborators: [],
+  show: false,
 };
-export const collaboratorsObj = new ProjectStep(COLLABORATORS, 'Colaboradores');
+
+export default CollaboratorsForm;

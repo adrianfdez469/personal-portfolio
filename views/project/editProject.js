@@ -23,96 +23,106 @@ import CloseIcon from '@material-ui/icons/Close';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import SaveIcon from '@material-ui/icons/Save';
-import { useRouter } from 'next/router';
 
 // componets
 import Transition from '../../components/UI/Transition';
-import { syncObj, SyncForm } from './steps/synchronization';
-import { basicInfoObj, BasicInfoForm } from './steps/basicInfo';
-import { galleryObj, GalleryForm } from './steps/gallery';
-import { skillsObj, SkillsForm } from './steps/skills';
-import { collaboratorsObj, CollaboratorsForm } from './steps/collaborators';
-import { linksObj, LinksForm } from './steps/links';
-import { moreObj, MoreForm } from './steps/more';
+import SyncForm from './steps/synchronization';
+import BasicInfoForm from './steps/basicInfo';
+import GalleryForm from './steps/gallery';
+import SkillsForm from './steps/skills';
+import CollaboratorsForm from './steps/collaborators';
+// hooks
+import { useLang } from '../../store/contexts/langContext';
 // styles
 import { useMainViewSyles } from './styles';
-
-const Steps = [syncObj, basicInfoObj, galleryObj, skillsObj, collaboratorsObj, linksObj, moreObj];
 
 const initialState = {
   activeStep: 0,
   data: {
     basicInfoData: null,
     skillsData: null,
-    links: null,
     collaborators: null,
   },
+  saving: false,
+  error: false,
 };
 const actions = {
   NEXT_STEP: 'NEXT_STEP',
   PREV_STEP: 'PREV_STEP',
   SET_REPOSITORY_DATA: 'SET_REPOSITORY_DATA',
+  START_SAVING: 'START_SAVING',
+  END_SAVING: 'END_SAVING',
+  ERROR_SAVING: 'ERROR_SAVING',
 };
 const reducer = (state, action) => {
   switch (action.type) {
     case actions.NEXT_STEP:
       return {
         ...state,
-        activeStep: state.activeStep + 1 < Steps.length ? state.activeStep + 1 : state.activeStep,
+        activeStep: state.activeStep + 1,
       };
     case actions.PREV_STEP:
       return {
         ...state,
-        activeStep: state.activeStep - 1 < 0 ? state.activeStep : state.activeStep - 1,
+        activeStep: state.activeStep - 1,
       };
     case actions.SET_REPOSITORY_DATA:
       return {
         ...state,
         data: action.data,
       };
-
+    case actions.START_SAVING:
+      return {
+        ...state,
+        saving: true,
+      };
+    case actions.ERROR_SAVING:
+      return {
+        ...state,
+        error: true,
+        saving: false,
+      };
+    case actions.END_SAVING:
+      return {
+        activeStep: 0,
+        data: {
+          basicInfoData: null,
+          skillsData: null,
+          links: null,
+          collaborators: null,
+        },
+        saving: false,
+        error: false,
+      };
     default:
       return state;
   }
 };
 
-const LayoutView = (props) => {
+const EditProjectView = (props) => {
   const { open: openDialog, handleClose } = props;
   // Hooks
   const classes = useMainViewSyles();
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const [state, dispatch] = useReducer(reducer, initialState);
-  const router = useRouter();
-  const { profileid } = router.query;
-
-  const handleNext = () => {
-    dispatch({ type: actions.NEXT_STEP });
-  };
-
-  const handlePrev = () => {
-    dispatch({ type: actions.PREV_STEP });
-  };
+  const { lang } = useLang();
+  // const router = useRouter();
+  // const { profileid } = router.query;
 
   const setRepoSyncData = (provider, data) => {
     const basicInfoData = {
       ...(data.name && { name: data.name }),
       ...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
       ...(data.description && { description: data.description }),
+      ...(data.url && { url: data.url }),
+      ...(data.deployments.nodes.length > 0 && {
+        deployUrl: data.deployments.nodes[0].latestStatus.environmentUrl,
+      }),
     };
     const skillsData = {
       ...(data.languages.nodes.length > 0 && {
-        languages: data.languages.nodes.map((lang) => ({ text: lang.name })),
+        languages: data.languages.nodes.map((programingLang) => ({ text: programingLang.name })),
       }),
-    };
-    const links = {
-      devLink: {
-        ...(data.url && { url: data.url }),
-      },
-      proyectLink: {
-        ...(data.deployments.nodes.length > 0 && {
-          url: data.deployments.nodes[0].latestStatus.environmentUrl,
-        }),
-      },
     };
     const collaborators =
       data.mentionableUsers.nodes.length === 0
@@ -129,10 +139,49 @@ const LayoutView = (props) => {
     const fullData = {
       basicInfoData: { ...basicInfoData },
       skillsData: { ...skillsData },
-      links: { ...links },
       collaborators,
     };
     dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
+  };
+
+  const Steps = [
+    {
+      cmp: <SyncForm selectRepo={setRepoSyncData} show={state.activeStep === 0} />,
+      label: lang.step.syncyLabel,
+    },
+    {
+      cmp: <BasicInfoForm show={state.activeStep === 1} data={state.data.basicInfoData} />,
+      label: lang.step.infoLabel,
+    },
+    {
+      cmp: <GalleryForm show={state.activeStep === 2} />,
+      label: lang.step.galeryLabel,
+    },
+    {
+      cmp: <SkillsForm show={state.activeStep === 3} data={state.data.skillsData} />,
+      label: lang.step.sillsLabel,
+    },
+    {
+      cmp: (
+        <CollaboratorsForm show={state.activeStep === 4} collaborators={state.data.collaborators} />
+      ),
+      label: lang.step.collaboratorsLabel,
+    },
+  ];
+
+  const handleNext = () => {
+    if (state.activeStep + 1 < Steps.length) {
+      dispatch({ type: actions.NEXT_STEP });
+    } else {
+      dispatch({ type: actions.START_SAVING });
+      // TODO: Fetch to save
+    }
+  };
+
+  const handlePrev = () => {
+    if (state.activeStep - 1 >= 0) {
+      dispatch({ type: actions.PREV_STEP });
+    }
   };
 
   const mainContent = (
@@ -180,16 +229,7 @@ const LayoutView = (props) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <SyncForm stepId={Steps[state.activeStep].id} selectRepo={setRepoSyncData} />
-        <BasicInfoForm stepId={Steps[state.activeStep].id} data={state.data.basicInfoData} />
-        <GalleryForm stepId={Steps[state.activeStep].id} />
-        <SkillsForm stepId={Steps[state.activeStep].id} data={state.data.skillsData} />
-        <CollaboratorsForm
-          stepId={Steps[state.activeStep].id}
-          collaborators={state.data.collaborators}
-        />
-        <LinksForm stepId={Steps[state.activeStep].id} data={state.data.links} />
-        <MoreForm stepId={Steps[state.activeStep].id} />
+        {Steps.map((stepForm) => stepForm.cmp)}
       </div>
 
       {greaterMdSize ? (
@@ -201,7 +241,7 @@ const LayoutView = (props) => {
             variant="outlined"
             style={{ width: '100px', margin: '5px' }}
           >
-            ATRAS
+            {lang.back}
           </Button>
           <Button
             onClick={handleNext}
@@ -210,7 +250,7 @@ const LayoutView = (props) => {
             variant="outlined"
             style={{ width: '100px', margin: '5px' }}
           >
-            {state.activeStep === Steps.length - 1 ? 'GUARDAR' : 'SIGUIENTE'}
+            {state.activeStep === Steps.length - 1 ? lang.save : lang.next}
           </Button>
         </Box>
       ) : (
@@ -224,7 +264,7 @@ const LayoutView = (props) => {
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Adicionar proyecto
+            {lang.title}
           </Typography>
           <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
             <CloseIcon />
@@ -255,9 +295,9 @@ const LayoutView = (props) => {
   );
 };
 
-LayoutView.propTypes = {
+EditProjectView.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
 };
 
-export default LayoutView;
+export default EditProjectView;

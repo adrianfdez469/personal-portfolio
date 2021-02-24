@@ -4,13 +4,6 @@ const useStyles = makeStyles((theme) => ({
   divContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    [theme.breakpoints.up(800)]: {
-      flexDirection: 'row',
-      height: 100,
-      justifyContent: 'flex-start',
-    },
   },
   linkField: {
     minWidth: '40%',
@@ -20,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'left',
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
   },
   divProcessing: {
     display: 'flex',
@@ -34,10 +27,6 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(6.25),
     height: theme.spacing(6.25),
     marginRight: theme.spacing(1),
-    // overflow: 'hidden',
-    // display: 'flex',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     [theme.breakpoints.up(800)]: {
       marginLeft: theme.spacing(1),
     },
