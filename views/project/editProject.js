@@ -23,13 +23,12 @@ import { useLang } from '../../store/contexts/langContext';
 // styles
 import { useMainViewSyles } from './styles';
 
+// Dynamic imports to improve performance
 const Stepper = dynamic(() => import('@material-ui/core/Stepper'));
-
 const CloseIcon = dynamic(() => import('@material-ui/icons/Close'));
 const ArrowBackIosIcon = dynamic(() => import('@material-ui/icons/ArrowBackIos'));
 const ArrowForwardIosIcon = dynamic(() => import('@material-ui/icons/ArrowForwardIos'));
 const SaveIcon = dynamic(() => import('@material-ui/icons/Save'));
-
 const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
 const GalleryForm = dynamic(() => import('./steps/gallery'));
 const SkillsForm = dynamic(() => import('./steps/skills'));
