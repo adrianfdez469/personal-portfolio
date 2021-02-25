@@ -1,40 +1,39 @@
 // libs
-import React, { useReducer, useEffect, useRef } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import {
-  /* Dialog,
-  DialogContent,
-  DialogActions, */
   Button,
-  /* AppBar,
-  Toolbar, */
+  AppBar,
+  Toolbar,
   Typography,
   Paper,
   Container,
   IconButton,
-  Stepper,
   MobileStepper,
   Step,
   StepButton,
   Box,
   useMediaQuery,
 } from '@material-ui/core';
-// import CloseIcon from '@material-ui/icons/Close';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import SaveIcon from '@material-ui/icons/Save';
-
 // componets
-// import Transition from '../../components/UI/Transition';
 import SyncForm from './steps/synchronization';
-// import BasicInfoForm from './steps/basicInfo';
-//import GalleryForm from './steps/gallery';
-//import SkillsForm from './steps/skills';
-//import CollaboratorsForm from './steps/collaborators';
 // hooks
 import { useLang } from '../../store/contexts/langContext';
 // styles
 import { useMainViewSyles } from './styles';
+
+const Stepper = dynamic(() => import('@material-ui/core/Stepper'));
+
+const CloseIcon = dynamic(() => import('@material-ui/icons/Close'));
+const ArrowBackIosIcon = dynamic(() => import('@material-ui/icons/ArrowBackIos'));
+const ArrowForwardIosIcon = dynamic(() => import('@material-ui/icons/ArrowForwardIos'));
+const SaveIcon = dynamic(() => import('@material-ui/icons/Save'));
+
+const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
+const GalleryForm = dynamic(() => import('./steps/gallery'));
+const SkillsForm = dynamic(() => import('./steps/skills'));
+const CollaboratorsForm = dynamic(() => import('./steps/collaborators'));
 
 const initialState = {
   activeStep: 0,
@@ -107,17 +106,12 @@ const reducer = (state, action) => {
 };
 
 const EditProjectView = (props) => {
-  // const { open: openDialog, handleClose } = props;
+  const { /*open: openDialog,*/ handleClose } = props;
   // Hooks
   const { lang } = useLang();
   const classes = useMainViewSyles();
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const BasicInfoForm = useRef(null);
-  const GalleryForm = useRef(null);
-  const SkillsForm = useRef(null);
-  const CollaboratorsForm = useRef(null);
 
   const setRepoSyncData = (data) => {
     const basicInfoData = {
@@ -141,53 +135,27 @@ const EditProjectView = (props) => {
     dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
   };
 
-  useEffect(() => {
-    const imports = [
-      import('./steps/basicInfo'),
-      import('./steps/gallery'),
-      import('./steps/skills'),
-      import('./steps/collaborators'),
-    ];
-    Promise.all(imports)
-      .then((components) => {
-        [
-          BasicInfoForm.current,
-          GalleryForm.current,
-          SkillsForm.current,
-          CollaboratorsForm.current,
-        ] = components.map((cmp) => cmp.default);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
   const Steps = [
     {
       cmp: <SyncForm show={state.activeStep === 0} selectRepo={setRepoSyncData} />,
       label: lang.step.syncyLabel,
     },
     {
-      cmp: BasicInfoForm.current ? (
-        <BasicInfoForm.current show={state.activeStep === 1} data={state.data.basicInfoData} />
-      ) : null,
+      cmp: <BasicInfoForm show={state.activeStep === 1} data={state.data.basicInfoData} />,
       label: lang.step.infoLabel,
     },
     {
-      cmp: GalleryForm.current ? <GalleryForm.current show={state.activeStep === 2} /> : null,
+      cmp: <GalleryForm show={state.activeStep === 2} />,
       label: lang.step.galeryLabel,
     },
     {
-      cmp: SkillsForm.current ? (
-        <SkillsForm.current show={state.activeStep === 3} data={state.data.skillsData} />
-      ) : null,
+      cmp: <SkillsForm show={state.activeStep === 3} data={state.data.skillsData} />,
       label: lang.step.sillsLabel,
     },
     {
-      cmp: CollaboratorsForm.current ? (
-        <CollaboratorsForm.current
-          show={state.activeStep === 4}
-          collaborators={state.data.collaborators}
-        />
-      ) : null,
+      cmp: (
+        <CollaboratorsForm show={state.activeStep === 4} collaborators={state.data.collaborators} />
+      ),
       label: lang.step.collaboratorsLabel,
     },
   ];
@@ -284,7 +252,6 @@ const EditProjectView = (props) => {
 
   return (
     <>
-      {/* <Dialog fullScreen open={openDialog} onClose={handleClose} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
@@ -294,9 +261,7 @@ const EditProjectView = (props) => {
             <CloseIcon />
           </IconButton>
         </Toolbar>
-  </AppBar>
-      
-      <DialogContent className={classes.dialog}> */}
+      </AppBar>
 
       {!greaterMdSize && (
         <Paper square elevation={0} className={classes.mobileStepHeader}>
@@ -314,9 +279,6 @@ const EditProjectView = (props) => {
           <>{mainContent}</>
         )}
       </Container>
-      {/* </DialogContent>
-      <DialogActions />
-      </Dialog> */}
     </>
   );
 };
