@@ -1,5 +1,5 @@
 import { generateHash, generateUuid } from './generators';
-import firebaseAdmin from './firebaseAdmin';
+import firebaseAdmin from './integrations/firebaseAdmin';
 
 const fs = require('fs');
 

@@ -16,7 +16,6 @@ import {
   FormLabel,
   Grid,
 } from '@material-ui/core';
-import { getSession } from 'next-auth/client';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
@@ -26,91 +25,45 @@ import useSyncStyles from './styles';
 import GitLabIcon from '../../../../components/UI/icons/GitlabIcon';
 
 // TODO: Sacar estas consultas de aqui y ponerlas en un lugar determinado para esto
-const getReposQuery = (first) => `
-  query { 
-    viewer { 
-      login
-      avatarUrl
-      repositories(first:${first}){
-        nodes{
-          id
-          name
-          description
-          shortDescriptionHTML(limit:150)
-          nameWithOwner
-          owner {
-            id
-            login
-            avatarUrl
-          }
-          isFork
-          parent {
-            nameWithOwner
-          }
-        }
-      }
+const getReposQuery = (provider) => `
+  query {
+    providerRepos(provider:${provider}){
+      id
+      name
+      description
+      nameWithOwner
+      ownerId
+      ownerLogin
+      ownerAvatarUrl
     }
   }`;
-const getRepoData = (owner, name) => `
-query {
-  repository(owner: "${owner}", name: "${name}" ) {
-    id
-    name
-    description
-    shortDescriptionHTML(limit:150)
-    openGraphImageUrl
-    owner {
-      login
-    }
-    primaryLanguage {
-      name
-      color
-    }
-    languages(first: 50){
-      nodes{
-        name
-        color
-      }
-    }
-    
-    homepageUrl
-    createdAt
-    nameWithOwner 
-    parent{
-      name
-      nameWithOwner
-    }
-    isFork
-    updatedAt
-    pushedAt
-    url
-    stargazerCount
-    forkCount
 
-    mentionableUsers (first: 6) {
-      nodes {
+const getRepoData = (provider, id) => `
+  query {
+    providerRepoData(provider:${provider}, id: "${id}" ) {
+      id
+      name
+      description
+      createdAt
+      nameWithOwner
+      ownerId
+      ownerLogin
+      ownerAvatarUrl
+      url
+      deploymentUrl
+      languages
+      collaborators {
         login
         avatarUrl
         email
         bio
-        isViewer
-        location
         name
         url
       }
-      totalCount
+      totalCollaborators
+      provider
     }
-    deployments(last:1) {
-      nodes {
-        environment
-        latestStatus {
-          environmentUrl #Este es el tipo
-        }
-      }
-    }
-  }
-}
-  `;
+  }`;
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -183,13 +136,11 @@ const reducer = (state, action) => {
     case actions.START_LOADING_GITHUB_REPOS:
       return {
         ...state,
-        // ...initialGitlabState,
         loadingGithubRepos: true,
       };
     case actions.SET_GITHUB_REPOS:
       return {
         ...state,
-        // ...initialGitlabState,
         githubRepos: action.data,
         loadingGithubRepos: false,
         errorLoadingGithubRepos: false,
@@ -304,28 +255,19 @@ const SyncForm = (props) => {
 
   // effect loading github repos
   useEffect(() => {
-    if (githubRepos.length === 0 && buttonGithubSelected === true) {
+    if (Array.isArray(githubRepos) && githubRepos.length === 0 && buttonGithubSelected === true) {
       dispatch({ type: actions.START_LOADING_GITHUB_REPOS });
       // TODO: Implementarle paginacion y busqueda por repositorio (adaptar el componente que desarrollé para que permita realizar estas acciones)
 
-      getSession()
-        .then((session) => {
-          if (session && session.accessToken) {
-            return fetch('https://api.github.com/graphql', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session.accessToken}`,
-              },
-              body: JSON.stringify({
-                query: getReposQuery(50),
-              }),
-            });
-          }
-          const error = new Error('No session found');
-          error.status = 401;
-          throw error;
-        })
+      fetch('/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: getReposQuery('github'),
+        }),
+      })
         .then((resp) => {
           if (resp.ok) {
             return resp.json();
@@ -335,10 +277,9 @@ const SyncForm = (props) => {
           throw error;
         })
         .then((data) => {
-          dispatch({ type: actions.SET_GITHUB_REPOS, data: data.data.viewer.repositories.nodes });
+          dispatch({ type: actions.SET_GITHUB_REPOS, data: data.data.providerRepos });
         })
         .catch(() => {
-          // TODO: Handle error
           dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS });
         });
     }
@@ -346,25 +287,16 @@ const SyncForm = (props) => {
 
   // effect loading details github repo
   useEffect(() => {
-    if (selectedGithubRepo && selectedGithubRepo.owner && selectedGithubRepo.name) {
-      getSession()
-        .then((session) => {
-          if (session && session.accessToken) {
-            return fetch('https://api.github.com/graphql', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session.accessToken}`,
-              },
-              body: JSON.stringify({
-                query: getRepoData(selectedGithubRepo.owner.login, selectedGithubRepo.name),
-              }),
-            });
-          }
-          const error = new Error('No session found');
-          error.status = 401;
-          throw error;
-        })
+    if (selectedGithubRepo && selectedGithubRepo.id) {
+      fetch('/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: getRepoData('github', selectedGithubRepo.id),
+        }),
+      })
         .then((resp) => {
           if (resp.ok) {
             return resp.json();
@@ -374,7 +306,7 @@ const SyncForm = (props) => {
           throw error;
         })
         .then((data) => {
-          selectRepo('github', data.data.repository);
+          selectRepo(data.data.providerRepoData);
         })
         .catch(() => {
           // TODO: Handle error
@@ -425,35 +357,36 @@ const SyncForm = (props) => {
               <MenuItem value={{ id: null, name: '' }}>
                 <em>{lang.syncStep.body.select.selectNone}</em>
               </MenuItem>
-              {githubRepos.map((repository) => (
-                <MenuItem value={repository} key={repository.id}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {greaterMdSize && (
-                      <Avatar
-                        alt={repository.owner.login}
-                        src={repository.owner.avatarUrl}
-                        variant="circular"
-                        className={styles.smallAvatar}
-                      />
-                    )}
+              {Array.isArray(githubRepos) &&
+                githubRepos.map((repository) => (
+                  <MenuItem value={repository} key={repository.id}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {greaterMdSize && (
+                        <Avatar
+                          alt={repository.ownerLogin}
+                          src={repository.ownerAvatarUrl}
+                          variant="circular"
+                          className={styles.smallAvatar}
+                        />
+                      )}
 
-                    <div>
-                      <Typography variant="body1">
-                        {greaterMdSize ? repository.nameWithOwner : repository.name}
-                      </Typography>
-                      <Typography variant="caption" color="textSecondary">
-                        {`${
-                          repository.description != null
-                            ? `${repository.description.slice(0, maxTextLeng)}${
-                                repository.description.length > maxTextLeng ? '...' : ''
-                              } `
-                            : ''
-                        }`}
-                      </Typography>
+                      <div>
+                        <Typography variant="body1">
+                          {greaterMdSize ? repository.nameWithOwner : repository.name}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {`${
+                            repository.description != null
+                              ? `${repository.description.slice(0, maxTextLeng)}${
+                                  repository.description.length > maxTextLeng ? '...' : ''
+                                } `
+                              : ''
+                          }`}
+                        </Typography>
+                      </div>
                     </div>
-                  </div>
-                </MenuItem>
-              ))}
+                  </MenuItem>
+                ))}
             </Select>
             {errorLoadingGithubRepos && (
               <FormLabel error>{lang.syncStep.body.select.errorLoadingReposMsg}</FormLabel>

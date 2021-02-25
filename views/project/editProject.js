@@ -1,13 +1,13 @@
 // libs
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Dialog,
+  /* Dialog,
   DialogContent,
-  DialogActions,
+  DialogActions, */
   Button,
-  AppBar,
-  Toolbar,
+  /* AppBar,
+  Toolbar, */
   Typography,
   Paper,
   Container,
@@ -19,18 +19,18 @@ import {
   Box,
   useMediaQuery,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+// import CloseIcon from '@material-ui/icons/Close';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import SaveIcon from '@material-ui/icons/Save';
 
 // componets
-import Transition from '../../components/UI/Transition';
+// import Transition from '../../components/UI/Transition';
 import SyncForm from './steps/synchronization';
-import BasicInfoForm from './steps/basicInfo';
-import GalleryForm from './steps/gallery';
-import SkillsForm from './steps/skills';
-import CollaboratorsForm from './steps/collaborators';
+// import BasicInfoForm from './steps/basicInfo';
+//import GalleryForm from './steps/gallery';
+//import SkillsForm from './steps/skills';
+//import CollaboratorsForm from './steps/collaborators';
 // hooks
 import { useLang } from '../../store/contexts/langContext';
 // styles
@@ -42,6 +42,7 @@ const initialState = {
     basicInfoData: null,
     skillsData: null,
     collaborators: null,
+    provider: null,
   },
   saving: false,
   error: false,
@@ -53,6 +54,7 @@ const actions = {
   START_SAVING: 'START_SAVING',
   END_SAVING: 'END_SAVING',
   ERROR_SAVING: 'ERROR_SAVING',
+  ADD_STEPS: 'ADD_STEPS',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -94,77 +96,98 @@ const reducer = (state, action) => {
         saving: false,
         error: false,
       };
+    case actions.ADD_STEPS:
+      return {
+        ...state,
+        Steps: action.data,
+      };
     default:
       return state;
   }
 };
 
 const EditProjectView = (props) => {
-  const { open: openDialog, handleClose } = props;
+  // const { open: openDialog, handleClose } = props;
   // Hooks
+  const { lang } = useLang();
   const classes = useMainViewSyles();
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { lang } = useLang();
-  // const router = useRouter();
-  // const { profileid } = router.query;
 
-  const setRepoSyncData = (provider, data) => {
+  const BasicInfoForm = useRef(null);
+  const GalleryForm = useRef(null);
+  const SkillsForm = useRef(null);
+  const CollaboratorsForm = useRef(null);
+
+  const setRepoSyncData = (data) => {
     const basicInfoData = {
       ...(data.name && { name: data.name }),
       ...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
       ...(data.description && { description: data.description }),
       ...(data.url && { url: data.url }),
-      ...(data.deployments.nodes.length > 0 && {
-        deployUrl: data.deployments.nodes[0].latestStatus.environmentUrl,
-      }),
+      ...(data.deploymentUrl && { deployUrl: data.deploymentUrl }),
     };
     const skillsData = {
-      ...(data.languages.nodes.length > 0 && {
-        languages: data.languages.nodes.map((programingLang) => ({ text: programingLang.name })),
-      }),
+      ...(data.languages.length > 0 && { languages: data.languages.map((lg) => ({ text: lg })) }),
     };
-    const collaborators =
-      data.mentionableUsers.nodes.length === 0
-        ? null
-        : data.mentionableUsers.nodes.map((collaborator) => ({
-            name: collaborator.name,
-            avatarUrl: collaborator.avatarUrl,
-            url: collaborator.url,
-            bio: collaborator.bio,
-            email: collaborator.email,
-            isOwner: data.owner.login === collaborator.login,
-          }));
+    const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
 
     const fullData = {
       basicInfoData: { ...basicInfoData },
       skillsData: { ...skillsData },
       collaborators,
+      provider: data.provider,
     };
     dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
   };
 
+  useEffect(() => {
+    const imports = [
+      import('./steps/basicInfo'),
+      import('./steps/gallery'),
+      import('./steps/skills'),
+      import('./steps/collaborators'),
+    ];
+    Promise.all(imports)
+      .then((components) => {
+        [
+          BasicInfoForm.current,
+          GalleryForm.current,
+          SkillsForm.current,
+          CollaboratorsForm.current,
+        ] = components.map((cmp) => cmp.default);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const Steps = [
     {
-      cmp: <SyncForm selectRepo={setRepoSyncData} show={state.activeStep === 0} />,
+      cmp: <SyncForm show={state.activeStep === 0} selectRepo={setRepoSyncData} />,
       label: lang.step.syncyLabel,
     },
     {
-      cmp: <BasicInfoForm show={state.activeStep === 1} data={state.data.basicInfoData} />,
+      cmp: BasicInfoForm.current ? (
+        <BasicInfoForm.current show={state.activeStep === 1} data={state.data.basicInfoData} />
+      ) : null,
       label: lang.step.infoLabel,
     },
     {
-      cmp: <GalleryForm show={state.activeStep === 2} />,
+      cmp: GalleryForm.current ? <GalleryForm.current show={state.activeStep === 2} /> : null,
       label: lang.step.galeryLabel,
     },
     {
-      cmp: <SkillsForm show={state.activeStep === 3} data={state.data.skillsData} />,
+      cmp: SkillsForm.current ? (
+        <SkillsForm.current show={state.activeStep === 3} data={state.data.skillsData} />
+      ) : null,
       label: lang.step.sillsLabel,
     },
     {
-      cmp: (
-        <CollaboratorsForm show={state.activeStep === 4} collaborators={state.data.collaborators} />
-      ),
+      cmp: CollaboratorsForm.current ? (
+        <CollaboratorsForm.current
+          show={state.activeStep === 4}
+          collaborators={state.data.collaborators}
+        />
+      ) : null,
       label: lang.step.collaboratorsLabel,
     },
   ];
@@ -260,7 +283,8 @@ const EditProjectView = (props) => {
   );
 
   return (
-    <Dialog fullScreen open={openDialog} onClose={handleClose} TransitionComponent={Transition}>
+    <>
+      {/* <Dialog fullScreen open={openDialog} onClose={handleClose} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
@@ -270,28 +294,30 @@ const EditProjectView = (props) => {
             <CloseIcon />
           </IconButton>
         </Toolbar>
-      </AppBar>
+  </AppBar>
+      
+      <DialogContent className={classes.dialog}> */}
 
-      <DialogContent className={classes.dialog}>
-        {!greaterMdSize && (
-          <Paper square elevation={0} className={classes.mobileStepHeader}>
-            <Typography align="center" color="primary">
-              {Steps[state.activeStep].label}
-            </Typography>
+      {!greaterMdSize && (
+        <Paper square elevation={0} className={classes.mobileStepHeader}>
+          <Typography align="center" color="primary">
+            {Steps[state.activeStep].label}
+          </Typography>
+        </Paper>
+      )}
+      <Container maxWidth="lg">
+        {greaterMdSize ? (
+          <Paper elevation={3} className={classes.paper}>
+            {mainContent}
           </Paper>
+        ) : (
+          <>{mainContent}</>
         )}
-        <Container maxWidth="lg">
-          {greaterMdSize ? (
-            <Paper elevation={3} className={classes.paper}>
-              {mainContent}
-            </Paper>
-          ) : (
-            <>{mainContent}</>
-          )}
-        </Container>
-      </DialogContent>
+      </Container>
+      {/* </DialogContent>
       <DialogActions />
-    </Dialog>
+      </Dialog> */}
+    </>
   );
 };
 

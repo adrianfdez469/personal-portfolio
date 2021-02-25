@@ -1,6 +1,7 @@
 import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
 import getPreviewData from '../../libs/metascraper';
+import { getGithubRepos, getGithubRepoData } from '../../libs/integrations/github.provider';
 
 const resolvers = {
   MutationResponse: {
@@ -14,6 +15,7 @@ const resolvers = {
       prisma.user.findMany({
         where: { ...args },
       }), */
+
     projects: (parent, args) =>
       prisma.project.findMany({
         where: { ...args },
@@ -40,6 +42,25 @@ const resolvers = {
           return getPreviewData(url);
         })
         .catch((err) => console.log(err));
+    },
+    providerRepos: async (parent, args, context) => {
+      switch (args.provider) {
+        case 'github':
+          return getGithubRepos(context);
+        case 'gitlab':
+        default:
+          return [];
+      }
+    },
+    providerRepoData: async (parent, args, context) => {
+      switch (args.provider) {
+        case 'github': {
+          return getGithubRepoData(context, args.id);
+        }
+        case 'gitlab':
+        default:
+          return null;
+      }
     },
   },
   Mutation: {
@@ -253,6 +274,80 @@ const resolvers = {
           },
         },
       }),
+  },
+  DevProviderRepo: {
+    ownerId: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.owner.id;
+        case 'gitlab':
+        default:
+          return null;
+      }
+    },
+    ownerLogin: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.owner.login;
+        case 'gitlab':
+        default:
+          return null;
+      }
+    },
+    ownerAvatarUrl: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.owner.avatarUrl;
+        case 'gitlab':
+        default:
+          return null;
+      }
+    },
+    deploymentUrl: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.deployments.nodes.length > 0
+            ? repo.deployments.nodes[0].latestStatus.environmentUrl
+            : '';
+        case 'gitlab':
+        default:
+          return null;
+      }
+    },
+    languages: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.languages.nodes.length > 0
+            ? repo.languages.nodes.map((lang) => lang.name)
+            : [];
+        case 'gitlab':
+        default:
+          return null;
+      }
+    },
+    collaborators: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.mentionableUsers.nodes.length > 0
+            ? repo.mentionableUsers.nodes.map((user) => ({
+                ...user,
+                isOwner: user.login === repo.owner.login,
+              }))
+            : [];
+        case 'gitlab':
+        default:
+          return null;
+      }
+    },
+    totalCollaborators: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.mentionableUsers.totalCount;
+        case 'gitlab':
+        default:
+          return null;
+      }
+    },
   },
 };
 

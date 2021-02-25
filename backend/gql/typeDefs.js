@@ -105,6 +105,33 @@ const typeDefs = gql`
     description: String
   }
 
+  type Collaborator {
+    login: String!
+    avatarUrl: String
+    email: String
+    bio: String
+    name: String!
+    url: String
+    isOwner: Boolean
+  }
+  type DevProviderRepo {
+    id: ID!
+    name: String!
+    description: String
+    createdAt: String
+    nameWithOwner: String
+    ownerId: ID!
+    ownerLogin: String
+    ownerAvatarUrl: String
+    url: String
+    deploymentUrl: String
+    languages: [String!]
+    collaborators: [Collaborator!]
+    totalCollaborators: String
+    provider: devProviders!
+  }
+  
+
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
@@ -143,13 +170,19 @@ const typeDefs = gql`
     notInt: [Int]
   }
   
+  enum devProviders {
+    github
+    gitlab
+  }
 
   type Query {
     #users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
     projects(id: IntComparer, name: StringComparer): [Project!]
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
-
     link(url: String): Link!
+
+    providerRepos(provider: devProviders!): [DevProviderRepo!]
+    providerRepoData(provider: devProviders!, id: ID!): DevProviderRepo!
   }
 `;
 
