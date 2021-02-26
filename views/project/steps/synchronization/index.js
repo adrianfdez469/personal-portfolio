@@ -16,6 +16,7 @@ import {
   FormLabel,
   Grid,
 } from '@material-ui/core';
+import { useRouter } from 'next/router';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
@@ -213,6 +214,7 @@ const SyncForm = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const { lang } = useLang();
+  const router = useRouter();
 
   // constants
   const maxTextLeng = greaterMdSize ? 150 : 35;
@@ -277,9 +279,22 @@ const SyncForm = (props) => {
           throw error;
         })
         .then((data) => {
+          if (data.errors && data.errors.length > 0) {
+            if (data.errors[0].message === 'NO_GITHUB_TOKEN') {
+              // TODO: Poner esto en un lugar mas comun
+              const redirectUrl = 'http://localhost:3000/api/customauth';
+              router.push(
+                `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${redirectUrl}&scope=repo,read:user,user:email&state=github`
+              );
+            } else {
+              const error = new Error('Cant load api data');
+              throw error;
+            }
+          }
           dispatch({ type: actions.SET_GITHUB_REPOS, data: data.data.providerRepos });
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS });
         });
     }
@@ -308,8 +323,9 @@ const SyncForm = (props) => {
         .then((data) => {
           selectRepo(data.data.providerRepoData);
         })
-        .catch(() => {
+        .catch((err) => {
           // TODO: Handle error
+          console.log(err);
           dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_DETAIL_REPO });
         });
     }

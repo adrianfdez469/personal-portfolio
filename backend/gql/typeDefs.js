@@ -110,7 +110,7 @@ const typeDefs = gql`
     avatarUrl: String
     email: String
     bio: String
-    name: String!
+    name: String
     url: String
     isOwner: Boolean
   }

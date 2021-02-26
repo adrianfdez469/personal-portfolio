@@ -10,7 +10,7 @@ export default (req, res) =>
     providers: [
       // OAuth authentication providers...
       Providers.GitHub({
-        clientId: process.env.GITHUB_ID,
+        clientId: process.env.NEXT_PUBLIC_GITHUB_ID,
         clientSecret: process.env.GITHUB_SECRET,
       }),
       Providers.LinkedIn({
@@ -41,15 +41,27 @@ export default (req, res) =>
         return baseUrl;
       },
       async session(session, token) {
+        // console.log('SESSION CALLBACK');
+        // console.log(session);
+        // console.log(token);
         const resultSession = { ...session };
         resultSession.accessToken = token.accessToken;
+        resultSession.tokenProvider = token.provider;
+        resultSession.userId = token.userId;
         return resultSession;
       },
       async jwt(token, user, account) {
+        // console.log('JWT CALBACK');
+        // console.log(token);
+        // console.log(user);
+        // console.log(account);
+
         const newToken = token;
         // Add access_token to the token right after signin
         if (account && account.accessToken) {
           newToken.accessToken = account.accessToken;
+          newToken.provider = account.provider;
+          newToken.userId = user.id;
         }
         return newToken;
       },

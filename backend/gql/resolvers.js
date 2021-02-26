@@ -331,6 +331,7 @@ const resolvers = {
           return repo.mentionableUsers.nodes.length > 0
             ? repo.mentionableUsers.nodes.map((user) => ({
                 ...user,
+                ...(!user.name && { name: user.login }),
                 isOwner: user.login === repo.owner.login,
               }))
             : [];

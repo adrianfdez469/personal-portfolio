@@ -68,6 +68,17 @@ model VerificationRequest {
 }
 
 // logic tables
+
+model UserTokens {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map(name: "user_id")
+  provider    Provider
+  accessToken String   @unique @map(name: "access_token")
+
+  @@unique([userId, provider])
+  @@map(name: "user_tokens")
+}
+
 model Link {
   id               Int      @id @default(autoincrement())
   url              String   @unique
@@ -132,4 +143,10 @@ enum SkillCatergory {
   PROG_LANG
   PROG_TECH
   OTHER
+}
+
+enum Provider {
+  github
+  gitlab
+  linkedIn
 }

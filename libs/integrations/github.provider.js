@@ -1,4 +1,5 @@
 import { getSession } from 'next-auth/client';
+import prisma from '../../prisma/prisma.instance';
 
 const getReposQuery = (first = 50) => `
   query { 
@@ -21,25 +22,48 @@ const getReposQuery = (first = 50) => `
 
 export const getGithubRepos = async (context) => {
   const session = await getSession(context);
-  if (session && session.accessToken) {
-    const response = await fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.accessToken}`,
+  if (!session) {
+    throw new Error('NO_SESSION');
+  }
+  if (session.tokenProvider !== 'github') {
+    const userToken = await prisma.userTokens.findUnique({
+      where: {
+        userId_provider: {
+          provider: 'github',
+          userId: session.userId,
+        },
       },
-      body: JSON.stringify({
-        query: getReposQuery(),
-      }),
     });
-    if (response.ok) {
-      return (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
-        ...repository,
-        provider: 'github',
-      }));
+    if (!userToken) {
+      throw new Error('NO_GITHUB_TOKEN');
+    } else {
+      session.accessToken = userToken.accessToken;
     }
   }
-  throw new Error('CANT_LOAD_PROVIDER_DATA');
+  if (!session.accessToken) {
+    throw new Error('NO_ACCESS_TOKEN_ON_SESSION');
+  }
+
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({
+      query: getReposQuery(),
+    }),
+  });
+  if (response.ok) {
+    return (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
+      ...repository,
+      provider: 'github',
+    }));
+  }
+  if (response.status === 401) {
+    throw new Error('UNAUTHORIZED');
+  }
+  throw new Error('INTERNAL_ERROR');
 };
 
 const getRepoData = (projectId) => `
@@ -86,24 +110,45 @@ query {
 export const getGithubRepoData = async (context, projectId) => {
   const session = await getSession(context);
 
-  if (session && session.accessToken) {
-    const response = await fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.accessToken}`,
+  if (!session) {
+    throw new Error('NO_SESSION');
+  }
+  if (session.tokenProvider !== 'github') {
+    const userToken = await prisma.userTokens.findUnique({
+      where: {
+        userId_provider: {
+          provider: 'github',
+          userId: session.userId,
+        },
       },
-      body: JSON.stringify({
-        query: getRepoData(projectId),
-      }),
     });
-    if (response.ok) {
-      const { data } = await response.json();
-      return {
-        ...data.node,
-        provider: 'github',
-      };
+    if (!userToken) {
+      throw new Error('NO_GITHUB_TOKEN');
+    } else {
+      session.accessToken = userToken.accessToken;
     }
+  }
+  if (!session.accessToken) {
+    throw new Error('NO_ACCESS_TOKEN_ON_SESSION');
+  }
+
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({
+      query: getRepoData(projectId),
+    }),
+  });
+
+  if (response.ok) {
+    const { data } = await response.json();
+    return {
+      ...data.node,
+      provider: 'github',
+    };
   }
   throw new Error('CANT_LOAD_PROVIDER_DATA');
 };
