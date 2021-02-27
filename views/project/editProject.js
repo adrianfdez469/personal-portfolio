@@ -113,15 +113,22 @@ const EditProjectView = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const setRepoSyncData = (data) => {
+    console.log(data);
     const basicInfoData = {
-      ...(data.name && { name: data.name }),
-      ...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
-      ...(data.description && { description: data.description }),
-      ...(data.url && { url: data.url }),
-      ...(data.deploymentUrl && { deployUrl: data.deploymentUrl }),
+      name: data.name || '',
+      //...(data.name && { name: data.name }),
+      initialDate: data.createdAt ? new Date(data.createdAt).getTime() : null,
+      //...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
+      description: data.description || '',
+      //...(data.description && { description: data.description }),
+      url: data.url || '',
+      //...(data.url && { url: data.url }),
+      deployUrl: data.deploymentUrl || '',
+      //...(data.deploymentUrl && { deployUrl: data.deploymentUrl }),
     };
     const skillsData = {
-      ...(data.languages.length > 0 && { languages: data.languages.map((lg) => ({ text: lg })) }),
+      languages: data.languages.length > 0 ? data.languages.map((lg) => ({ text: lg })) : [],
+      //...(data.languages.length > 0 && { languages: data.languages.map((lg) => ({ text: lg })) }),
     };
     const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
 

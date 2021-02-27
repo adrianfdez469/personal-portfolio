@@ -142,9 +142,7 @@ const LinkPreview = (props) => {
   }, [typing, link, getData]);
 
   useEffect(() => {
-    if (url) {
-      dispatch({ type: 'CHANGE_LINK', value: url });
-    }
+    dispatch({ type: 'CHANGE_LINK', value: url });
   }, [url]);
 
   // handlers

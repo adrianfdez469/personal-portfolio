@@ -46,11 +46,12 @@ const BasicInfoForm = (props) => {
   // effects
   useEffect(() => {
     if (data) {
-      if (data.name) setName(data.name);
-      if (data.initialDate) setInitialDate(data.initialDate);
-      if (data.description) setDescription(data.description);
-      if (data.url) setDevLink(data.url);
-      if (data.deployUrl) setProjectLink(data.deployUrl);
+      console.log(data);
+      setName(data.name);
+      setInitialDate(data.initialDate);
+      setDescription(data.description);
+      setDevLink(data.url);
+      setProjectLink(data.deployUrl);
     }
   }, [data]);
 
