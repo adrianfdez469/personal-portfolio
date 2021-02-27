@@ -36,6 +36,7 @@ const getReposQuery = (provider) => `
       ownerId
       ownerLogin
       ownerAvatarUrl
+      isPrivate
     }
   }`;
 
@@ -389,6 +390,11 @@ const SyncForm = (props) => {
                       <div>
                         <Typography variant="body1">
                           {greaterMdSize ? repository.nameWithOwner : repository.name}
+                          {repository.isPrivate && (
+                            <Typography variant="caption" color="primary">
+                              {` (${lang.syncStep.body.select.private})`}
+                            </Typography>
+                          )}
                         </Typography>
                         <Typography variant="caption" color="textSecondary">
                           {`${

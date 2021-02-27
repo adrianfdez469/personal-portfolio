@@ -129,6 +129,7 @@ const typeDefs = gql`
     collaborators: [Collaborator!]
     totalCollaborators: String
     provider: devProviders!
+    isPrivate: Boolean
   }
   
 

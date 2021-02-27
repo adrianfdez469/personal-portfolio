@@ -25,7 +25,8 @@
         "gitlabLabel": "Repositorios de Gitlab",
         "selectNone": "Ninguno",
         "errorLoadingReposMsg": "No se pudieron cargar los repositorios",
-        "errorLoadingDetailsReposMsg": "Algo pudo salir mal"
+        "errorLoadingDetailsReposMsg": "Algo pudo salir mal",
+        "private": "Privado"
       }
     }
   },

@@ -25,7 +25,8 @@
         "gitlabLabel": "Gitlab repositories",
         "selectNone": "None",
         "errorLoadingReposMsg": "Can't load the repositories",
-        "errorLoadingDetailsReposMsg": "Something could go wrong"
+        "errorLoadingDetailsReposMsg": "Something could go wrong",
+        "private": "Private"
       }
     }
   },
