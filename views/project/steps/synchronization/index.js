@@ -139,6 +139,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         loadingGithubRepos: true,
+        errorLoadingGithubRepos: false,
       };
     case actions.SET_GITHUB_REPOS:
       return {
@@ -157,11 +158,13 @@ const reducer = (state, action) => {
       return {
         ...state,
         selectedGithubRepo: action.data,
+        errorLoadingGithubDetailsRespo: false,
       };
     case actions.DESELECT_GITHUB_REPO:
       return {
         ...state,
         selectedGithubRepo: null,
+        errorLoadingGithubDetailsRespo: false,
       };
     case actions.SET_ERROR_LOADING_GITHUB_DETAIL_REPO:
       return {
