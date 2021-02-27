@@ -101,6 +101,7 @@ const GalleryForm = (props) => {
               uploadBtnProps={{ disabled: true, label: lang.galleryStep.body.uploadBtn }}
               cameraBtnProps={{ disabled: true, label: lang.galleryStep.body.cameraBtn }}
               maxImgSize={0}
+              id={image.id}
             />
           </Box>
         ))}
@@ -118,6 +119,7 @@ const GalleryForm = (props) => {
               cameraBtnProps={{ label: lang.galleryStep.body.cameraBtn }}
               cancelBtnProps={{ label: lang.galleryStep.body.cancelBtn }}
               takeBtnProps={{ label: lang.galleryStep.body.takeBtn }}
+              id={999}
             />
           </Box>
         )}

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev1": "docker-compose up -d & yarn dev",
     "build": "next build",
     "start": "next start"
   },

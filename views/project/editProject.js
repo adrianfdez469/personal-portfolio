@@ -1,5 +1,5 @@
 // libs
-import React, { useReducer } from 'react';
+import React, { useReducer, Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import {
@@ -219,7 +219,9 @@ const EditProjectView = (props) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {Steps.map((stepForm) => stepForm.cmp)}
+        {Steps.map((stepForm) => (
+          <Fragment key={stepForm.label}>{stepForm.cmp}</Fragment>
+        ))}
       </div>
 
       {greaterMdSize ? (
@@ -253,7 +255,7 @@ const EditProjectView = (props) => {
     <>
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="button" className={classes.title}>
             {lang.title}
           </Typography>
           <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
@@ -270,13 +272,13 @@ const EditProjectView = (props) => {
         </Paper>
       )}
       <Container maxWidth="lg">
-        {greaterMdSize ? (
-          <Paper elevation={3} className={classes.paper}>
-            {mainContent}
-          </Paper>
-        ) : (
-          <>{mainContent}</>
-        )}
+        <Paper
+          elevation={3}
+          className={classes.paper}
+          style={{ display: greaterMdSize ? 'block' : 'contents' }}
+        >
+          {mainContent}
+        </Paper>
       </Container>
     </>
   );

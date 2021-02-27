@@ -9,9 +9,9 @@ export const useMainViewSyles = makeStyles((theme) => ({
     flex: 1,
   },
   paper: {
+    minHeight: '80vh',
     margin: theme.spacing(2),
     padding: theme.spacing(2),
-    minHeight: '80vh',
   },
   buttonsContainer: {
     display: 'flex',

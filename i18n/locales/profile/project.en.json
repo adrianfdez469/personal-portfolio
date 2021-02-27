@@ -1,16 +1,16 @@
 {
   "redirecting": "Redirecting...",
-  "title": "Add project",
+  "title": "New project",
   "next": "Next",
   "back": "Back",
   "save": "Save",
   "step": {
-    "syncyLabel": "Sync your project",
+    "syncyLabel": "Syncronization",
     "infoLabel": "Information",
     "galeryLabel": "Galery",
-    "sillsLabel": "Dev Skills",
-    "collaboratorsLabel": "Collabotarotors",
-    "linksLabel": "External links"
+    "sillsLabel": "Skills",
+    "collaboratorsLabel": "Collaborators",
+    "linksLabel": "Links"
   },
   "syncStep": {
     "header": {

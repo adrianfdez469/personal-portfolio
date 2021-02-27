@@ -1,16 +1,16 @@
 {
   "redirecting": "Redireccionando...",
-  "title": "Adicionar projecto",
+  "title": "Nuevo projecto",
   "next": "Siguiente",
   "back": "Atras",
   "save": "Guardar",
   "step": {
-    "syncyLabel": "Sincroniza tu proyecto",
+    "syncyLabel": "Sincronización",
     "infoLabel": "Información",
     "galeryLabel": "Galería",
-    "sillsLabel": "Habilidades de desarrollador",
+    "sillsLabel": "Habilidades",
     "collaboratorsLabel": "Colaboradores",
-    "linksLabel": "Enlaces externos"
+    "linksLabel": "Enlaces"
   },
   "syncStep": {
     "header": {
