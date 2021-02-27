@@ -330,7 +330,7 @@ const SyncForm = (props) => {
           dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_DETAIL_REPO });
         });
     }
-  }, [selectedGithubRepo.id]);
+  }, [selectedGithubRepo]);
 
   return (
     <Box className={stepStyles.mainContent} hidden={!show}>
