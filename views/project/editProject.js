@@ -203,7 +203,7 @@ const EditProjectView = (props) => {
           nextButton={
             <IconButton
               onClick={handleNext}
-              color="primary"
+              color={state.activeStep === Steps.length - 1 ? 'secondary' : 'primary'}
               disabled={state.activeStep === Steps.length}
             >
               {state.activeStep === Steps.length - 1 ? <SaveIcon /> : <ArrowForwardIosIcon />}
@@ -237,7 +237,7 @@ const EditProjectView = (props) => {
           </Button>
           <Button
             onClick={handleNext}
-            color="primary"
+            color={state.activeStep === Steps.length - 1 ? 'secondary' : 'primary'}
             disabled={state.activeStep === Steps.length}
             variant="outlined"
             style={{ width: '100px', margin: '5px' }}
