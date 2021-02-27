@@ -23,6 +23,9 @@ const useGalleryStyles = makeStyles((theme) => ({
     },
     zIndex: 999,
   },
+  primaryColor: {
+    color: theme.palette.primary.main,
+  },
 }));
 
 export default useGalleryStyles;

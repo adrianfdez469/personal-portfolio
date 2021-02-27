@@ -46,7 +46,6 @@ const BasicInfoForm = (props) => {
   // effects
   useEffect(() => {
     if (data) {
-      console.log(data);
       setName(data.name);
       setInitialDate(data.initialDate);
       setDescription(data.description);

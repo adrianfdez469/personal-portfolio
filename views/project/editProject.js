@@ -285,6 +285,7 @@ const EditProjectView = (props) => {
           style={{ display: greaterMdSize ? 'block' : 'contents' }}
         >
           {mainContent}
+          {!greaterMdSize && <div className={classes.mobileBottonSpacer} />}
         </Paper>
       </Container>
     </>

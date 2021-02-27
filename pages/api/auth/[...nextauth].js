@@ -40,10 +40,14 @@ export default (req, res) =>
     },
     callbacks: {
       async redirect(url, baseUrl) {
+        // console.log('CALLBACK redirect');
+        // console.log(url);
+        // console.log(baseUrl);
+
         return baseUrl;
       },
       async session(session, token) {
-        // console.log('SESSION CALLBACK');
+        // console.log('CALLBACK session');
         // console.log(session);
         // console.log(token);
         const resultSession = { ...session };
@@ -52,8 +56,8 @@ export default (req, res) =>
         resultSession.userId = token.userId;
         return resultSession;
       },
-      async jwt(token, user, account) {
-        // console.log('JWT CALBACK');
+      async jwt(token, user, account /* , profile, isNewUser */) {
+        // console.log('CALBACK jwt');
         // console.log(token);
         // console.log(user);
         // console.log(account);
@@ -70,6 +74,9 @@ export default (req, res) =>
     },
     events: {
       async createUser(user) {
+        // console.log('EVENTS createUser');
+        // console.log(user);
+
         if (user && user.id) {
           let slug = '';
           if (user.name && user.name !== '') {
@@ -92,10 +99,28 @@ export default (req, res) =>
         }
       },
       async signIn(data) {
+        // console.log('EVENTS signIn');
+        // console.log(data);
         if (data.account.provider === 'github') {
           deleteGithubEnhanceToken(data.user.id);
         }
       },
+      /* async signOut(data) {
+        console.log('EVENTS signOut');
+        console.log(data);
+      },
+      async linkAccount(data) {
+        console.log('EVENTS linkAccount');
+        console.log(data);
+      },
+      async session(data) {
+        console.log('EVENTS session');
+        console.log(data);
+      },
+      async error(data) {
+        console.log('EVENTS error');
+        console.log(data);
+      }, */
     },
     secret: process.env.NEXTAUTH_SHA_SECRET,
     // debug: true,

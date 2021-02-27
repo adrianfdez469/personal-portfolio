@@ -5,7 +5,7 @@ export const useMainViewSyles = makeStyles((theme) => ({
     position: 'relative',
   },
   title: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
     flex: 1,
   },
   paper: {

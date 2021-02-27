@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import { styles } from '@material-ui/pickers/views/Calendar/Calendar';
 import ReactProfileImage from '../../../../components/UI/UploadImage';
 // Hooks
 import { useLang } from '../../../../store/contexts/langContext';
@@ -76,9 +77,9 @@ const GalleryForm = (props) => {
       <Box>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           {lang.galleryStep.header.title}
-        </Typography>
-        <Typography align="center" color="primary">
-          {`${images.length}/${maxImagesCount}`}
+          <Box component="span" className={galleryStyles.primaryColor}>
+            {` ${images.length}/${maxImagesCount}`}
+          </Box>
         </Typography>
       </Box>
       <div className={galleryStyles.uploadImgContainer}>
