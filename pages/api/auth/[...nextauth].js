@@ -3,6 +3,7 @@ import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
 import prisma from '../../../prisma/prisma.instance';
 import { getHashSlug } from '../../../libs/generators';
+import { deleteGithubEnhanceToken } from '../../../libs/integrations/github.provider';
 
 export default (req, res) =>
   NextAuth(req, res, {
@@ -12,6 +13,7 @@ export default (req, res) =>
       Providers.GitHub({
         clientId: process.env.NEXT_PUBLIC_GITHUB_ID,
         clientSecret: process.env.GITHUB_SECRET,
+        scope: 'repo,read:user',
       }),
       Providers.LinkedIn({
         clientId: process.env.LINKEDIN_CLIENT_ID,
@@ -87,6 +89,11 @@ export default (req, res) =>
               id: user.id,
             },
           });
+        }
+      },
+      async signIn(data) {
+        if (data.account.provider === 'github') {
+          deleteGithubEnhanceToken(data.user.id);
         }
       },
     },
