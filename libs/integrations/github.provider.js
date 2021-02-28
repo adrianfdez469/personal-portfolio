@@ -1,5 +1,6 @@
 import { getSession } from 'next-auth/client';
 import prisma from '../../prisma/prisma.instance';
+import { generateHash, checkHash } from '../bcrypt';
 
 const gqlRepos = (first = 50) => `
   query { 
@@ -62,7 +63,7 @@ const gqlRepoData = (projectId) => `
     }
   }`;
 
-const getGithubEnhanceToken = async (userId) => {
+const findEnhanceToken = async (userId) => {
   const userToken = await prisma.userTokens.findUnique({
     where: {
       userId_provider: {
@@ -81,7 +82,7 @@ const getGithubToken = async (context) => {
   if (!session) {
     throw new Error('NO_SESSION');
   }
-  const accessToken = await getGithubEnhanceToken(session.userId);
+  const accessToken = await findEnhanceToken(session.userId);
   if (!accessToken) {
     if (session.tokenProvider !== 'github') {
       throw new Error('NO_GITHUB_TOKEN');
@@ -94,9 +95,9 @@ const getGithubToken = async (context) => {
   return accessToken;
 };
 
-const getGithubEnhaceToken = async (code, state) => {
+const requestGithubEnhanceToken = async (code, state) => {
   const response = await fetch(
-    `https://github.com/login/oauth/access_token?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&client_secret=${process.env.GITHUB_SECRET}&code=${code}&state=${state}`,
+    `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_ID}&client_secret=${process.env.GITHUB_SECRET}&code=${code}&state=${state}`,
     {
       method: 'POST',
       headers: {
@@ -160,25 +161,42 @@ export const getGithubRepoData = async (context, projectId) => {
   throw new Error('CANT_LOAD_PROVIDER_DATA');
 };
 
-export const saveGithubEnhanceToken = async (userId, code, state) => {
-  const accessToken = await getGithubEnhaceToken(code, state);
+export const getGithubLoginPageUrl = (showRepos) => {
+  const scope = showRepos === 'private' ? '&scope=repo,read:user,user:email' : '';
+  const redirectUrl = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?provider=github`;
 
-  await prisma.userTokens.upsert({
-    where: {
-      userId_provider: {
-        provider: state,
-        userId,
+  const hash = generateHash(process.env.BCRYPT_HASH_STRING);
+
+  return `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_ID}&redirect_uri=${redirectUrl}${scope}&state=${hash}`;
+};
+
+export const respGithubMiddleware = async (req, res, code, state) => {
+  const checked = checkHash(process.env.BCRYPT_HASH_STRING, state);
+
+  if (checked) {
+    const session = await getSession({ req });
+    const accessToken = await requestGithubEnhanceToken(code, state);
+    await prisma.userTokens.upsert({
+      where: {
+        userId_provider: {
+          provider: 'github',
+          userId: session.userId,
+        },
       },
-    },
-    create: {
-      accessToken,
-      provider: state,
-      userId,
-    },
-    update: {
-      accessToken,
-    },
-  });
+      create: {
+        accessToken,
+        provider: 'github',
+        userId: session.userId,
+      },
+      update: {
+        accessToken,
+      },
+    });
+    res.writeHead(301, {
+      Location: `${process.env.NEXTAUTH_URL}/profile/${session.userId}/newproject`,
+    });
+    res.end();
+  }
 };
 
 export const deleteGithubEnhanceToken = async (userId) => {

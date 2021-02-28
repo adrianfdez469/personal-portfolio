@@ -285,11 +285,7 @@ const SyncForm = (props) => {
         .then((data) => {
           if (data.errors && data.errors.length > 0) {
             if (data.errors[0].message === 'NO_GITHUB_TOKEN') {
-              // TODO: Poner esto en un lugar mas comun
-              const redirectUrl = 'http://localhost:3000/api/customauth';
-              router.push(
-                `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${redirectUrl}&scope=repo,read:user,user:email&state=github`
-              );
+              router.push('/api/customAuth/providerLoginCall?provider=github&showRepos=publics');
             } else {
               const error = new Error('Cant load api data');
               throw error;

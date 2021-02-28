@@ -11,7 +11,7 @@ export default (req, res) =>
     providers: [
       // OAuth authentication providers...
       Providers.GitHub({
-        clientId: process.env.NEXT_PUBLIC_GITHUB_ID,
+        clientId: process.env.GITHUB_ID,
         clientSecret: process.env.GITHUB_SECRET,
         scope: 'repo,read:user',
       }),
@@ -25,8 +25,15 @@ export default (req, res) =>
       }),
       // Passwordless / email sign in
       Providers.Email({
-        server: process.env.MAIL_SERVER,
-        from: 'NextAuth.js <no-reply@example.com>',
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: process.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: process.env.EMAIL_FROM,
       }),
     ],
     pages: {
@@ -40,14 +47,14 @@ export default (req, res) =>
     },
     callbacks: {
       async redirect(url, baseUrl) {
-        // console.log('CALLBACK redirect');
+        // console.log(' -------------- CALLBACK redirect');
         // console.log(url);
         // console.log(baseUrl);
 
         return baseUrl;
       },
       async session(session, token) {
-        // console.log('CALLBACK session');
+        // console.log(' -------------- CALLBACK session');
         // console.log(session);
         // console.log(token);
         const resultSession = { ...session };
@@ -57,7 +64,7 @@ export default (req, res) =>
         return resultSession;
       },
       async jwt(token, user, account /* , profile, isNewUser */) {
-        // console.log('CALBACK jwt');
+        // console.log(' -------------- CALBACK jwt');
         // console.log(token);
         // console.log(user);
         // console.log(account);
@@ -105,22 +112,6 @@ export default (req, res) =>
           deleteGithubEnhanceToken(data.user.id);
         }
       },
-      /* async signOut(data) {
-        console.log('EVENTS signOut');
-        console.log(data);
-      },
-      async linkAccount(data) {
-        console.log('EVENTS linkAccount');
-        console.log(data);
-      },
-      async session(data) {
-        console.log('EVENTS session');
-        console.log(data);
-      },
-      async error(data) {
-        console.log('EVENTS error');
-        console.log(data);
-      }, */
     },
     secret: process.env.NEXTAUTH_SHA_SECRET,
     // debug: true,

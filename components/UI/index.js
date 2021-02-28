@@ -1,4 +1,4 @@
-export { default as LoginButtonFactory } from './Buttons/LoginButtonFactory';
+export { default as LoginButtonFactory } from './Buttons/authButtons/LoginButtonFactory';
 export { default as LandingAbout } from './landing/LandingAbout';
 export { default as LandingFeatures } from './landing/LandingFeatures';
 export { default as LandingFooter } from './landing/LandingFooter';
