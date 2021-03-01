@@ -126,10 +126,15 @@ export const getGithubRepos = async (context) => {
     }),
   });
   if (response.ok) {
-    return (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
-      ...repository,
-      provider: 'github',
-    }));
+    const scopes = response.headers.get('x-oauth-scopes');
+    console.log(scopes);
+    return {
+      repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
+        ...repository,
+        provider: 'github',
+      })),
+      scopes,
+    };
   }
   if (response.status === 401) {
     throw new Error('UNAUTHORIZED');
@@ -162,7 +167,7 @@ export const getGithubRepoData = async (context, projectId) => {
 };
 
 export const getGithubLoginPageUrl = (showRepos) => {
-  const scope = showRepos === 'private' ? '&scope=repo,read:user,user:email' : '';
+  const scope = showRepos === 'privates' ? '&scope=repo,read:user,user:email' : '';
   const redirectUrl = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?provider=github`;
 
   const hash = generateHash(process.env.BCRYPT_HASH_STRING);

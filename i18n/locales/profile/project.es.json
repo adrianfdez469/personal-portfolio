@@ -18,7 +18,9 @@
     },
     "body": {
       "buttons": {
-        "common": "Sincroniza con"
+        "common": "Sincroniza con",
+        "grantPrivateAccess": "Repos privados",
+        "grantPublicAccess": "Repos públicos"
       },
       "select": {
         "githubLabel": "Repositorios de Github",

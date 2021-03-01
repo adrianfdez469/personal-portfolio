@@ -13,7 +13,6 @@ export default (req, res) =>
       Providers.GitHub({
         clientId: process.env.GITHUB_ID,
         clientSecret: process.env.GITHUB_SECRET,
-        scope: 'repo,read:user',
       }),
       Providers.LinkedIn({
         clientId: process.env.LINKEDIN_CLIENT_ID,

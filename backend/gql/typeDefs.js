@@ -128,9 +128,14 @@ const typeDefs = gql`
     languages: [String!]
     collaborators: [Collaborator!]
     totalCollaborators: String
-    provider: devProviders!
     isPrivate: Boolean
+    provider: devProviders,
   }
+  type ProvidersResposResponse {
+    scopes: String
+    repos: [DevProviderRepo!]
+  }
+  
   
 
   type Mutation {
@@ -182,7 +187,7 @@ const typeDefs = gql`
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
     link(url: String): Link!
 
-    providerRepos(provider: devProviders!): [DevProviderRepo!]
+    providerRepos(provider: devProviders!): ProvidersResposResponse!
     providerRepoData(provider: devProviders!, id: ID!): DevProviderRepo!
   }
 `;

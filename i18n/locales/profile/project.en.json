@@ -18,7 +18,9 @@
     },
     "body": {
       "buttons": {
-        "common": "Sync with"
+        "common": "Sync with",
+        "grantPrivateAccess": "Private repos",
+        "grantPublicAccess": "Public repos"
       },
       "select": {
         "githubLabel": "Github repositories",

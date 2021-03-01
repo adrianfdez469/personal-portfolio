@@ -16,6 +16,9 @@ import {
   FormLabel,
   Grid,
 } from '@material-ui/core';
+import LockIcon from '@material-ui/icons/LockOutlined';
+import LockOpenIcon from '@material-ui/icons/LockOpenOutlined';
+
 import { useRouter } from 'next/router';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
@@ -29,14 +32,18 @@ import GitLabIcon from '../../../../components/UI/icons/GitlabIcon';
 const getReposQuery = (provider) => `
   query {
     providerRepos(provider:${provider}){
-      id
-      name
-      description
-      nameWithOwner
-      ownerId
-      ownerLogin
-      ownerAvatarUrl
-      isPrivate
+      scopes
+      repos {
+        id
+        name
+        description
+        nameWithOwner
+        ownerId
+        ownerLogin
+        ownerAvatarUrl
+        isPrivate
+        provider
+      }
     }
   }`;
 
@@ -86,6 +93,7 @@ const initialGithubState = {
   githubRepos: [],
   detailsGithubRepoSelected: null,
   errorLoadingGithubDetailsRespo: false,
+  hasPermissionForPrivateRepos: false,
 };
 const initialGitlabState = {
   buttonGitlabSelected: false,
@@ -113,6 +121,7 @@ const actions = {
   START_LOADING_DETAIL_GTIHUB_REPO: 'START_LOADING_DETAIL_GTIHUB_REPO',
   SET_ERROR_LOADING_GITHUB_DETAIL_REPO: 'SET_ERROR_LOADING_GITHUB_DETAIL_REPO',
   STOP_LOADING_DETAIL_GTIHUB_REPO: 'STOP_LOADING_DETAIL_GTIHUB_REPO',
+  NO_GITHUB_TOKEN: 'NO_GITHUB_TOKEN',
 
   SELECT_GITLAB_PROVIDER_BUTTON: 'SELECT_GITLAB_PROVIDER_BUTTON',
   START_LOADING_GITLAB_REPOS: 'START_LOADING_GITLAB_REPOS',
@@ -147,11 +156,12 @@ const reducer = (state, action) => {
         githubRepos: action.data,
         loadingGithubRepos: false,
         errorLoadingGithubRepos: false,
+        hasPermissionForPrivateRepos: action.hasPermision,
       };
     case actions.SET_ERROR_LOADING_GITHUB_REPOS:
       return {
         ...state,
-        errorLoadingGithubRepos: true,
+        errorLoadingGithubRepos: action.data,
         loadingGithubRepos: false,
       };
     case actions.SELECT_GITHUB_REPO:
@@ -170,6 +180,10 @@ const reducer = (state, action) => {
       return {
         ...state,
         errorLoadingGithubDetailsRespo: true,
+      };
+    case actions.NO_GITHUB_TOKEN:
+      return {
+        ...state,
       };
 
     // GITLAB
@@ -258,6 +272,13 @@ const SyncForm = (props) => {
       dispatch({ type: actions.SELECT_GITHUB_REPO });
     }
   };
+  const handleNavigateToGetAccess = (provider, showPrivates) => {
+    router.push(
+      `/api/customAuth/providerLoginCall?provider=${provider}&showRepos=${
+        showPrivates ? 'privates' : 'publics'
+      }`
+    );
+  };
 
   // effect loading github repos
   useEffect(() => {
@@ -283,19 +304,29 @@ const SyncForm = (props) => {
           throw error;
         })
         .then((data) => {
+          console.log(data);
           if (data.errors && data.errors.length > 0) {
             if (data.errors[0].message === 'NO_GITHUB_TOKEN') {
-              router.push('/api/customAuth/providerLoginCall?provider=github&showRepos=publics');
-            } else {
-              const error = new Error('Cant load api data');
-              throw error;
+              // handleNavigateToGetAccess('github', false);
+              dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: 'NO_GITHUB_TOKEN' });
+              return;
             }
+            const error = new Error('Cant load api data');
+            throw error;
           }
-          dispatch({ type: actions.SET_GITHUB_REPOS, data: data.data.providerRepos });
+          let hasPermision = true;
+          if (data.data.providerRepos.scopes === 'user') {
+            hasPermision = false;
+          }
+          dispatch({
+            type: actions.SET_GITHUB_REPOS,
+            data: data.data.providerRepos.repos,
+            hasPermision,
+          });
         })
         .catch((err) => {
           console.log(err);
-          dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS });
+          dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: err.message });
         });
     }
   }, [buttonGithubSelected, githubRepos]);
@@ -358,65 +389,93 @@ const SyncForm = (props) => {
 
       {buttonGithubSelected && (
         <Box className={styles.formcontrolWrapper}>
-          <FormControl variant="standard" className={styles.formControl} fullWidth>
-            <InputLabel id="github-repos-select">
-              {lang.syncStep.body.select.githubLabel}
-            </InputLabel>
-            <Select
-              labelId="github-repos-select"
-              id="github-repos-select"
-              value={selectedGithubRepo || ''}
-              onChange={handleSelectGithubRepo}
-              label={lang.syncStep.body.select.githubLabel}
-              MenuProps={MenuProps}
-            >
-              <MenuItem value={{ id: null, name: '' }}>
-                <em>{lang.syncStep.body.select.selectNone}</em>
-              </MenuItem>
-              {Array.isArray(githubRepos) &&
-                githubRepos.map((repository) => (
-                  <MenuItem value={repository} key={repository.id}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      {greaterMdSize && (
-                        <Avatar
-                          alt={repository.ownerLogin}
-                          src={repository.ownerAvatarUrl}
-                          variant="circular"
-                          className={styles.smallAvatar}
-                        />
-                      )}
-
-                      <div>
-                        <Typography variant="body1">
-                          {greaterMdSize ? repository.nameWithOwner : repository.name}
-                          {repository.isPrivate && (
-                            <Typography variant="caption" color="primary">
-                              {` (${lang.syncStep.body.select.private})`}
-                            </Typography>
-                          )}
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {`${
-                            repository.description != null
-                              ? `${repository.description.slice(0, maxTextLeng)}${
-                                  repository.description.length > maxTextLeng ? '...' : ''
-                                } `
-                              : ''
-                          }`}
-                        </Typography>
-                      </div>
-                    </div>
+          {state.errorLoadingGithubRepos !== 'NO_GITHUB_TOKEN' && (
+            <Box style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <FormControl variant="standard" className={styles.formControl} fullWidth>
+                <InputLabel id="github-repos-select">
+                  {lang.syncStep.body.select.githubLabel}
+                </InputLabel>
+                <Select
+                  labelId="github-repos-select"
+                  id="github-repos-select"
+                  value={selectedGithubRepo || ''}
+                  onChange={handleSelectGithubRepo}
+                  label={lang.syncStep.body.select.githubLabel}
+                  MenuProps={MenuProps}
+                >
+                  <MenuItem value={{ id: null, name: '' }}>
+                    <em>{lang.syncStep.body.select.selectNone}</em>
                   </MenuItem>
-                ))}
-            </Select>
-            {errorLoadingGithubRepos && (
-              <FormLabel error>{lang.syncStep.body.select.errorLoadingReposMsg}</FormLabel>
-            )}
-            {errorLoadingGithubDetailsRespo && (
-              <FormLabel error>{lang.syncStep.body.select.errorLoadingDetailsReposMsg}</FormLabel>
-            )}
-          </FormControl>
+                  {Array.isArray(githubRepos) &&
+                    githubRepos.map((repository) => (
+                      <MenuItem value={repository} key={repository.id}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          {greaterMdSize && (
+                            <Avatar
+                              alt={repository.ownerLogin}
+                              src={repository.ownerAvatarUrl}
+                              variant="circular"
+                              className={styles.smallAvatar}
+                            />
+                          )}
+
+                          <div>
+                            <Typography variant="body1">
+                              {greaterMdSize ? repository.nameWithOwner : repository.name}
+                              {repository.isPrivate && (
+                                <Typography variant="caption" color="primary">
+                                  {` (${lang.syncStep.body.select.private})`}
+                                </Typography>
+                              )}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {`${
+                                repository.description != null
+                                  ? `${repository.description.slice(0, maxTextLeng)}${
+                                      repository.description.length > maxTextLeng ? '...' : ''
+                                    } `
+                                  : ''
+                              }`}
+                            </Typography>
+                          </div>
+                        </div>
+                      </MenuItem>
+                    ))}
+                </Select>
+                {errorLoadingGithubRepos && (
+                  <FormLabel error>{lang.syncStep.body.select.errorLoadingReposMsg}</FormLabel>
+                )}
+                {errorLoadingGithubDetailsRespo && (
+                  <FormLabel error>
+                    {lang.syncStep.body.select.errorLoadingDetailsReposMsg}
+                  </FormLabel>
+                )}
+              </FormControl>
+            </Box>
+          )}
           {loadingGithubRepos && <LinearProgress className={styles.progress} />}
+          {!state.hasPermissionForPrivateRepos && (
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<LockIcon />}
+              style={{ margin: 8, width: 180 }}
+              onClick={() => handleNavigateToGetAccess('github', true)}
+            >
+              {lang.syncStep.body.buttons.grantPrivateAccess}
+            </Button>
+          )}
+          {state.errorLoadingGithubRepos === 'NO_GITHUB_TOKEN' && (
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<LockOpenIcon />}
+              style={{ margin: 8, width: 180 }}
+              onClick={() => handleNavigateToGetAccess('github', false)}
+            >
+              {lang.syncStep.body.buttons.grantPublicAccess}
+            </Button>
+          )}
         </Box>
       )}
       {buttonGitlabSelected && (
