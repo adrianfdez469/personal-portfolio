@@ -227,7 +227,6 @@ const SyncButton = (props) => {
 
 const SyncForm = (props) => {
   const { show, selectRepo } = props;
-
   // hooks
   const [state, dispatch] = useReducer(reducer, initialState);
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
@@ -511,4 +510,4 @@ SyncForm.defaultProps = {
   show: false,
 };
 
-export default SyncForm;
+export default React.memo(SyncForm);

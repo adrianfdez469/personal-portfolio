@@ -1,5 +1,5 @@
 // libs
-import React, { useReducer, Fragment, useEffect } from 'react';
+import React, { useReducer, Fragment, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import {
@@ -34,12 +34,42 @@ const GalleryForm = dynamic(() => import('./steps/gallery'));
 const SkillsForm = dynamic(() => import('./steps/skills'));
 const CollaboratorsForm = dynamic(() => import('./steps/collaborators'));
 
+const saveQueryData = (data) => `
+  mutation {
+    createProject(
+      project: ${data}
+    )
+  }
+`;
+
 const initialState = {
   activeStep: 0,
   data: {
-    basicInfoData: null,
-    skillsData: null,
-    collaborators: null,
+    basicInfoData: {
+      name: '',
+      initialDate: null,
+      endDate: null,
+      description: '',
+      otherText: '',
+      proyectLink: {
+        url: '',
+        title: '',
+        description: '',
+        imageUrl: '',
+      },
+      devLink: {
+        url: '',
+        title: '',
+        description: '',
+        imageUrl: '',
+      },
+    },
+    skillsData: {
+      languages: [],
+      technologies: [],
+    },
+    collaborators: [],
+    images: [],
     provider: null,
   },
   saving: false,
@@ -53,6 +83,11 @@ const actions = {
   END_SAVING: 'END_SAVING',
   ERROR_SAVING: 'ERROR_SAVING',
   ADD_STEPS: 'ADD_STEPS',
+
+  CHANGE_BASIC_DATA: 'CHANGE_BASIC_DATA',
+  CHANGE_SKILLS_DATA: 'CHANGE_SKILLS_DATA',
+  CHANGE_COLLABORATORS_DATA: 'CHANGE_COLLABORATORS_DATA',
+  CHANGE_IMAGES_DATA: 'CHANGE_IMAGES_DATA',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -99,47 +134,116 @@ const reducer = (state, action) => {
         ...state,
         Steps: action.data,
       };
+    case actions.CHANGE_BASIC_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          basicInfoData: {
+            ...state.data.basicInfoData,
+            ...action.data,
+          },
+        },
+      };
+    case actions.CHANGE_SKILLS_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          skillsData: {
+            ...state.data.skillsData,
+            ...action.data,
+          },
+        },
+      };
+    case actions.CHANGE_COLLABORATORS_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          collaborators: action.data,
+        },
+      };
+    case actions.CHANGE_IMAGES_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          images: action.data,
+        },
+      };
     default:
       return state;
   }
 };
 
 const EditProjectView = (props) => {
-  const { /*open: openDialog,*/ handleClose } = props;
+  const { handleClose } = props;
   // Hooks
   const { lang } = useLang();
   const classes = useMainViewSyles();
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setRepoSyncData = (data) => {
-    console.log(data);
-    const basicInfoData = {
-      name: data.name || '',
-      //...(data.name && { name: data.name }),
-      initialDate: data.createdAt ? new Date(data.createdAt).getTime() : null,
-      //...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
-      description: data.description || '',
-      //...(data.description && { description: data.description }),
-      url: data.url || '',
-      //...(data.url && { url: data.url }),
-      deployUrl: data.deploymentUrl || '',
-      //...(data.deploymentUrl && { deployUrl: data.deploymentUrl }),
-    };
-    const skillsData = {
-      languages: data.languages.length > 0 ? data.languages.map((lg) => ({ text: lg })) : [],
-      //...(data.languages.length > 0 && { languages: data.languages.map((lg) => ({ text: lg })) }),
-    };
-    const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
+  const setRepoSyncData = useCallback(
+    (data) => {
+      console.log(data);
 
-    const fullData = {
-      basicInfoData: { ...basicInfoData },
-      skillsData: { ...skillsData },
-      collaborators,
-      provider: data.provider,
-    };
-    dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
-  };
+      const basicInfoData = {
+        ...initialState.data.basicInfoData,
+        name: data.name || '',
+        initialDate: data.createdAt ? new Date(data.createdAt).getTime() : null,
+        description: data.description || '',
+        devLink: {
+          ...initialState.data.basicInfoData.devLink,
+          url: data.url || '',
+        },
+        proyectLink: {
+          ...initialState.data.basicInfoData.proyectLink,
+          url: data.deploymentUrl || '',
+        },
+      };
+      const skillsData = {
+        ...initialState.data.skillsData,
+        languages: data.languages.length > 0 ? data.languages.map((lg) => ({ text: lg })) : [],
+      };
+      const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
+
+      const fullData = {
+        basicInfoData: { ...basicInfoData },
+        skillsData: { ...skillsData },
+        collaborators,
+        provider: data.provider,
+      };
+      dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
+    },
+    [dispatch]
+  );
+
+  const handleChangeBasicInfoData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_BASIC_DATA, data: data });
+    },
+    [dispatch]
+  );
+  const handleChangeSkillsData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_SKILLS_DATA, data: data });
+    },
+    [dispatch]
+  );
+  const handleChangeCollaboratorsData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_COLLABORATORS_DATA, data: data });
+    },
+    [dispatch]
+  );
+  const handleChangeImagesData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_IMAGES_DATA, data: data });
+    },
+    [dispatch]
+  );
 
   const Steps = [
     {
@@ -147,22 +251,44 @@ const EditProjectView = (props) => {
       label: lang.step.syncyLabel,
     },
     {
-      cmp: <BasicInfoForm show={state.activeStep === 1} data={state.data.basicInfoData} />,
+      cmp: (
+        <BasicInfoForm
+          show={state.activeStep === 1}
+          data={state.data.basicInfoData}
+          changeData={handleChangeBasicInfoData}
+        />
+      ),
       label: lang.step.infoLabel,
     },
     {
-      cmp: <GalleryForm show={state.activeStep === 2} />,
-      label: lang.step.galeryLabel,
-    },
-    {
-      cmp: <SkillsForm show={state.activeStep === 3} data={state.data.skillsData} />,
+      cmp: (
+        <SkillsForm
+          show={state.activeStep === 2}
+          data={state.data.skillsData}
+          changeData={handleChangeSkillsData}
+        />
+      ),
       label: lang.step.sillsLabel,
     },
     {
       cmp: (
-        <CollaboratorsForm show={state.activeStep === 4} collaborators={state.data.collaborators} />
+        <CollaboratorsForm
+          show={state.activeStep === 3}
+          collaborators={state.data.collaborators}
+          changeData={handleChangeCollaboratorsData}
+        />
       ),
       label: lang.step.collaboratorsLabel,
+    },
+    {
+      cmp: (
+        <GalleryForm
+          show={state.activeStep === 4}
+          images={state.data.images}
+          changeData={handleChangeImagesData}
+        />
+      ),
+      label: lang.step.galeryLabel,
     },
   ];
 
@@ -172,6 +298,8 @@ const EditProjectView = (props) => {
     } else {
       dispatch({ type: actions.START_SAVING });
       // TODO: Fetch to save
+
+      console.log(state);
     }
   };
 

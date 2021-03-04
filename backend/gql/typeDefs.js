@@ -13,9 +13,9 @@ const typeDefs = gql`
   type Link {
     id: ID!
     url: String!
-    title: String
-    description: String
-    imageUrl: String
+    title: String!
+    description: String!
+    imageUrl: String!
   }
   type Skill {
     id: ID!
@@ -84,18 +84,34 @@ const typeDefs = gql`
     description: String
     imageUrl: String
   }
+  # input ProjectParams {
+  #   userId: ID
+  #   name: String!
+  #   description: String
+  #   initialDate: String
+  #   finalDate: String
+  #   skills: [SkillParams!]
+  #   projectLink: LinkParams
+  #   projectDevLink: LinkParams
+  #   otherInfo: String
+  #   imageIds: [ID!]
+  # }
   input ProjectParams {
     userId: ID
     name: String!
     description: String
     initialDate: String
     finalDate: String
-    skills: [SkillParams!]
+    addedSkills: [SkillParams!]
+    removedSkills: [ID!]
     projectLink: LinkParams
     projectDevLink: LinkParams
     otherInfo: String
-    imageIds: [ID!]
+    addedImageIds: [String!]
+    removedImages: [String!]
   }
+
+
   input UserParams {
     name: String
     email: String
@@ -143,6 +159,9 @@ const typeDefs = gql`
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
     createProject(project: ProjectParams!): SaveProjectMutationResponse!
     updateProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
+    
+    # saveProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
+    
   }
 
   enum CamelMode {

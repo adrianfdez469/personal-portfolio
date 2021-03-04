@@ -21,13 +21,12 @@ const getPreviewData = async (targetUrl) => {
     const metadata = await metascraper({ html, url });
 
     const data = {
-      ...(metadata.title && { title: metadata.title.slice(0, 50) }),
-      ...(metadata.description && {
-        description: `${metadata.description.slice(0, 250)}${
-          metadata.description.length > 250 ? '...' : ''
-        }`,
-      }),
-      // img: metadata.logo || metadata.image,
+      title: metadata.title
+        ? `${metadata.title.slice(0, 50)}${metadata.title.length > 50 ? '...' : ''}`
+        : '',
+      description: metadata.description
+        ? `${metadata.description.slice(0, 250)}${metadata.description.length > 250 ? '...' : ''}`
+        : '',
       id: -1,
       url,
       imageUrl: metadata.logo || metadata.image,

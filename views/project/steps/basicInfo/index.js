@@ -1,6 +1,6 @@
 // Ext libs
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import React /* , { useState, useEffect } */ from 'react';
 import { Box, Typography, Grid, TextField } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import {} from 'next/router';
@@ -13,46 +13,61 @@ import { useStepsStyles } from '../../styles';
 
 const BasicInfoForm = (props) => {
   // constants
-  const { show, data } = props;
+  const { show, data, changeData } = props;
   // styles
   const stepStyles = useStepsStyles();
+
   // hooks
-  const [name, setName] = useState('');
-  const [initialDate, setInitialDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [description, setDescription] = useState('');
-  const [otherText, setOtherText] = useState('');
-  const [proyectLink, setProjectLink] = useState(null);
-  const [devLink, setDevLink] = useState(null);
+  // const [name, setName] = useState('');
+  // const [initialDate, setInitialDate] = useState(null);
+  // const [endDate, setEndDate] = useState(null);
+  // const [description, setDescription] = useState('');
+  // const [otherText, setOtherText] = useState('');
+  //  const [proyectLink, setProjectLink] = useState(null);
+  // const [devLink, setDevLink] = useState(null);
   const { lang } = useLang();
 
   // handlers
   const handleNameChange = (event) => {
-    setName(event.target.value);
+    // setName(event.target.value);
+    changeData({ name: event.target.value });
   };
   const handleInitialDateChange = (date) => {
-    setInitialDate(date);
+    // setInitialDate(date);
+    changeData({ initialDate: new Date(date).getTime() });
   };
   const handleEndDateChange = (date) => {
-    setEndDate(date);
+    // setEndDate(date);
+    changeData({ endDate: new Date(date).getTime() });
   };
   const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
+    // setDescription(event.target.value);
+    changeData({ description: event.target.value });
   };
   const hanclerOtherChange = (event) => {
-    setOtherText(event.target.value);
+    // setOtherText(event.target.value);
+    changeData({ otherText: event.target.value });
   };
-
-  // effects
-  useEffect(() => {
-    if (data) {
-      setName(data.name);
-      setInitialDate(data.initialDate);
-      setDescription(data.description);
-      setDevLink(data.url);
-      setProjectLink(data.deployUrl);
-    }
-  }, [data]);
+  const handleSetProjectLink = (text) => {
+    changeData({
+      proyectLink: {
+        url: text,
+      },
+    });
+  };
+  const handleSetProjectPreview = (previewData) => {
+    changeData({ proyectLink: previewData });
+  };
+  const handleSetProjectDevLink = (text) => {
+    changeData({
+      devLink: {
+        url: text,
+      },
+    });
+  };
+  const handleSetProjectDevPreview = (previewData) => {
+    changeData({ devLink: previewData });
+  };
 
   return (
     <Box className={stepStyles.mainContent} hidden={!show}>
@@ -68,7 +83,7 @@ const BasicInfoForm = (props) => {
               required
               margin="dense"
               onChange={handleNameChange}
-              value={name}
+              value={data.name}
               variant="outlined"
               fullWidth
             />
@@ -86,7 +101,7 @@ const BasicInfoForm = (props) => {
               // maxDate={endDate}
               format={lang.infoStep.form.inputDate.formatDate}
               inputVariant="outlined"
-              value={initialDate}
+              value={data.initialDate}
               onChange={handleInitialDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change start date',
@@ -109,13 +124,13 @@ const BasicInfoForm = (props) => {
               disableFuture
               format={lang.infoStep.form.inputDate.formatDate}
               inputVariant="outlined"
-              value={endDate}
+              value={data.endDate}
               onChange={handleEndDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change end date',
               }}
               // fullWidth={!greaterMdSize}
-              minDate={initialDate}
+              minDate={data.initialDate}
               fullWidth
               invalidDateMessage={lang.infoStep.form.inputDate.invalidDate}
               invalidLabel={lang.infoStep.form.inputDate.invalidDate}
@@ -129,7 +144,7 @@ const BasicInfoForm = (props) => {
               multiline
               rows="5"
               margin="dense"
-              value={description}
+              value={data.description}
               onChange={handleDescriptionChange}
               variant="outlined"
               fullWidth
@@ -143,7 +158,7 @@ const BasicInfoForm = (props) => {
               margin="dense"
               label={lang.infoStep.form.inputMore.label}
               placeholder={lang.infoStep.form.inputMore.placeholder}
-              value={otherText}
+              value={data.otherText}
               onChange={hanclerOtherChange}
               fullWidth
             />
@@ -152,18 +167,20 @@ const BasicInfoForm = (props) => {
             <LinkPreview
               fullWidth
               label={lang.infoStep.form.inputProjectLink.label}
-              setLink={setProjectLink}
-              url={proyectLink}
+              setLink={handleSetProjectLink}
+              url={data.proyectLink.url}
               placeholder={lang.infoStep.form.inputProjectLink.placeholder}
+              setPreview={handleSetProjectPreview}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <LinkPreview
               fullWidth
               label={lang.infoStep.form.inputProjectDevLink.label}
-              setLink={setDevLink}
-              url={devLink}
+              setLink={handleSetProjectDevLink}
+              url={data.devLink.url}
               placeholder={lang.infoStep.form.inputProjectDevLink.placeholder}
+              setPreview={handleSetProjectDevPreview}
             />
           </Grid>
         </Grid>
@@ -173,22 +190,30 @@ const BasicInfoForm = (props) => {
 };
 
 BasicInfoForm.propTypes = {
+  changeData: PropTypes.func.isRequired,
   data: PropTypes.shape({
-    name: PropTypes.string,
-    description: PropTypes.string,
-    initialDate: PropTypes.number,
-    url: PropTypes.string,
-    deployUrl: PropTypes.string,
-  }),
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    initialDate: PropTypes.oneOfType([PropTypes.number, PropTypes.shape(PropTypes.any)]),
+    endDate: PropTypes.oneOfType([PropTypes.number, PropTypes.shape(PropTypes.any)]),
+    otherText: PropTypes.string.isRequired,
+    proyectLink: PropTypes.shape({
+      url: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      imageUrl: PropTypes.string.isRequired,
+    }),
+    devLink: PropTypes.shape({
+      url: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      imageUrl: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
   show: PropTypes.bool,
 };
 BasicInfoForm.defaultProps = {
-  data: {
-    name: '',
-    description: '',
-    initialDate: null,
-  },
   show: false,
 };
 
-export default BasicInfoForm;
+export default React.memo(BasicInfoForm);

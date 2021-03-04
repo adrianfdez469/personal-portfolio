@@ -25,52 +25,54 @@ const getSkillsQuery = () => `
 
 const SkillsForm = (props) => {
   // constants
-  const { show, data } = props;
+  const { show, data, changeData } = props;
   // hooks
   const styles = useSkillsStyles();
   const stepStyles = useStepsStyles();
-  const [programmingLangs, setProgrammingLangs] = useState([]);
-  const [technologies, setTechnologies] = useState([]);
   const [allProgrammingLangs, setAllProgrammingLangs] = useState([]);
   const [allTechnologies, setAllTechnologies] = useState([]);
   const { lang } = useLang();
 
   // hadlers
   const handleDelLang = (pl) => {
-    setProgrammingLangs((state) => state.filter((devlang) => devlang.text !== pl.text));
+    const languages = data.languages.filter((devlang) => devlang.text !== pl.text);
+    changeData({
+      languages,
+    });
   };
   const handleAddLanguage = (devlang) => {
     if (
       !existsObjWithPropValue(
-        programmingLangs.map((pl) => ({ ...pl, text: pl.text.toLowerCase().trim() })),
+        data.languages.map((pl) => ({ ...pl, text: pl.text.toLowerCase().trim() })),
         'text',
         devlang.text.toLowerCase().trim()
       )
     ) {
-      setProgrammingLangs((state) => [...state, devlang]);
+      changeData({
+        languages: [...data.languages, devlang],
+      });
     }
   };
   const handleDelTech = (tech) => {
-    setTechnologies((state) => state.filter((th) => th.text !== tech.text));
+    const technologies = data.technologies.filter((technology) => technology.text !== tech.text);
+    changeData({
+      technologies,
+    });
   };
   const handleAddTechnologie = (tech) => {
     if (
       !existsObjWithPropValue(
-        technologies.map((th) => ({ ...th, text: th.text.toLowerCase().trim() })),
+        data.technologies.map((th) => ({ ...th, text: th.text.toLowerCase().trim() })),
         'text',
         tech.text.toLowerCase().trim()
       )
     ) {
-      setTechnologies((state) => [...state, tech]);
+      // setTechnologies((state) => [...state, tech]);
+      changeData({
+        technologies: [...data.technologies, tech],
+      });
     }
   };
-
-  // effects setting loaded data from repo
-  useEffect(() => {
-    if (data && data.languages && data.languages.length > 0) {
-      setProgrammingLangs(data.languages);
-    }
-  }, [data]);
 
   // loading skils
   useEffect(() => {
@@ -136,11 +138,11 @@ const SkillsForm = (props) => {
               }}
               // helperText="Adiciona los lenguajes de programación utilizados"
               optionsList={allProgrammingLangs}
-              excludedOptions={programmingLangs}
+              excludedOptions={data.languages}
               onAdd={handleAddLanguage}
             />
             <div className={styles.chipsContainer}>
-              {programmingLangs.map((pl) => (
+              {data.languages.map((pl) => (
                 <Chip
                   key={pl.text}
                   label={pl.text}
@@ -162,11 +164,11 @@ const SkillsForm = (props) => {
               }}
               // helperText="Adiciona las tecnologías utilizadas"
               optionsList={allTechnologies}
-              excludedOptions={technologies}
+              excludedOptions={data.technologies}
               onAdd={handleAddTechnologie}
             />
             <div className={styles.chipsContainer}>
-              {technologies.map((tech) => (
+              {data.technologies.map((tech) => (
                 <Chip
                   key={tech.text}
                   label={tech.text}
@@ -185,8 +187,14 @@ const SkillsForm = (props) => {
 
 SkillsForm.propTypes = {
   show: PropTypes.bool,
+  changeData: PropTypes.func.isRequired,
   data: PropTypes.shape({
     languages: PropTypes.arrayOf(
+      PropTypes.shape({
+        text: PropTypes.string.isRequired,
+      })
+    ),
+    technologies: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.string.isRequired,
       })
@@ -197,4 +205,4 @@ SkillsForm.defaultProps = {
   data: null,
   show: false,
 };
-export default SkillsForm;
+export default React.memo(SkillsForm);
