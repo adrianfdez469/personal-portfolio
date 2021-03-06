@@ -1,16 +1,16 @@
 {
   "redirecting": "Redirecting...",
-  "title": "Add project",
+  "title": "New project",
   "next": "Next",
   "back": "Back",
   "save": "Save",
   "step": {
-    "syncyLabel": "Sync your project",
+    "syncyLabel": "Syncronization",
     "infoLabel": "Information",
     "galeryLabel": "Galery",
-    "sillsLabel": "Dev Skills",
-    "collaboratorsLabel": "Collabotarotors",
-    "linksLabel": "External links"
+    "sillsLabel": "Skills",
+    "collaboratorsLabel": "Collaborators",
+    "linksLabel": "Links"
   },
   "syncStep": {
     "header": {
@@ -18,14 +18,17 @@
     },
     "body": {
       "buttons": {
-        "common": "Sync with"
+        "common": "Sync with",
+        "grantPrivateAccess": "Private repos",
+        "grantPublicAccess": "Public repos"
       },
       "select": {
         "githubLabel": "Github repositories",
         "gitlabLabel": "Gitlab repositories",
         "selectNone": "None",
         "errorLoadingReposMsg": "Can't load the repositories",
-        "errorLoadingDetailsReposMsg": "Something could go wrong"
+        "errorLoadingDetailsReposMsg": "Something could go wrong",
+        "private": "Private"
       }
     }
   },

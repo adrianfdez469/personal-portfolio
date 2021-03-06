@@ -1,4 +1,6 @@
 import { ApolloServer } from 'apollo-server-micro';
+
+// import jwt from 'next-auth/jwt';
 import { resolvers, typeDefs } from '../../../backend';
 
 const apolloServer = new ApolloServer({

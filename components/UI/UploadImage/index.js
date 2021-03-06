@@ -21,23 +21,19 @@ const useStyles = makeStyles((theme) => ({
   }),
 }));
 
-// eslint-disable-next-line react/prop-types
-const UploadBtn = ({ action, uploadProps, uploadBtnLabel }) => {
+const UploadBtn = ({ action, uploadProps, uploadBtnLabel, uploadBtnId }) => {
   const classes = useStyles();
-  const randomId = `contained-button-file-${Math.random()}`;
   return (
     <>
       <input
         accept="image/*"
         className={classes.input}
-        // id="contained-button-file"
-        id={randomId}
+        id={uploadBtnId}
         onChange={action}
         type="file"
-        // eslint-disable-next-line react/prop-types
         disabled={uploadProps.disabled}
       />
-      <label htmlFor={randomId}>
+      <label htmlFor={uploadBtnId}>
         <Button variant="outlined" color="primary" component="span" {...uploadProps}>
           {uploadBtnLabel}
         </Button>
@@ -45,9 +41,16 @@ const UploadBtn = ({ action, uploadProps, uploadBtnLabel }) => {
     </>
   );
 };
+UploadBtn.propTypes = {
+  action: PropTypes.func.isRequired,
+  uploadProps: PropTypes.shape({ disabled: PropTypes.bool }).isRequired,
+  uploadBtnLabel: PropTypes.string.isRequired,
+  uploadBtnId: PropTypes.number.isRequired,
+};
 
 const imageUpload = (props) => {
   const {
+    id,
     styles,
     camera,
     defaultImage,
@@ -164,6 +167,7 @@ const imageUpload = (props) => {
           </Button>
         ) : (
           <UploadBtn
+            uploadBtnId={id}
             action={handlerImage}
             uploadProps={restUploadBtnProps}
             uploadBtnLabel={uploadBtnLabel}
@@ -180,14 +184,15 @@ const imageUpload = (props) => {
 };
 
 imageUpload.propTypes = {
-  styles: PropTypes.shape(PropTypes.object),
+  id: PropTypes.number.isRequired,
+  styles: PropTypes.objectOf(PropTypes.any),
   camera: PropTypes.bool,
-  defaultImage: PropTypes.shape(PropTypes.any),
+  defaultImage: PropTypes.string.isRequired,
   returnImage: PropTypes.func.isRequired,
-  uploadBtnProps: PropTypes.shape(PropTypes.object),
-  cameraBtnProps: PropTypes.shape(PropTypes.object),
-  cancelBtnProps: PropTypes.shape(PropTypes.object),
-  takeBtnProps: PropTypes.shape(PropTypes.object),
+  uploadBtnProps: PropTypes.objectOf(PropTypes.any),
+  cameraBtnProps: PropTypes.objectOf(PropTypes.any),
+  cancelBtnProps: PropTypes.objectOf(PropTypes.any),
+  takeBtnProps: PropTypes.objectOf(PropTypes.any),
   maxImgSize: PropTypes.number,
   sizeErrorMsg: PropTypes.string,
   isNotImgErrorMsg: PropTypes.string,
@@ -196,7 +201,6 @@ imageUpload.propTypes = {
 imageUpload.defaultProps = {
   styles: { height: 200, width: 200, backgroundColor: '#eee', borderRadius: '5px' },
   camera: false,
-  defaultImage: null,
   uploadBtnProps: { onClick: () => {}, label: 'Upload' },
   cameraBtnProps: { onClick: () => {}, label: 'Camera' },
   cancelBtnProps: { onClick: () => {}, label: 'Cancel' },

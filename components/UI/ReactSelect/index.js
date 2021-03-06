@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 // libs
 import React from 'react';
 import {
@@ -13,6 +12,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import PropTypes from 'prop-types';
 
 // constants
 const ITEM_HEIGHT = 48;
@@ -177,6 +177,16 @@ const InputTextSelect = (props) => {
       </Popper>
     </div>
   );
+};
+
+InputTextSelect.propTypes = {
+  onAdd: PropTypes.func.isRequired,
+  optionsList: PropTypes.arrayOf(PropTypes.any).isRequired,
+  excludedOptions: PropTypes.arrayOf(PropTypes.any).isRequired,
+  textFieldProps: PropTypes.objectOf(PropTypes.any),
+};
+InputTextSelect.defaultProps = {
+  textFieldProps: null,
 };
 
 export default InputTextSelect;

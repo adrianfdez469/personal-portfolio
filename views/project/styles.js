@@ -5,13 +5,13 @@ export const useMainViewSyles = makeStyles((theme) => ({
     position: 'relative',
   },
   title: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
     flex: 1,
   },
   paper: {
+    minHeight: '80vh',
     margin: theme.spacing(2),
     padding: theme.spacing(2),
-    minHeight: '80vh',
   },
   buttonsContainer: {
     display: 'flex',

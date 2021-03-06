@@ -75,7 +75,7 @@ export const getStaticProps = async (context) => {
   };
 };
 
-const Cmp = (props) => {
+const NewProject = (props) => {
   const { language } = props;
 
   if (!language) {
@@ -91,11 +91,8 @@ const Cmp = (props) => {
   );
 };
 
-Cmp.propTypes = {
-  language: PropTypes.shape(PropTypes.object),
-};
-Cmp.defaultProps = {
-  language: null,
+NewProject.propTypes = {
+  language: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default Cmp;
+export default NewProject;

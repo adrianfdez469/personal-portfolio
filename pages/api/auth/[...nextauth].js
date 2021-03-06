@@ -3,6 +3,7 @@ import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
 import prisma from '../../../prisma/prisma.instance';
 import { getHashSlug } from '../../../libs/generators';
+import { deleteGithubEnhanceToken } from '../../../libs/integrations/github.provider';
 
 export default (req, res) =>
   NextAuth(req, res, {
@@ -23,8 +24,15 @@ export default (req, res) =>
       }),
       // Passwordless / email sign in
       Providers.Email({
-        server: process.env.MAIL_SERVER,
-        from: 'NextAuth.js <no-reply@example.com>',
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: process.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: process.env.EMAIL_FROM,
       }),
     ],
     pages: {
@@ -38,24 +46,43 @@ export default (req, res) =>
     },
     callbacks: {
       async redirect(url, baseUrl) {
+        // console.log(' -------------- CALLBACK redirect');
+        // console.log(url);
+        // console.log(baseUrl);
+
         return baseUrl;
       },
       async session(session, token) {
+        // console.log(' -------------- CALLBACK session');
+        // console.log(session);
+        // console.log(token);
         const resultSession = { ...session };
         resultSession.accessToken = token.accessToken;
+        resultSession.tokenProvider = token.provider;
+        resultSession.userId = token.userId;
         return resultSession;
       },
-      async jwt(token, user, account) {
+      async jwt(token, user, account /* , profile, isNewUser */) {
+        // console.log(' -------------- CALBACK jwt');
+        // console.log(token);
+        // console.log(user);
+        // console.log(account);
+
         const newToken = token;
         // Add access_token to the token right after signin
         if (account && account.accessToken) {
           newToken.accessToken = account.accessToken;
+          newToken.provider = account.provider;
+          newToken.userId = user.id;
         }
         return newToken;
       },
     },
     events: {
       async createUser(user) {
+        // console.log('EVENTS createUser');
+        // console.log(user);
+
         if (user && user.id) {
           let slug = '';
           if (user.name && user.name !== '') {
@@ -75,6 +102,13 @@ export default (req, res) =>
               id: user.id,
             },
           });
+        }
+      },
+      async signIn(data) {
+        // console.log('EVENTS signIn');
+        // console.log(data);
+        if (data.account.provider === 'github') {
+          deleteGithubEnhanceToken(data.user.id);
         }
       },
     },

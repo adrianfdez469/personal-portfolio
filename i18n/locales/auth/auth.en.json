@@ -1,0 +1,7 @@
+{
+  "signInWithText": "Sign in with",
+  "emailLabel": "Email",
+  "orSeparator": "OR",
+  "oAuthAccountNotLinkedMsg": "To confirm your identity, sign in with the same account you used originally.",
+  "examleEmail": "email@example.com"
+}

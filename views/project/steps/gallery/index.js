@@ -1,7 +1,7 @@
 // Ext libs
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, IconButton } from '@material-ui/core';
+import { Box, Typography, IconButton, Backdrop, CircularProgress } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import ReactProfileImage from '../../../../components/UI/UploadImage';
 // Hooks
@@ -14,18 +14,16 @@ import useGalleryStyles from './styles';
 import { maxImagesCount, maxImgSize } from '../../../../constants/projectImagesConst';
 
 const GalleryForm = (props) => {
-  const { show } = props;
+  const { show, images, changeData } = props;
   // hooks
   const stepStyles = useStepsStyles();
   const galleryStyles = useGalleryStyles();
-  const [images, setImages] = useState([]);
+  // const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const { lang } = useLang();
 
   // handlers
   const addImageHandler = async (base64Img, imageFile) => {
-    const imageId = Math.random();
-    setImages([...images, { id: imageId, img: base64Img, file: imageFile, url: null }]);
     setUploading(true);
     const formData = new FormData();
     formData.append('imageFile', imageFile);
@@ -41,13 +39,8 @@ const GalleryForm = (props) => {
         throw new Error('Error');
       })
       .then((resp) => {
-        const { url } = resp;
-        setImages((imagesSt) => {
-          const idx = imagesSt.findIndex((img) => img.id === imageId);
-          const newImages = [...imagesSt];
-          newImages[idx].url = url;
-          return newImages;
-        });
+        const imageId = Math.random();
+        changeData([...images, { id: imageId, img: base64Img, file: imageFile, url: resp.url }]);
       })
       .catch((error) => {
         console.log(error);
@@ -67,8 +60,7 @@ const GalleryForm = (props) => {
         imageUrl: images.find((img) => img.id === id).url,
       }),
     });
-
-    setImages(images.filter((img) => img.id !== id));
+    changeData(images.filter((img) => img.id !== id));
   };
 
   return (
@@ -76,11 +68,12 @@ const GalleryForm = (props) => {
       <Box>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           {lang.galleryStep.header.title}
-        </Typography>
-        <Typography align="center" color="primary">
-          {`${images.length}/${maxImagesCount}`}
+          <Box component="span" className={galleryStyles.primaryColor}>
+            {` ${images.length}/${maxImagesCount}`}
+          </Box>
         </Typography>
       </Box>
+
       <div className={galleryStyles.uploadImgContainer}>
         {images.map((image, idx) => (
           <Box m={2} key={image.id} className={galleryStyles.uploadImgWrapper}>
@@ -101,6 +94,7 @@ const GalleryForm = (props) => {
               uploadBtnProps={{ disabled: true, label: lang.galleryStep.body.uploadBtn }}
               cameraBtnProps={{ disabled: true, label: lang.galleryStep.body.cameraBtn }}
               maxImgSize={0}
+              id={image.id}
             />
           </Box>
         ))}
@@ -118,18 +112,24 @@ const GalleryForm = (props) => {
               cameraBtnProps={{ label: lang.galleryStep.body.cameraBtn }}
               cancelBtnProps={{ label: lang.galleryStep.body.cancelBtn }}
               takeBtnProps={{ label: lang.galleryStep.body.takeBtn }}
+              id={999}
             />
           </Box>
         )}
       </div>
+      <Backdrop className={galleryStyles.backdrop} open={uploading}>
+        <CircularProgress color="primary" />
+      </Backdrop>
     </Box>
   );
 };
 
 GalleryForm.propTypes = {
   show: PropTypes.bool,
+  images: PropTypes.arrayOf(PropTypes.any).isRequired,
+  changeData: PropTypes.func.isRequired,
 };
 GalleryForm.defaultProps = {
   show: false,
 };
-export default GalleryForm;
+export default React.memo(GalleryForm);

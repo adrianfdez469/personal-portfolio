@@ -1,16 +1,16 @@
 {
   "redirecting": "Redireccionando...",
-  "title": "Adicionar projecto",
+  "title": "Nuevo projecto",
   "next": "Siguiente",
   "back": "Atras",
   "save": "Guardar",
   "step": {
-    "syncyLabel": "Sincroniza tu proyecto",
+    "syncyLabel": "Sincronización",
     "infoLabel": "Información",
     "galeryLabel": "Galería",
-    "sillsLabel": "Habilidades de desarrollador",
+    "sillsLabel": "Habilidades",
     "collaboratorsLabel": "Colaboradores",
-    "linksLabel": "Enlaces externos"
+    "linksLabel": "Enlaces"
   },
   "syncStep": {
     "header": {
@@ -18,14 +18,17 @@
     },
     "body": {
       "buttons": {
-        "common": "Sincroniza con"
+        "common": "Sincroniza con",
+        "grantPrivateAccess": "Repos privados",
+        "grantPublicAccess": "Repos públicos"
       },
       "select": {
         "githubLabel": "Repositorios de Github",
         "gitlabLabel": "Repositorios de Gitlab",
         "selectNone": "Ninguno",
         "errorLoadingReposMsg": "No se pudieron cargar los repositorios",
-        "errorLoadingDetailsReposMsg": "Algo pudo salir mal"
+        "errorLoadingDetailsReposMsg": "Algo pudo salir mal",
+        "private": "Privado"
       }
     }
   },

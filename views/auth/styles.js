@@ -3,38 +3,31 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 export default makeStyles((theme) => ({
   overAllContainer: {
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
     height: '100vh',
   },
   card: {
     padding: theme.spacing(2),
+    width: 'auto',
   },
   container: {
-    margin: 'auto',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-
-    [theme.breakpoints.up('md')]: {
-      flexDirection: 'row',
-      alignContent: 'center',
-      justifyItems: 'center',
-    },
+    marginBottom: theme.spacing(5),
+    marginTop: theme.spacing(5),
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
+    width: theme.spacing(30),
   },
   separator: {
     margin: theme.spacing(2),
     width: theme.spacing(34),
-
-    [theme.breakpoints.up('md')]: {
-      width: theme.spacing(5),
-      height: theme.spacing(25),
-    },
   },
   loginButtons: {
     display: 'flex',
@@ -43,7 +36,7 @@ export default makeStyles((theme) => ({
     height: theme.spacing(25),
   },
   circle: {
-    border: '1px solid #bbb',
+    border: '1px solid #777',
     padding: theme.spacing(1.5),
     borderRadius: '50%',
     height: theme.spacing(5),
@@ -55,23 +48,18 @@ export default makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     zIndex: 99,
     margin: 'auto',
-    [theme.breakpoints.up('md')]: {
-      bottom: theme.spacing(15),
-    },
   },
   circleText: {
-    color: '#bbb',
+    color: '#777',
   },
   divider: {
     position: 'relative',
     top: theme.spacing(2.5),
     zIndex: 1,
-    [theme.breakpoints.up('md')]: {
-      top: theme.spacing(0),
-      margin: 'auto',
-    },
+    backgroundColor: '#777',
   },
   textField: {
     marginBottom: theme.spacing(2),
+    width: theme.spacing(27),
   },
 }));

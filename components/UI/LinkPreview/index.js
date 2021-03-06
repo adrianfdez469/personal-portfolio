@@ -78,7 +78,7 @@ const reducer = (state, action) => {
 
 const LinkPreview = (props) => {
   // constants
-  const { setLink, url, ...rest } = props;
+  const { setLink, url, setPreview, ...rest } = props;
   const abortController = useRef();
 
   // hooks
@@ -116,6 +116,7 @@ const LinkPreview = (props) => {
         .then((resp) => {
           const { data } = resp;
           dispatch({ type: 'SET_PREVIEW', data: { ...data.link } });
+          setPreview({ ...data.link });
         })
         .catch(() => {
           dispatch({ type: 'PREVIEW_ERROR' });
@@ -142,9 +143,7 @@ const LinkPreview = (props) => {
   }, [typing, link, getData]);
 
   useEffect(() => {
-    if (url) {
-      dispatch({ type: 'CHANGE_LINK', value: url });
-    }
+    dispatch({ type: 'CHANGE_LINK', value: url });
   }, [url]);
 
   // handlers
@@ -210,10 +209,11 @@ const LinkPreview = (props) => {
 
 LinkPreview.propTypes = {
   setLink: PropTypes.func.isRequired,
+  setPreview: PropTypes.func.isRequired,
   url: PropTypes.string,
 };
 LinkPreview.defaultProps = {
   url: null,
 };
 
-export default LinkPreview;
+export default React.memo(LinkPreview);

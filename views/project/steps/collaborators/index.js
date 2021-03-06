@@ -21,18 +21,18 @@ import { useStepsStyles } from '../../styles';
 import useCollaboratorsStyles from './styles';
 
 const CollaboratorsForm = (props) => {
-  const { show, collaborators } = props;
+  const { show, collaborators, changeData } = props;
   const stepStyles = useStepsStyles();
   const styles = useCollaboratorsStyles();
-  const [profiles, setProfiles] = useState([]);
+  // const [profiles, setProfiles] = useState([]);
   const [expanded, setExpanded] = useState(null);
   const inputNameRef = useRef(null);
   const inputEmailRef = useRef(null);
   const { lang } = useLang();
 
   const handlerAddProfile = () => {
-    setProfiles((prevProfiles) => [
-      ...prevProfiles,
+    changeData([
+      ...collaborators,
       {
         name: inputNameRef.current.value,
         email: inputEmailRef.current.value,
@@ -42,12 +42,6 @@ const CollaboratorsForm = (props) => {
   const handleChange = (expandedIdx) => (event, isExpanded) => {
     setExpanded(isExpanded ? expandedIdx : false);
   };
-
-  useEffect(() => {
-    if (collaborators && collaborators.length > 0) {
-      setProfiles(collaborators);
-    }
-  }, [collaborators]);
 
   // TODO: Add a remove button
   // TODO: Disable the Save Button if no name is entered
@@ -60,7 +54,7 @@ const CollaboratorsForm = (props) => {
         </Typography>
       </Box>
 
-      {profiles.map((profile, idx) => (
+      {collaborators.map((profile, idx) => (
         <Accordion key={idx.toString()} expanded={idx === expanded} onChange={handleChange(idx)}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Avatar alt={profile.name} src={profile.avatarUrl} className={styles.smallAvatar} />
@@ -73,11 +67,18 @@ const CollaboratorsForm = (props) => {
           </AccordionDetails>
         </Accordion>
       ))}
-      <Accordion expanded={profiles.length === expanded} onChange={handleChange(profiles.length)}>
+      <Accordion
+        expanded={collaborators.length === expanded}
+        onChange={handleChange(collaborators.length)}
+      >
         <AccordionSummary expandIcon={<AddIcon />}>
-          {profiles.length !== expanded && <Avatar className={styles.smallAvatar} />}
-          {profiles.length === expanded && (
-            <Grid container spacing={2} style={{ display: profiles.length !== expanded && 'none' }}>
+          {collaborators.length !== expanded && <Avatar className={styles.smallAvatar} />}
+          {collaborators.length === expanded && (
+            <Grid
+              container
+              spacing={2}
+              style={{ display: collaborators.length !== expanded && 'none' }}
+            >
               <Grid item xs={12} sm={6}>
                 <TextField
                   label={lang.collaboratorsStep.form.nameLabel}
@@ -109,6 +110,7 @@ const CollaboratorsForm = (props) => {
 };
 
 CollaboratorsForm.propTypes = {
+  changeData: PropTypes.func.isRequired,
   collaborators: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -127,4 +129,4 @@ CollaboratorsForm.defaultProps = {
   show: false,
 };
 
-export default CollaboratorsForm;
+export default React.memo(CollaboratorsForm);

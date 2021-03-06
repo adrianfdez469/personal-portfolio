@@ -13,9 +13,9 @@ const typeDefs = gql`
   type Link {
     id: ID!
     url: String!
-    title: String
-    description: String
-    imageUrl: String
+    title: String!
+    description: String!
+    imageUrl: String!
   }
   type Skill {
     id: ID!
@@ -84,18 +84,34 @@ const typeDefs = gql`
     description: String
     imageUrl: String
   }
+  # input ProjectParams {
+  #   userId: ID
+  #   name: String!
+  #   description: String
+  #   initialDate: String
+  #   finalDate: String
+  #   skills: [SkillParams!]
+  #   projectLink: LinkParams
+  #   projectDevLink: LinkParams
+  #   otherInfo: String
+  #   imageIds: [ID!]
+  # }
   input ProjectParams {
     userId: ID
     name: String!
     description: String
     initialDate: String
     finalDate: String
-    skills: [SkillParams!]
+    addedSkills: [SkillParams!]
+    removedSkills: [ID!]
     projectLink: LinkParams
     projectDevLink: LinkParams
     otherInfo: String
-    imageIds: [ID!]
+    addedImageIds: [String!]
+    removedImages: [String!]
   }
+
+
   input UserParams {
     name: String
     email: String
@@ -105,11 +121,47 @@ const typeDefs = gql`
     description: String
   }
 
+  type Collaborator {
+    login: String!
+    avatarUrl: String
+    email: String
+    bio: String
+    name: String
+    url: String
+    isOwner: Boolean
+  }
+  type DevProviderRepo {
+    id: ID!
+    name: String!
+    description: String
+    createdAt: String
+    nameWithOwner: String
+    ownerId: ID!
+    ownerLogin: String
+    ownerAvatarUrl: String
+    url: String
+    deploymentUrl: String
+    languages: [String!]
+    collaborators: [Collaborator!]
+    totalCollaborators: String
+    isPrivate: Boolean
+    provider: devProviders,
+  }
+  type ProvidersResposResponse {
+    scopes: String
+    repos: [DevProviderRepo!]
+  }
+  
+  
+
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
     createProject(project: ProjectParams!): SaveProjectMutationResponse!
     updateProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
+    
+    # saveProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
+    
   }
 
   enum CamelMode {
@@ -143,13 +195,19 @@ const typeDefs = gql`
     notInt: [Int]
   }
   
+  enum devProviders {
+    github
+    gitlab
+  }
 
   type Query {
     #users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
     projects(id: IntComparer, name: StringComparer): [Project!]
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
-
     link(url: String): Link!
+
+    providerRepos(provider: devProviders!): ProvidersResposResponse!
+    providerRepoData(provider: devProviders!, id: ID!): DevProviderRepo!
   }
 `;
 

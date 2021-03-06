@@ -1,10 +1,8 @@
 // libs
-import React, { useReducer } from 'react';
+import React, { useReducer, Fragment, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import {
-  Dialog,
-  DialogContent,
-  DialogActions,
   Button,
   AppBar,
   Toolbar,
@@ -12,36 +10,67 @@ import {
   Paper,
   Container,
   IconButton,
-  Stepper,
   MobileStepper,
   Step,
   StepButton,
   Box,
   useMediaQuery,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import SaveIcon from '@material-ui/icons/Save';
-
 // componets
-import Transition from '../../components/UI/Transition';
 import SyncForm from './steps/synchronization';
-import BasicInfoForm from './steps/basicInfo';
-import GalleryForm from './steps/gallery';
-import SkillsForm from './steps/skills';
-import CollaboratorsForm from './steps/collaborators';
 // hooks
 import { useLang } from '../../store/contexts/langContext';
 // styles
 import { useMainViewSyles } from './styles';
 
+// Dynamic imports to improve performance
+const Stepper = dynamic(() => import('@material-ui/core/Stepper'));
+const CloseIcon = dynamic(() => import('@material-ui/icons/Close'));
+const ArrowBackIosIcon = dynamic(() => import('@material-ui/icons/ArrowBackIos'));
+const ArrowForwardIosIcon = dynamic(() => import('@material-ui/icons/ArrowForwardIos'));
+const SaveIcon = dynamic(() => import('@material-ui/icons/Save'));
+const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
+const GalleryForm = dynamic(() => import('./steps/gallery'));
+const SkillsForm = dynamic(() => import('./steps/skills'));
+const CollaboratorsForm = dynamic(() => import('./steps/collaborators'));
+
+const saveQueryData = (data) => `
+  mutation {
+    createProject(
+      project: ${data}
+    )
+  }
+`;
+
 const initialState = {
   activeStep: 0,
   data: {
-    basicInfoData: null,
-    skillsData: null,
-    collaborators: null,
+    basicInfoData: {
+      name: '',
+      initialDate: null,
+      endDate: null,
+      description: '',
+      otherText: '',
+      proyectLink: {
+        url: '',
+        title: '',
+        description: '',
+        imageUrl: '',
+      },
+      devLink: {
+        url: '',
+        title: '',
+        description: '',
+        imageUrl: '',
+      },
+    },
+    skillsData: {
+      languages: [],
+      technologies: [],
+    },
+    collaborators: [],
+    images: [],
+    provider: null,
   },
   saving: false,
   error: false,
@@ -53,6 +82,12 @@ const actions = {
   START_SAVING: 'START_SAVING',
   END_SAVING: 'END_SAVING',
   ERROR_SAVING: 'ERROR_SAVING',
+  ADD_STEPS: 'ADD_STEPS',
+
+  CHANGE_BASIC_DATA: 'CHANGE_BASIC_DATA',
+  CHANGE_SKILLS_DATA: 'CHANGE_SKILLS_DATA',
+  CHANGE_COLLABORATORS_DATA: 'CHANGE_COLLABORATORS_DATA',
+  CHANGE_IMAGES_DATA: 'CHANGE_IMAGES_DATA',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -94,78 +129,166 @@ const reducer = (state, action) => {
         saving: false,
         error: false,
       };
+    case actions.ADD_STEPS:
+      return {
+        ...state,
+        Steps: action.data,
+      };
+    case actions.CHANGE_BASIC_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          basicInfoData: {
+            ...state.data.basicInfoData,
+            ...action.data,
+          },
+        },
+      };
+    case actions.CHANGE_SKILLS_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          skillsData: {
+            ...state.data.skillsData,
+            ...action.data,
+          },
+        },
+      };
+    case actions.CHANGE_COLLABORATORS_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          collaborators: action.data,
+        },
+      };
+    case actions.CHANGE_IMAGES_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          images: action.data,
+        },
+      };
     default:
       return state;
   }
 };
 
 const EditProjectView = (props) => {
-  const { open: openDialog, handleClose } = props;
+  const { handleClose } = props;
   // Hooks
+  const { lang } = useLang();
   const classes = useMainViewSyles();
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { lang } = useLang();
-  // const router = useRouter();
-  // const { profileid } = router.query;
 
-  const setRepoSyncData = (provider, data) => {
-    const basicInfoData = {
-      ...(data.name && { name: data.name }),
-      ...(data.createdAt && { initialDate: new Date(data.createdAt).getTime() }),
-      ...(data.description && { description: data.description }),
-      ...(data.url && { url: data.url }),
-      ...(data.deployments.nodes.length > 0 && {
-        deployUrl: data.deployments.nodes[0].latestStatus.environmentUrl,
-      }),
-    };
-    const skillsData = {
-      ...(data.languages.nodes.length > 0 && {
-        languages: data.languages.nodes.map((programingLang) => ({ text: programingLang.name })),
-      }),
-    };
-    const collaborators =
-      data.mentionableUsers.nodes.length === 0
-        ? null
-        : data.mentionableUsers.nodes.map((collaborator) => ({
-            name: collaborator.name,
-            avatarUrl: collaborator.avatarUrl,
-            url: collaborator.url,
-            bio: collaborator.bio,
-            email: collaborator.email,
-            isOwner: data.owner.login === collaborator.login,
-          }));
+  const setRepoSyncData = useCallback(
+    (data) => {
+      console.log(data);
 
-    const fullData = {
-      basicInfoData: { ...basicInfoData },
-      skillsData: { ...skillsData },
-      collaborators,
-    };
-    dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
-  };
+      const basicInfoData = {
+        ...initialState.data.basicInfoData,
+        name: data.name || '',
+        initialDate: data.createdAt ? new Date(data.createdAt).getTime() : null,
+        description: data.description || '',
+        devLink: {
+          ...initialState.data.basicInfoData.devLink,
+          url: data.url || '',
+        },
+        proyectLink: {
+          ...initialState.data.basicInfoData.proyectLink,
+          url: data.deploymentUrl || '',
+        },
+      };
+      const skillsData = {
+        ...initialState.data.skillsData,
+        languages: data.languages.length > 0 ? data.languages.map((lg) => ({ text: lg })) : [],
+      };
+      const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
+
+      const fullData = {
+        basicInfoData: { ...basicInfoData },
+        skillsData: { ...skillsData },
+        collaborators,
+        provider: data.provider,
+      };
+      dispatch({ type: actions.SET_REPOSITORY_DATA, data: fullData });
+    },
+    [dispatch]
+  );
+
+  const handleChangeBasicInfoData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_BASIC_DATA, data: data });
+    },
+    [dispatch]
+  );
+  const handleChangeSkillsData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_SKILLS_DATA, data: data });
+    },
+    [dispatch]
+  );
+  const handleChangeCollaboratorsData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_COLLABORATORS_DATA, data: data });
+    },
+    [dispatch]
+  );
+  const handleChangeImagesData = useCallback(
+    (data) => {
+      dispatch({ type: actions.CHANGE_IMAGES_DATA, data: data });
+    },
+    [dispatch]
+  );
 
   const Steps = [
     {
-      cmp: <SyncForm selectRepo={setRepoSyncData} show={state.activeStep === 0} />,
+      cmp: <SyncForm show={state.activeStep === 0} selectRepo={setRepoSyncData} />,
       label: lang.step.syncyLabel,
     },
     {
-      cmp: <BasicInfoForm show={state.activeStep === 1} data={state.data.basicInfoData} />,
+      cmp: (
+        <BasicInfoForm
+          show={state.activeStep === 1}
+          data={state.data.basicInfoData}
+          changeData={handleChangeBasicInfoData}
+        />
+      ),
       label: lang.step.infoLabel,
     },
     {
-      cmp: <GalleryForm show={state.activeStep === 2} />,
-      label: lang.step.galeryLabel,
-    },
-    {
-      cmp: <SkillsForm show={state.activeStep === 3} data={state.data.skillsData} />,
+      cmp: (
+        <SkillsForm
+          show={state.activeStep === 2}
+          data={state.data.skillsData}
+          changeData={handleChangeSkillsData}
+        />
+      ),
       label: lang.step.sillsLabel,
     },
     {
       cmp: (
-        <CollaboratorsForm show={state.activeStep === 4} collaborators={state.data.collaborators} />
+        <CollaboratorsForm
+          show={state.activeStep === 3}
+          collaborators={state.data.collaborators}
+          changeData={handleChangeCollaboratorsData}
+        />
       ),
       label: lang.step.collaboratorsLabel,
+    },
+    {
+      cmp: (
+        <GalleryForm
+          show={state.activeStep === 4}
+          images={state.data.images}
+          changeData={handleChangeImagesData}
+        />
+      ),
+      label: lang.step.galeryLabel,
     },
   ];
 
@@ -175,6 +298,8 @@ const EditProjectView = (props) => {
     } else {
       dispatch({ type: actions.START_SAVING });
       // TODO: Fetch to save
+
+      console.log(state);
     }
   };
 
@@ -213,7 +338,7 @@ const EditProjectView = (props) => {
           nextButton={
             <IconButton
               onClick={handleNext}
-              color="primary"
+              color={state.activeStep === Steps.length - 1 ? 'secondary' : 'primary'}
               disabled={state.activeStep === Steps.length}
             >
               {state.activeStep === Steps.length - 1 ? <SaveIcon /> : <ArrowForwardIosIcon />}
@@ -229,7 +354,9 @@ const EditProjectView = (props) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {Steps.map((stepForm) => stepForm.cmp)}
+        {Steps.map((stepForm) => (
+          <Fragment key={stepForm.label}>{stepForm.cmp}</Fragment>
+        ))}
       </div>
 
       {greaterMdSize ? (
@@ -245,7 +372,7 @@ const EditProjectView = (props) => {
           </Button>
           <Button
             onClick={handleNext}
-            color="primary"
+            color={state.activeStep === Steps.length - 1 ? 'secondary' : 'primary'}
             disabled={state.activeStep === Steps.length}
             variant="outlined"
             style={{ width: '100px', margin: '5px' }}
@@ -260,10 +387,10 @@ const EditProjectView = (props) => {
   );
 
   return (
-    <Dialog fullScreen open={openDialog} onClose={handleClose} TransitionComponent={Transition}>
+    <>
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="button" className={classes.title}>
             {lang.title}
           </Typography>
           <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
@@ -272,26 +399,24 @@ const EditProjectView = (props) => {
         </Toolbar>
       </AppBar>
 
-      <DialogContent className={classes.dialog}>
-        {!greaterMdSize && (
-          <Paper square elevation={0} className={classes.mobileStepHeader}>
-            <Typography align="center" color="primary">
-              {Steps[state.activeStep].label}
-            </Typography>
-          </Paper>
-        )}
-        <Container maxWidth="lg">
-          {greaterMdSize ? (
-            <Paper elevation={3} className={classes.paper}>
-              {mainContent}
-            </Paper>
-          ) : (
-            <>{mainContent}</>
-          )}
-        </Container>
-      </DialogContent>
-      <DialogActions />
-    </Dialog>
+      {!greaterMdSize && (
+        <Paper square elevation={0} className={classes.mobileStepHeader}>
+          <Typography align="center" color="primary">
+            {Steps[state.activeStep].label}
+          </Typography>
+        </Paper>
+      )}
+      <Container maxWidth="lg">
+        <Paper
+          elevation={3}
+          className={classes.paper}
+          style={{ display: greaterMdSize ? 'block' : 'contents' }}
+        >
+          {mainContent}
+          {!greaterMdSize && <div className={classes.mobileBottonSpacer} />}
+        </Paper>
+      </Container>
+    </>
   );
 };
 
