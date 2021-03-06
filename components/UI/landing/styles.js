@@ -5,9 +5,12 @@ export default makeStyles((theme) => ({
     flexGrow: 1,
     minHeight: '100vh',
   },
-  heading: {
-    fontWeight: 'bold',
+  globalButtons: {
+    color: theme.palette.type === 'dark' ? 'white' : 'black',
   },
+  // heading: {
+  //   fontWeight: 'bold',
+  // },
   paper: {
     background: 'rgba(205, 205, 205, 0.6)',
     borderRadius: 20,

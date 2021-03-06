@@ -10,7 +10,7 @@ const IntroHeader = ({ mainHeadingVariant, secondaryHeadingVariant }) => {
     <>
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item>
-          <Typography variant={mainHeadingVariant} color="primary" className={classes.heading}>
+          <Typography variant={mainHeadingVariant} className={classes.heading}>
             PERSONAL PORTFOLIO™
           </Typography>
         </Grid>

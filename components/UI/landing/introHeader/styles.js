@@ -3,6 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 export default makeStyles((theme) => ({
   heading: {
     fontWeight: 'bold',
+    color: theme.palette.primary.main,
   },
   // paper: {
   //   background: 'rgba(205, 205, 205, 0.6)',

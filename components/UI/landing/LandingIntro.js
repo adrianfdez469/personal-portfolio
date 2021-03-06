@@ -4,17 +4,28 @@ import { Box, Container, Grid, Hidden, IconButton } from '@material-ui/core';
 import { Brightness7, Language } from '@material-ui/icons';
 import useStyles from './styles';
 import IntroHeader from './introHeader/IntroHeader';
+import useMessage from '../../../hooks/useMessage';
 
 const LandingIntro = () => {
   const classes = useStyles();
+  const [showMessage] = useMessage();
+
+  const show = () => {
+    showMessage(
+      'Informacion',
+      'Lo hemos logrado, esto es lo que queriamos hacer asd asd asdasd asdasda asdasdad fwwfwefw casdasdad.',
+      'success'
+    );
+  };
+
   return (
     <>
       <Container className={classes.root}>
         <Box align="end">
-          <IconButton>
+          <IconButton className={classes.globalButtons}>
             <Language />
           </IconButton>
-          <IconButton>
+          <IconButton className={classes.globalButtons} onClick={show}>
             <Brightness7 />
           </IconButton>
         </Box>
