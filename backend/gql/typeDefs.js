@@ -11,7 +11,6 @@ const typeDefs = gql`
   }
 
   type Link {
-    id: ID!
     url: String!
     title: String!
     description: String!
@@ -33,8 +32,8 @@ const typeDefs = gql`
     initialDate: Date
     finalDate: Date
     skills: [Skill!]
-    projectLink: Link
-    projectDevLink: Link
+    projectLink: String
+    projectDevLink: String
     otherInfo: String
     images: [Image!]
   }
@@ -78,37 +77,19 @@ const typeDefs = gql`
     name: String
     category: SkillTypes
   }
-  input LinkParams {
-    url: String!
-    title: String
-    description: String
-    imageUrl: String
-  }
-  # input ProjectParams {
-  #   userId: ID
-  #   name: String!
-  #   description: String
-  #   initialDate: String
-  #   finalDate: String
-  #   skills: [SkillParams!]
-  #   projectLink: LinkParams
-  #   projectDevLink: LinkParams
-  #   otherInfo: String
-  #   imageIds: [ID!]
-  # }
+  
   input ProjectParams {
-    userId: ID
+    # userId: ID
     name: String!
     description: String
     initialDate: String
     finalDate: String
-    addedSkills: [SkillParams!]
-    removedSkills: [ID!]
-    projectLink: LinkParams
-    projectDevLink: LinkParams
+    skills: [SkillParams!]
+    projectLink: String
+    projectDevLink: String
     otherInfo: String
-    addedImageIds: [String!]
-    removedImages: [String!]
+    # collaborators: [Collaborator!]
+    images: [String!]
   }
 
 
@@ -157,10 +138,9 @@ const typeDefs = gql`
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
-    createProject(project: ProjectParams!): SaveProjectMutationResponse!
-    updateProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
-    
-    # saveProject(projectId: ID!, project: ProjectParams!): SaveProjectMutationResponse!
+    # createProject(project: ProjectParams!): ProjectParams!
+    # updateProject(projectId: ID!, project: ProjectParams!): ProjectParams!
+    saveProject(projectId: ID, project: ProjectParams!): Project!
     
   }
 

@@ -1,11 +1,13 @@
 // Ext libs
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, IconButton, Backdrop, CircularProgress } from '@material-ui/core';
+import { Box, Typography, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import ReactProfileImage from '../../../../components/UI/UploadImage';
 // Hooks
 import { useLang } from '../../../../store/contexts/langContext';
+// Components
+import CustomBackdrop from '../../../../components/UI/backdrop';
 // Styles
 import { useStepsStyles } from '../../styles';
 import useGalleryStyles from './styles';
@@ -117,9 +119,7 @@ const GalleryForm = (props) => {
           </Box>
         )}
       </div>
-      <Backdrop className={galleryStyles.backdrop} open={uploading}>
-        <CircularProgress color="primary" />
-      </Backdrop>
+      <CustomBackdrop open={uploading} />
     </Box>
   );
 };

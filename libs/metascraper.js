@@ -27,7 +27,6 @@ const getPreviewData = async (targetUrl) => {
       description: metadata.description
         ? `${metadata.description.slice(0, 250)}${metadata.description.length > 250 ? '...' : ''}`
         : '',
-      id: -1,
       url,
       imageUrl: metadata.logo || metadata.image,
     };
