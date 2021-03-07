@@ -11,7 +11,6 @@ import useStyles from './styles';
 const getLinkPrevQuery = (url) => `
   query {
     link(url:"${url}") {
-      id
       url
       title
       description
@@ -153,6 +152,7 @@ const LinkPreview = (props) => {
       type: 'CHANGE_LINK',
       value: event.target.value,
     });
+    setLink(event.target.value);
   };
 
   let previewView = null;

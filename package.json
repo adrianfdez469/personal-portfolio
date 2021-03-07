@@ -6,7 +6,9 @@
     "dev": "next dev",
     "dev1": "docker-compose up -d & yarn dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prisma:migrate": "npx prisma migrate dev --preview-feature",
+    "prisma:generate": "npx prisma generate"
   },
   "dependencies": {
     "@date-io/date-fns": "v1",

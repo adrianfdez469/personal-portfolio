@@ -52,6 +52,9 @@ const BasicInfoForm = (props) => {
     changeData({
       proyectLink: {
         url: text,
+        imageUrl: '',
+        title: '',
+        description: '',
       },
     });
   };
@@ -62,6 +65,9 @@ const BasicInfoForm = (props) => {
     changeData({
       devLink: {
         url: text,
+        imageUrl: '',
+        title: '',
+        description: '',
       },
     });
   };

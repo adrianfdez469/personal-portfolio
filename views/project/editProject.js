@@ -22,6 +22,8 @@ import SyncForm from './steps/synchronization';
 import { useLang } from '../../store/contexts/langContext';
 // styles
 import { useMainViewSyles } from './styles';
+// constants
+import SkillCategories from '../../constants/skillsCategorysConst';
 
 // Dynamic imports to improve performance
 const Stepper = dynamic(() => import('@material-ui/core/Stepper'));
@@ -33,12 +35,16 @@ const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
 const GalleryForm = dynamic(() => import('./steps/gallery'));
 const SkillsForm = dynamic(() => import('./steps/skills'));
 const CollaboratorsForm = dynamic(() => import('./steps/collaborators'));
+const CustomBackdrop = dynamic(() => import('../../components/UI/backdrop'));
 
-const saveQueryData = (data) => `
-  mutation {
-    createProject(
-      project: ${data}
-    )
+const saveQueryData = `
+  mutation saveProject( $projectId: ID, $project: ProjectParams! ) {
+    saveProject( 
+        projectId: $projectId, 
+        project: $project
+    ) {
+      id
+    }
   }
 `;
 
@@ -82,7 +88,6 @@ const actions = {
   START_SAVING: 'START_SAVING',
   END_SAVING: 'END_SAVING',
   ERROR_SAVING: 'ERROR_SAVING',
-  ADD_STEPS: 'ADD_STEPS',
 
   CHANGE_BASIC_DATA: 'CHANGE_BASIC_DATA',
   CHANGE_SKILLS_DATA: 'CHANGE_SKILLS_DATA',
@@ -119,20 +124,10 @@ const reducer = (state, action) => {
       };
     case actions.END_SAVING:
       return {
+        ...state,
         activeStep: 0,
-        data: {
-          basicInfoData: null,
-          skillsData: null,
-          links: null,
-          collaborators: null,
-        },
         saving: false,
         error: false,
-      };
-    case actions.ADD_STEPS:
-      return {
-        ...state,
-        Steps: action.data,
       };
     case actions.CHANGE_BASIC_DATA:
       return {
@@ -178,7 +173,7 @@ const reducer = (state, action) => {
 };
 
 const EditProjectView = (props) => {
-  const { handleClose } = props;
+  const { handleClose, projectId } = props;
   // Hooks
   const { lang } = useLang();
   const classes = useMainViewSyles();
@@ -210,6 +205,7 @@ const EditProjectView = (props) => {
       const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
 
       const fullData = {
+        ...initialState.data,
         basicInfoData: { ...basicInfoData },
         skillsData: { ...skillsData },
         collaborators,
@@ -297,9 +293,65 @@ const EditProjectView = (props) => {
       dispatch({ type: actions.NEXT_STEP });
     } else {
       dispatch({ type: actions.START_SAVING });
-      // TODO: Fetch to save
+      console.log(state.data);
+      const proglangs = state.data.skillsData.languages.map((lang) => {
+        return {
+          id: lang.id || null,
+          name: lang.text,
+          category: SkillCategories.PROG_LANG,
+        };
+      });
+      const techs = state.data.skillsData.technologies.map((lang) => {
+        return {
+          id: lang.id || null,
+          name: lang.text,
+          category: SkillCategories.PROG_TECH,
+        };
+      });
+      const skills = [...proglangs, ...techs];
+      const images = state.data.images.map((img) => img.url);
 
-      console.log(state);
+      const basicData = state.data.basicInfoData;
+
+      fetch('/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: saveQueryData,
+          variables: {
+            projectId: projectId,
+            project: {
+              name: basicData.name,
+              description: basicData.description,
+              initialDate: basicData.initialDate ? basicData.initialDate.toString() : null,
+              finalDate: basicData.endDate ? basicData.endDate.toString() : null,
+              otherInfo: basicData.otherText,
+              skills: skills,
+              projectLink: basicData.proyectLink.url,
+              projectDevLink: basicData.devLink.url,
+              images: images,
+            },
+          },
+        }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Error saving data');
+        })
+        .then((resp) => {
+          console.log('Salvado correctamente');
+          console.log(resp);
+          dispatch({ type: actions.END_SAVING });
+        })
+        .catch((err) => {
+          console.log('Error');
+          console.log(err);
+          dispatch({ type: actions.ERROR_SAVING });
+        });
     }
   };
 
@@ -415,14 +467,18 @@ const EditProjectView = (props) => {
           {mainContent}
           {!greaterMdSize && <div className={classes.mobileBottonSpacer} />}
         </Paper>
+        <CustomBackdrop open={state.saving} />
       </Container>
     </>
   );
 };
 
 EditProjectView.propTypes = {
-  open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  projectId: PropTypes.number,
+};
+EditProjectView.defaultProps = {
+  projectId: null,
 };
 
 export default EditProjectView;
