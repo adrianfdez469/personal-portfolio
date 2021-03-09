@@ -20,29 +20,26 @@ const createPropsObject = async (locale) => {
   return { language };
 };
 
-// eslint-disable-next-line react/prop-types
-const SignIn = ({ providers, language, csrftoken }) => (
-  <LangContext.Provider value={language}>
-    <LoginView providers={{ ...providers }} csrfToken={csrftoken} />
-  </LangContext.Provider>
-);
-
-/*
- SignIn.getInitialProps = async (context) => ({
-  providers: await providersFunc(context),
-}); */
-
 export async function getServerSideProps(context) {
   const { locale } = context;
   const { language } = { ...(await createPropsObject(locale)) };
+  const baseUrl = process.env.NEXTAUTH_URL;
 
   return {
     props: {
       providers: await providersFunc(context),
       language,
       csrftoken: await csrfToken(context),
+      baseUrl,
     },
   };
 }
+
+// eslint-disable-next-line react/prop-types
+const SignIn = ({ providers, language, csrftoken, baseUrl }) => (
+  <LangContext.Provider value={language}>
+    <LoginView providers={{ ...providers }} csrfToken={csrftoken} baseUrl={baseUrl} />
+  </LangContext.Provider>
+);
 
 export default SignIn;

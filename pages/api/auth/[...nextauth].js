@@ -45,12 +45,8 @@ export default (req, res) =>
       signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     },
     callbacks: {
-      async redirect(url, baseUrl) {
-        // console.log(' -------------- CALLBACK redirect');
-        // console.log(url);
-        // console.log(baseUrl);
-
-        return baseUrl;
+      async redirect(url) {
+        return url;
       },
       async session(session, token) {
         // console.log(' -------------- CALLBACK session');

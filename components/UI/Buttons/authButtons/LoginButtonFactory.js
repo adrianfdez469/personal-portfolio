@@ -53,7 +53,6 @@ const CustomEmailLoginButton = (/* props */) => {
   const EmailLoginButton = createButton({
     text: `${lang.signInWithText} ${lang.emailLabel}`,
     icon: createSvgIcon(EmailIcon),
-    // iconFormat: (name) => `fa fa-${name}`,
     style: { background: '#3b5998' },
     activeStyle: { background: '#293e69' },
     onClick,
@@ -72,15 +71,16 @@ CustomLinkedinLoginButton.propTypes = CustomButtonPropType;
 // CustomEmailLoginButton.propTypes = CustomButtonPropType;
 
 const LogginButtonFactory = (props) => {
-  const router = useRouter();
+  const { baseUrl } = props;
+  const callbackUrl = `${baseUrl}/api/redirector?redirect_to=EDIT_USER`;
 
   switch (props.id) {
     case 'github':
-      return <CustomGithubLoginButton id="github" callbackUrl={router.query.callbackUrl} />;
+      return <CustomGithubLoginButton id="github" callbackUrl={callbackUrl} />;
     case 'google':
-      return <CustomGoogleLoginButton id="google" callbackUrl={router.query.callbackUrl} />;
+      return <CustomGoogleLoginButton id="google" callbackUrl={callbackUrl} />;
     case 'linkedin':
-      return <CustomLinkedinLoginButton id="linkedin" callbackUrl={router.query.callbackUrl} />;
+      return <CustomLinkedinLoginButton id="linkedin" callbackUrl={callbackUrl} />;
     case 'email':
       return <CustomEmailLoginButton />;
     default:
@@ -90,6 +90,7 @@ const LogginButtonFactory = (props) => {
 
 LogginButtonFactory.propTypes = {
   id: PropTypes.string.isRequired,
+  baseUrl: PropTypes.string.isRequired,
 };
 
 export default React.memo(LogginButtonFactory);
