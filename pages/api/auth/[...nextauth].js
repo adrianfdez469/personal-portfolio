@@ -101,8 +101,6 @@ export default (req, res) =>
         }
       },
       async signIn(data) {
-        // console.log('EVENTS signIn');
-        // console.log(data);
         if (data.account.provider === 'github') {
           deleteGithubEnhanceToken(data.user.id);
         }

@@ -16,7 +16,12 @@ const resolvers = {
       prisma.user.findMany({
         where: { ...args },
       }), */
-
+    user: (parent, args) =>
+      prisma.user.findUnique({
+        where: {
+          id: +args.id,
+        },
+      }),
     projects: (parent, args) =>
       prisma.project.findMany({
         where: { ...args },
