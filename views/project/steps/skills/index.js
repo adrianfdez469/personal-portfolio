@@ -8,7 +8,7 @@ import { existsObjWithPropValue } from '../../../../libs/helpers';
 // Hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
-import { useStepsStyles } from '../../styles';
+import useStepsStyles from '../../styles';
 import useSkillsStyles from './styles';
 // Constants
 import skillsCategories from '../../../../constants/skillsCategorysConst';
@@ -25,7 +25,7 @@ const getSkillsQuery = () => `
 
 const SkillsForm = (props) => {
   // constants
-  const { show, data, changeData } = props;
+  const { data, changeData } = props;
   // hooks
   const styles = useSkillsStyles();
   const stepStyles = useStepsStyles();
@@ -120,7 +120,7 @@ const SkillsForm = (props) => {
   }, []);
 
   return (
-    <Box className={stepStyles.mainContent} hidden={!show}>
+    <Box className={stepStyles.mainContent}>
       <Box className={stepStyles.stepDescriptor}>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           {lang.skillsStep.header.title}
@@ -186,7 +186,6 @@ const SkillsForm = (props) => {
 };
 
 SkillsForm.propTypes = {
-  show: PropTypes.bool,
   changeData: PropTypes.func.isRequired,
   data: PropTypes.shape({
     languages: PropTypes.arrayOf(
@@ -203,6 +202,5 @@ SkillsForm.propTypes = {
 };
 SkillsForm.defaultProps = {
   data: null,
-  show: false,
 };
 export default React.memo(SkillsForm);

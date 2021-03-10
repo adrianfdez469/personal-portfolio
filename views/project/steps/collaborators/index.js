@@ -1,5 +1,5 @@
 // Ext libs
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -17,11 +17,11 @@ import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
-import { useStepsStyles } from '../../styles';
+import useStepsStyles from '../../styles';
 import useCollaboratorsStyles from './styles';
 
 const CollaboratorsForm = (props) => {
-  const { show, collaborators, changeData } = props;
+  const { collaborators, changeData } = props;
   const stepStyles = useStepsStyles();
   const styles = useCollaboratorsStyles();
   // const [profiles, setProfiles] = useState([]);
@@ -47,7 +47,7 @@ const CollaboratorsForm = (props) => {
   // TODO: Disable the Save Button if no name is entered
 
   return (
-    <Box className={stepStyles.mainContent} hidden={!show}>
+    <Box className={stepStyles.mainContent}>
       <Box className={stepStyles.stepDescriptor}>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           {lang.collaboratorsStep.header.title}
@@ -122,11 +122,9 @@ CollaboratorsForm.propTypes = {
       isOwner: PropTypes.bool,
     })
   ),
-  show: PropTypes.bool,
 };
 CollaboratorsForm.defaultProps = {
   collaborators: [],
-  show: false,
 };
 
 export default React.memo(CollaboratorsForm);

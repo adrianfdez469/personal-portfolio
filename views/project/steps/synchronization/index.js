@@ -23,7 +23,7 @@ import { useRouter } from 'next/router';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
-import { useStepsStyles } from '../../styles';
+import useStepsStyles from '../../styles';
 import useSyncStyles from './styles';
 // Custom icons
 import GitLabIcon from '../../../../components/UI/icons/GitlabIcon';
@@ -226,7 +226,7 @@ const SyncButton = (props) => {
 };
 
 const SyncForm = (props) => {
-  const { show, selectRepo } = props;
+  const { selectRepo } = props;
   // hooks
   const [state, dispatch] = useReducer(reducer, initialState);
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
@@ -362,7 +362,7 @@ const SyncForm = (props) => {
   }, [selectedGithubRepo]);
 
   return (
-    <Box className={stepStyles.mainContent} hidden={!show}>
+    <Box className={stepStyles.mainContent}>
       <Box className={stepStyles.stepDescriptor}>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           {lang.syncStep.header.label}
@@ -504,10 +504,6 @@ const SyncForm = (props) => {
 
 SyncForm.propTypes = {
   selectRepo: PropTypes.func.isRequired,
-  show: PropTypes.bool,
-};
-SyncForm.defaultProps = {
-  show: false,
 };
 
 export default React.memo(SyncForm);

@@ -9,14 +9,14 @@ import { useLang } from '../../../../store/contexts/langContext';
 // Components
 import CustomBackdrop from '../../../../components/UI/backdrop';
 // Styles
-import { useStepsStyles } from '../../styles';
+import useStepsStyles from '../../styles';
 import useGalleryStyles from './styles';
 
 // constants
 import { maxImagesCount, maxImgSize } from '../../../../constants/projectImagesConst';
 
 const GalleryForm = (props) => {
-  const { show, images, changeData } = props;
+  const { images, changeData } = props;
   // hooks
   const stepStyles = useStepsStyles();
   const galleryStyles = useGalleryStyles();
@@ -66,7 +66,7 @@ const GalleryForm = (props) => {
   };
 
   return (
-    <Box className={stepStyles.mainContent} hidden={!show}>
+    <Box className={stepStyles.mainContent}>
       <Box>
         <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
           {lang.galleryStep.header.title}
@@ -125,11 +125,7 @@ const GalleryForm = (props) => {
 };
 
 GalleryForm.propTypes = {
-  show: PropTypes.bool,
   images: PropTypes.arrayOf(PropTypes.any).isRequired,
   changeData: PropTypes.func.isRequired,
-};
-GalleryForm.defaultProps = {
-  show: false,
 };
 export default React.memo(GalleryForm);
