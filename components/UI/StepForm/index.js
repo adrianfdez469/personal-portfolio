@@ -191,6 +191,12 @@ const EditProjectView = (props) => {
 
 EditProjectView.propTypes = {
   handleClose: PropTypes.func.isRequired,
+  lang: PropTypes.shape(PropTypes.object).isRequired,
+  Steps: PropTypes.arrayOf(
+    PropTypes.shape({ cmp: PropTypes.element.isRequired, label: PropTypes.string.isRequired })
+      .isRequired
+  ).isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
 export default EditProjectView;

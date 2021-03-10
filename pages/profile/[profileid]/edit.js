@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getSession } from 'next-auth/client';
+import { useRouter } from 'next/router';
 import { ProfileContext } from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
-import ES from '../../../i18n/locales/profile/project.es.json';
-import EN from '../../../i18n/locales/profile/project.en.json';
+import ES from '../../../i18n/locales/profile/profile.es.json';
+import EN from '../../../i18n/locales/profile/profile.en.json';
+import EditProfile from '../../../views/profile/edit/editProfile';
 
 const languageLocales = {
   en: EN,
@@ -66,9 +68,16 @@ export const getServerSideProps = async (context) => {
 
 const Edit = (props) => {
   const { language, profile } = props;
+  const router = useRouter();
   return (
     <LangContext.Provider value={language}>
-      <ProfileContext.Provider value={profile} />
+      <ProfileContext.Provider value={profile}>
+        <EditProfile
+          handleClose={() => {
+            router.back();
+          }}
+        />
+      </ProfileContext.Provider>
     </LangContext.Provider>
   );
 };

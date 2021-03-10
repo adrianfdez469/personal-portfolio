@@ -1,14 +1,15 @@
 // Ext libs
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, Chip } from '@material-ui/core';
+import { Chip } from '@material-ui/core';
 // Internal libs
 import InputTextSelect from '../../../../components/UI/ReactSelect';
 import { existsObjWithPropValue } from '../../../../libs/helpers';
+// components
+import StepItem from '../../../../components/UI/StepForm/StepItem';
 // Hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
-import useStepsStyles from '../../styles';
 import useSkillsStyles from './styles';
 // Constants
 import skillsCategories from '../../../../constants/skillsCategorysConst';
@@ -28,7 +29,6 @@ const SkillsForm = (props) => {
   const { data, changeData } = props;
   // hooks
   const styles = useSkillsStyles();
-  const stepStyles = useStepsStyles();
   const [allProgrammingLangs, setAllProgrammingLangs] = useState([]);
   const [allTechnologies, setAllTechnologies] = useState([]);
   const { lang } = useLang();
@@ -120,13 +120,7 @@ const SkillsForm = (props) => {
   }, []);
 
   return (
-    <Box className={stepStyles.mainContent}>
-      <Box className={stepStyles.stepDescriptor}>
-        <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-          {lang.skillsStep.header.title}
-        </Typography>
-      </Box>
-
+    <StepItem label={lang.skillsStep.header.title}>
       <div className={styles.divContainer}>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -181,7 +175,7 @@ const SkillsForm = (props) => {
           </div>
         </div>
       </div>
-    </Box>
+    </StepItem>
   );
 };
 

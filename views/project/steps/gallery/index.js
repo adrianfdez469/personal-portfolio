@@ -1,15 +1,15 @@
 // Ext libs
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, IconButton } from '@material-ui/core';
+import { Box, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import ReactProfileImage from '../../../../components/UI/UploadImage';
 // Hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Components
 import CustomBackdrop from '../../../../components/UI/backdrop';
+import StepItem from '../../../../components/UI/StepForm/StepItem';
 // Styles
-import useStepsStyles from '../../styles';
 import useGalleryStyles from './styles';
 
 // constants
@@ -18,7 +18,6 @@ import { maxImagesCount, maxImgSize } from '../../../../constants/projectImagesC
 const GalleryForm = (props) => {
   const { images, changeData } = props;
   // hooks
-  const stepStyles = useStepsStyles();
   const galleryStyles = useGalleryStyles();
   // const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -66,16 +65,16 @@ const GalleryForm = (props) => {
   };
 
   return (
-    <Box className={stepStyles.mainContent}>
-      <Box>
-        <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
+    <StepItem
+      label={
+        <>
           {lang.galleryStep.header.title}
           <Box component="span" className={galleryStyles.primaryColor}>
             {` ${images.length}/${maxImagesCount}`}
           </Box>
-        </Typography>
-      </Box>
-
+        </>
+      }
+    >
       <div className={galleryStyles.uploadImgContainer}>
         {images.map((image, idx) => (
           <Box m={2} key={image.id} className={galleryStyles.uploadImgWrapper}>
@@ -120,7 +119,7 @@ const GalleryForm = (props) => {
         )}
       </div>
       <CustomBackdrop open={uploading} />
-    </Box>
+    </StepItem>
   );
 };
 
