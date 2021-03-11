@@ -1,36 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
 
 const useStyle = makeStyles((theme) => ({
   borderLong: {
-    width: '160px',
-    height: '160px',
+    width: theme.spacing(20),
+    height: theme.spacing(20),
     borderRadius: '50%',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow:
-      ' 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
+    backgroundColor: theme.palette.background.default,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarLong: {
-    width: '154px',
-    height: '154px',
+    width: theme.spacing(19.25),
+    height: theme.spacing(19.25),
   },
   borderSmall: {
-    width: '60px',
-    height: '60px',
+    width: theme.spacing(7.5),
+    height: theme.spacing(7.5),
     borderRadius: '50%',
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.background.default,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarSmall: {
-    width: '56px',
-    height: '56px',
-  },
-  marginSmall: {
-    margin: '-3.6rem 0.5rem 0.0rem 0.18rem',
-  },
-  marginLong: {
-    margin: '-9.8rem 0.5rem 0.0rem 0.19rem',
+    width: theme.spacing(7),
+    height: theme.spacing(7),
   },
 }));
 
@@ -40,12 +37,10 @@ const AvatarPhoto = (props) => {
 
   const borderStyle = size === 'small' ? styles.borderSmall : styles.borderLong;
   const avatarStyle = size === 'small' ? styles.avatarSmall : styles.avatarLong;
-  const marginStyle = size === 'small' ? styles.marginSmall : styles.marginLong;
 
   return (
-    <div style={{ backgroundColor: 'transparent' }}>
-      <div className={borderStyle} />
-      <Avatar className={clsx(avatarStyle, marginStyle)} src={src} variant="circular" />
+    <div className={borderStyle}>
+      <Avatar className={avatarStyle} src={src} variant="circular" />
     </div>
   );
 };
