@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 
 import StepForm from '../../../components/UI/StepForm';
 import SyncForm from './steps/syncronization';
+import PersonalDataForm from './steps/personalData';
+import ContactDataForm from './steps/contactData';
 import { useLang } from '../../../store/contexts/langContext';
 
 const initialState = {
@@ -86,6 +88,14 @@ const EditProjectView = (props) => {
     {
       cmp: <SyncForm />,
       label: lang.step.syncyLabel,
+    },
+    {
+      cmp: <PersonalDataForm />,
+      label: lang.step.personalData,
+    },
+    {
+      cmp: <ContactDataForm />,
+      label: lang.step.contactData,
     },
   ];
 

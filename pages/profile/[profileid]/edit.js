@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 import { ProfileContext } from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
-import ES from '../../../i18n/locales/profile/profile.es.json';
-import EN from '../../../i18n/locales/profile/profile.en.json';
+import ES from '../../../i18n/locales/pageProfileForm/profile.es.json';
+import EN from '../../../i18n/locales/pageProfileForm/profile.en.json';
 import EditProfile from '../../../views/profile/edit/editProfile';
 
 const languageLocales = {

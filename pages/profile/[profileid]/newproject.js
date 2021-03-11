@@ -3,8 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
-import ES from '../../../i18n/locales/profile/project/project.es.json';
-import EN from '../../../i18n/locales/profile/project/project.en.json';
+import ES from '../../../i18n/locales/pageProjectForm/project.es.json';
+import EN from '../../../i18n/locales/pageProjectForm/project.en.json';
 // components
 import { EditProject } from '../../../views/index';
 import { LangContext } from '../../../store/contexts/langContext';

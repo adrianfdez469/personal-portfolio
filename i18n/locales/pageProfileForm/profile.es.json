@@ -1,0 +1,88 @@
+{
+  "redirecting": "Redireccionando...",
+  "title": "Nuevo projecto",
+  "next": "Siguiente",
+  "back": "Atras",
+  "save": "Guardar",
+  "step": {
+    "syncyLabel": "Sincronización",
+    "personalData": "Datos personales",
+    "contactData": "Datos de contacto"
+  },
+  "syncStep": {
+    "header": {
+      "label": "Acelera el proceso cargando tu informacion de alguno de estos proveedores!"
+    },
+    "body": {
+      "buttons": {
+        "common": "Sincroniza con"
+      }
+    }
+  },
+  "personalDataStep": {
+    "header": {
+      "label": "Agrega tus datos personales"
+    },
+    "form": {
+      "inputName": {
+        "label": "Nombre",
+        "placeholder": "Nombre y apellidos"
+      },
+      "title": {
+        "label": "Títylo de trabajo",
+        "placeholder": "Títylo de trabajo"
+      },
+      "description": {
+        "label": "Sobre tí",
+        "placeholder": "Algo sobre tí"
+      },
+      "birthday": {
+        "clearLabel": "Limpiar",
+        "cancelLabel": "Cancelar",
+        "okLabel": "Ok",
+        "formatDate": "dd/mm/yyyy",
+        "invalidDate": "Fecha inválida",
+        "maxDateMessage": "Fecha mayor que la fecha máxima",
+        "minDateMessage": "Fecha menor que la fecha mínima",
+        "label": "Fecha de nacimiento"
+      },
+      "gender": {
+        "label": "Género",
+        "none": "Ninguno",
+        "male": "Masculino",
+        "female": "Femenino"
+      }
+    }
+  },
+  "contactDataStep": {
+    "header": {
+      "label": "Esta información permitirá a los reclutadores contactar contigo"
+    },
+    "form": {
+      "email": {
+        "label": "Correo",
+        "placeholder": "Correo electrónico"
+      },
+      "phone": {
+        "label": "Teléfono",
+        "placeholder": "Número de teléfono"
+      },
+      "facebookLink": {
+        "label": "Facebook",
+        "placeholder": "https://www.facebook.com/profilename"
+      },
+      "linkedinLink": {
+        "label": "LinkedIn",
+        "placeholder": "https://www.linkedin.com/in/profilename"
+      },
+      "twitterLink": {
+        "label": "Twitter",
+        "placeholder": "https://twitter.com/profilename"
+      },
+      "githubLink": {
+        "label": "Github",
+        "placeholder": "https://github.com/profilename"
+      }
+    }
+  }
+}
