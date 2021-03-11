@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Avatar, makeStyles } from '@material-ui/core';
-
 import clsx from 'clsx';
 
 const useStyle = makeStyles((theme) => ({
@@ -36,30 +36,23 @@ const useStyle = makeStyles((theme) => ({
 
 const AvatarPhoto = (props) => {
   const { src, size } = props;
-  const classes = useStyle();
+  const styles = useStyle();
 
-  const [border, setBorder] = useState('long');
-  const [avatar, setAvatar] = useState('long');
-  const [margin, setMargin] = useState('long');
-
-  useEffect(() => {
-    if (size === 'small') {
-      setBorder(classes.borderSmall);
-      setAvatar(classes.avatarSmall);
-      setMargin(classes.marginSmall);
-    } else {
-      setBorder(classes.borderLong);
-      setAvatar(classes.avatarLong);
-      setMargin(classes.marginLong);
-    }
-  });
+  const borderStyle = size === 'small' ? styles.borderSmall : styles.borderLong;
+  const avatarStyle = size === 'small' ? styles.avatarSmall : styles.avatarLong;
+  const marginStyle = size === 'small' ? styles.marginSmall : styles.marginLong;
 
   return (
     <div style={{ backgroundColor: 'transparent' }}>
-      <div className={border} />
-      <Avatar className={clsx(avatar, margin)} src={src} variant="circular" />
+      <div className={borderStyle} />
+      <Avatar className={clsx(avatarStyle, marginStyle)} src={src} variant="circular" />
     </div>
   );
+};
+
+AvatarPhoto.propTypes = {
+  src: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(['small', 'long']).isRequired,
 };
 
 export default AvatarPhoto;
