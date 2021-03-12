@@ -1,13 +1,13 @@
 // Ext libs
 import React /* , { useState, useEffect } */ from 'react';
+import PropTypes from 'prop-types';
 import { Grid, TextField } from '@material-ui/core';
 // Components
 import StepItem from '../../../../../components/UI/StepForm/StepItem';
-import LinkPreview from '../../../../../components/UI/LinkPreview';
 // hooks
 import { useLang } from '../../../../../store/contexts/langContext';
 
-const PersonalDataForm = () => {
+const PersonalDataForm = ({ data, edit }) => {
   // constants
   const { lang } = useLang();
 
@@ -24,8 +24,8 @@ const PersonalDataForm = () => {
             placeholder={lang.contactDataStep.form.email.placeholder}
             required
             margin="dense"
-            // onChange={(event) => handleChange('name', event.target.value)}
-            // value={data.name}
+            value={data.email}
+            onChange={(event) => edit('email', event.target.value)}
             variant="outlined"
             fullWidth
           />
@@ -35,55 +35,70 @@ const PersonalDataForm = () => {
             label={lang.contactDataStep.form.phone.label}
             placeholder={lang.contactDataStep.form.phone.placeholder}
             margin="dense"
-            // onChange={(event) => handleChange('name', event.target.value)}
-            // value={data.name}
+            value={data.phone}
+            onChange={(event) => edit('phone', event.target.value)}
             variant="outlined"
             fullWidth
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <LinkPreview
-            fullWidth
+          <TextField
             label={lang.contactDataStep.form.facebookLink.label}
             placeholder={lang.contactDataStep.form.facebookLink.placeholder}
-            // url={data.devLink.url}
-            // setLink={handleSetProjectDevLink}
-            // setPreview={handleSetProjectDevPreview}
+            margin="dense"
+            variant="outlined"
+            fullWidth
+            value={data.facebook}
+            onChange={(event) => edit('facebook', event.target.value)}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <LinkPreview
-            fullWidth
+          <TextField
             label={lang.contactDataStep.form.linkedinLink.label}
             placeholder={lang.contactDataStep.form.linkedinLink.placeholder}
-            // url={data.devLink.url}
-            // setLink={handleSetProjectDevLink}
-            // setPreview={handleSetProjectDevPreview}
+            margin="dense"
+            variant="outlined"
+            fullWidth
+            value={data.linkedin}
+            onChange={(event) => edit('linkedin', event.target.value)}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <LinkPreview
-            fullWidth
+          <TextField
             label={lang.contactDataStep.form.twitterLink.label}
             placeholder={lang.contactDataStep.form.twitterLink.placeholder}
-            // url={data.devLink.url}
-            // setLink={handleSetProjectDevLink}
-            // setPreview={handleSetProjectDevPreview}
+            margin="dense"
+            variant="outlined"
+            fullWidth
+            value={data.twitter}
+            onChange={(event) => edit('twitter', event.target.value)}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <LinkPreview
-            fullWidth
+          <TextField
             label={lang.contactDataStep.form.githubLink.label}
             placeholder={lang.contactDataStep.form.githubLink.placeholder}
-            // url={data.devLink.url}
-            // setLink={handleSetProjectDevLink}
-            // setPreview={handleSetProjectDevPreview}
+            margin="dense"
+            variant="outlined"
+            fullWidth
+            value={data.github}
+            onChange={(event) => edit('github', event.target.value)}
           />
         </Grid>
       </Grid>
     </StepItem>
   );
 };
-
+PersonalDataForm.propTypes = {
+  data: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+    linkedin: PropTypes.string.isRequired,
+    facebook: PropTypes.string.isRequired,
+    twitter: PropTypes.string.isRequired,
+    github: PropTypes.string.isRequired,
+    gitlab: PropTypes.string.isRequired,
+  }).isRequired,
+  edit: PropTypes.func.isRequired,
+};
 export default React.memo(PersonalDataForm);

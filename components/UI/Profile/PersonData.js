@@ -52,7 +52,7 @@ const PersonData = (props) => {
                   <Grid container direction="column">
                     <Grid item>
                       <div style={{ margin: '0.0rem 0.5rem 0.0rem 2.0rem' }}>
-                        <AvatarPhoto src="/static/images/jarce78.jpg" size="long" />
+                        <AvatarPhoto src="/static/images/jarce78.jpg" size="long" edit={edit} />
                       </div>
                     </Grid>
                     <Grid item>

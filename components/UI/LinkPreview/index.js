@@ -209,11 +209,12 @@ const LinkPreview = (props) => {
 
 LinkPreview.propTypes = {
   setLink: PropTypes.func.isRequired,
-  setPreview: PropTypes.func.isRequired,
+  setPreview: PropTypes.func,
   url: PropTypes.string,
 };
 LinkPreview.defaultProps = {
   url: null,
+  setPreview: () => {},
 };
 
 export default React.memo(LinkPreview);

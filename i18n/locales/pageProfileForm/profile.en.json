@@ -44,7 +44,13 @@
         "invalidDate": "Invalid date",
         "maxDateMessage": "Date should not be after today",
         "minDateMessage": "Date should not be before min date",
-        "label": "Birthday"
+        "label": "Date of Birth"
+      },
+      "experience": {
+        "label": "Experience",
+        "placeholder": "Years of experience",
+        "years": "years",
+        "year": "year"
       },
       "gender": {
         "label": "Gender",

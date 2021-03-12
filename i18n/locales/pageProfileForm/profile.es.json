@@ -46,6 +46,12 @@
         "minDateMessage": "Fecha menor que la fecha mínima",
         "label": "Fecha de nacimiento"
       },
+      "experience": {
+        "label": "Experiencia",
+        "placeholder": "Años de experiencia",
+        "years": "años",
+        "year": "año"
+      },
       "gender": {
         "label": "Género",
         "none": "Ninguno",

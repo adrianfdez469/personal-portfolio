@@ -18,18 +18,15 @@ const initialState = {
       description: '',
       birthday: null,
       gender: null,
-      avatarUrl: null,
+      experience: 0,
     },
     contactData: {
       email: '',
       phone: '',
-    },
-    socialData: {
-      linkedin: null,
       facebook: null,
+      linkedin: null,
       twitter: null,
       github: null,
-      gitlab: null,
     },
   },
   saving: false,
@@ -41,6 +38,9 @@ const actions = {
   START_SAVING: 'START_SAVING',
   END_SAVING: 'END_SAVING',
   ERROR_SAVING: 'ERROR_SAVING',
+
+  EDIT_PERSONAL_DATA: 'EDIT_PERSONAL_DATA',
+  EDIT_CONTACT_DATA: 'EDIT_CONTACT_DATA',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -72,6 +72,28 @@ const reducer = (state, action) => {
         saving: false,
         error: false,
       };
+    case actions.EDIT_PERSONAL_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          personalData: {
+            ...state.data.personalData,
+            [action.field]: action.value,
+          },
+        },
+      };
+    case actions.EDIT_CONTACT_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          contactData: {
+            ...state.data.contactData,
+            [action.field]: action.value,
+          },
+        },
+      };
     default:
       return state;
   }
@@ -84,24 +106,31 @@ const EditProjectView = (props) => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const handleSave = () => {
+    console.log(state);
+    dispatch({ type: actions.START_SAVING });
+  };
+  const handleEditPersonalData = (field, value) => {
+    dispatch({ type: actions.EDIT_PERSONAL_DATA, field, value });
+  };
+  const handleEditContactData = (field, value) => {
+    dispatch({ type: actions.EDIT_CONTACT_DATA, field, value });
+  };
+
   const Steps = [
     {
       cmp: <SyncForm />,
       label: lang.step.syncyLabel,
     },
     {
-      cmp: <PersonalDataForm />,
+      cmp: <PersonalDataForm data={state.data.personalData} edit={handleEditPersonalData} />,
       label: lang.step.personalData,
     },
     {
-      cmp: <ContactDataForm />,
+      cmp: <ContactDataForm data={state.data.contactData} edit={handleEditContactData} />,
       label: lang.step.contactData,
     },
   ];
-
-  const handleSave = () => {
-    dispatch({ type: actions.START_SAVING });
-  };
 
   return (
     <>
