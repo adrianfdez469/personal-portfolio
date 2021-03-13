@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, IconButton, Badge, makeStyles } from '@material-ui/core';
-import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
+import dynamic from 'next/dynamic';
+import { Avatar, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 
 const useStyle = makeStyles((theme) => ({
@@ -31,29 +31,6 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const useSmallPhotoCameraButtonStyle = makeStyles((theme) => ({
-  iconButton: {
-    backgroundColor: theme.palette.background.default,
-    boxShadow: `0 0 5px ${theme.palette.action.disabled}`,
-    '&:hover': {
-      backgroundColor: theme.palette.background.paper,
-    },
-  },
-}));
-const SmallPhotoCameraButton = ({ onClick, size }) => {
-  const styles = useSmallPhotoCameraButtonStyle();
-  return (
-    <IconButton id="cameraIconButton" size="small" className={styles.iconButton} onClick={onClick}>
-      <PhotoCameraOutlinedIcon fontSize={size === 'small' ? size : 'default'} />
-    </IconButton>
-  );
-};
-
-SmallPhotoCameraButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  size: PropTypes.string.isRequired,
-};
-
 const AvatarPhoto = (props) => {
   const { src, size, edit } = props;
   const styles = useStyle();
@@ -61,22 +38,22 @@ const AvatarPhoto = (props) => {
   const borderStyle = size === 'small' ? styles.borderSmall : styles.borderLong;
   const avatarStyle = size === 'small' ? styles.avatarSmall : styles.avatarLong;
 
-  const content = edit ? (
-    <Badge
-      overlap="circle"
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-      badgeContent={<SmallPhotoCameraButton onClick={() => {}} size={size} />}
-    >
-      <Avatar className={avatarStyle} src={src} variant="circular" />
-    </Badge>
-  ) : (
+  const [AvatarCmp, setAvatarCmp] = useState(
     <Avatar className={avatarStyle} src={src} variant="circular" />
   );
 
-  return <div className={clsx(styles.border, borderStyle)}>{content}</div>;
+  useEffect(() => {
+    if (edit) {
+      const Editable = dynamic(() => import('./EditAvatarPhoto'));
+      setAvatarCmp(
+        <Editable size={size} onClick={() => {}}>
+          {AvatarCmp}
+        </Editable>
+      );
+    }
+  }, []);
+
+  return <div className={clsx(styles.border, borderStyle)}>{AvatarCmp}</div>;
 };
 
 AvatarPhoto.propTypes = {
