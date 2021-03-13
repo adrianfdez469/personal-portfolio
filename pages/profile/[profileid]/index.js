@@ -40,6 +40,7 @@ const queryUserData = (id) => `
           id
           imageUrl
         }
+        logoUrl
       }
     }
 

@@ -108,6 +108,7 @@ model Project {
   userId         Int             @map("userid")
   projectLink    String?         @map("project_link")
   projectDevLink String?         @map("project_devlink")
+  logoUrl        String?         @map("url_logo")
   user           User            @relation(fields: [userId], references: [id])
   skills         ProjectSkills[]
   images         Image[]

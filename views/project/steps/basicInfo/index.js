@@ -25,25 +25,8 @@ const BasicInfoForm = (props) => {
   const { lang, locale } = useLang();
 
   // handlers
-  const handleNameChange = (event) => {
-    // setName(event.target.value);
-    changeData({ name: event.target.value });
-  };
-  const handleInitialDateChange = (date) => {
-    // setInitialDate(date);
-    changeData({ initialDate: new Date(date).getTime() });
-  };
-  const handleEndDateChange = (date) => {
-    // setEndDate(date);
-    changeData({ endDate: new Date(date).getTime() });
-  };
-  const handleDescriptionChange = (event) => {
-    // setDescription(event.target.value);
-    changeData({ description: event.target.value });
-  };
-  const hanclerOtherChange = (event) => {
-    // setOtherText(event.target.value);
-    changeData({ otherText: event.target.value });
+  const handleChange = (field, value) => {
+    changeData({ [field]: value });
   };
   const handleSetProjectLink = (text) => {
     changeData({
@@ -81,7 +64,7 @@ const BasicInfoForm = (props) => {
               placeholder={lang.infoStep.form.inputName.placeholder}
               required
               margin="dense"
-              onChange={handleNameChange}
+              onChange={(event) => handleChange('name', event.target.value)}
               value={data.name}
               variant="outlined"
               fullWidth
@@ -101,7 +84,7 @@ const BasicInfoForm = (props) => {
               format={lang.infoStep.form.inputDate.formatDate}
               inputVariant="outlined"
               value={data.initialDate}
-              onChange={handleInitialDateChange}
+              onChange={(date) => handleChange('initialDate', new Date(date).getTime())}
               KeyboardButtonProps={{
                 'aria-label': 'change start date',
               }}
@@ -124,7 +107,7 @@ const BasicInfoForm = (props) => {
               format={lang.infoStep.form.inputDate.formatDate}
               inputVariant="outlined"
               value={data.endDate}
-              onChange={handleEndDateChange}
+              onChange={(date) => handleChange('endDate', new Date(date).getTime())}
               KeyboardButtonProps={{
                 'aria-label': 'change end date',
               }}
@@ -144,7 +127,7 @@ const BasicInfoForm = (props) => {
               rows="5"
               margin="dense"
               value={data.description}
-              onChange={handleDescriptionChange}
+              onChange={(event) => handleChange('description', event.target.value)}
               variant="outlined"
               fullWidth
             />
@@ -158,7 +141,7 @@ const BasicInfoForm = (props) => {
               label={lang.infoStep.form.inputMore.label}
               placeholder={lang.infoStep.form.inputMore.placeholder}
               value={data.otherText}
-              onChange={hanclerOtherChange}
+              onChange={(event) => handleChange('otherText', event.target.value)}
               fullWidth
             />
           </Grid>

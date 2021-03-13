@@ -36,6 +36,7 @@ const typeDefs = gql`
     projectDevLink: String
     otherInfo: String
     images: [Image!]
+    logoUrl: String
   }
   type User {
     id: ID!
@@ -87,6 +88,7 @@ const typeDefs = gql`
     skills: [SkillParams!]
     projectLink: String
     projectDevLink: String
+    logoUrl: String
     otherInfo: String
     # collaborators: [Collaborator!]
     images: [String!]

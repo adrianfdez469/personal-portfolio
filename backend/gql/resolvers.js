@@ -204,7 +204,7 @@ const resolvers = {
       try {
         const { projectId, project } = args;
         const { userId } = await getSession(context);
-        const { projectLink, projectDevLink, skills, images } = project;
+        const { projectLink, projectDevLink, skills, images, logoUrl } = project;
 
         let skillIds = null;
         let iniDate = null;
@@ -271,6 +271,7 @@ const resolvers = {
                 imageUrl: img,
               })),
             },
+            logoUrl,
           },
           update: {
             name: project.name,
@@ -292,6 +293,7 @@ const resolvers = {
                 imageUrl: img,
               })),
             },
+            logoUrl,
           },
         });
         console.log(savedProject);

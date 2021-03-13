@@ -14,20 +14,12 @@ import {
   Avatar,
 } from '@material-ui/core';
 import { ThumbUpAltOutlined, ShareOutlined, EditOutlined } from '@material-ui/icons';
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import SkillCategoriesConst from '../../../constants/skillsCategorysConst';
 import { useProjectBoxStyles } from './styles';
 
 import { useProfile } from '../../../store/contexts/profileContext';
-
-/* const list = [
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-]; */
 
 const ProjectBox = () => {
   const styles = useProjectBoxStyles();
@@ -47,8 +39,8 @@ const ProjectBox = () => {
               <Card className={styles.card}>
                 <CardHeader
                   avatar={
-                    <Avatar aria-label="recipe" className={styles.avatar}>
-                      A
+                    <Avatar aria-label="recipe" className={styles.avatar} src={element.logoUrl}>
+                      {element.name[0].toUpperCase()}
                     </Avatar>
                   }
                   action={

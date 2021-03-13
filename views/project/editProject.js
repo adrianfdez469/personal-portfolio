@@ -91,7 +91,7 @@ const reducer = (state, action) => {
         saving: false,
         error: false,
       };
-    case actions.CHANGE_BASIC_DATA:
+    case actions.CHANGE_BASIC_DATA: {
       return {
         ...state,
         data: {
@@ -102,6 +102,8 @@ const reducer = (state, action) => {
           },
         },
       };
+    }
+
     case actions.CHANGE_SKILLS_DATA:
       return {
         ...state,
@@ -146,7 +148,11 @@ const EditProjectView = (props) => {
 
       const basicInfoData = {
         ...initialState.data.basicInfoData,
-        name: data.name || '',
+        name:
+          (data.name && data.name.replaceAll(/[_-]/g, ' '))
+            .split(' ')
+            .map((text) => `${text.slice(0, 1).toUpperCase()}${text.slice(1)}`)
+            .join(' ') || '',
         initialDate: data.createdAt ? new Date(data.createdAt).getTime() : null,
         description: data.description || '',
         devLink: {
@@ -246,6 +252,7 @@ const EditProjectView = (props) => {
     const images = state.data.images.map((img) => img.url);
 
     const basicData = state.data.basicInfoData;
+    const logoUrl = basicData.proyectLink.imageUrl || basicData.devLink.imageUrl || null;
 
     fetch('/api/graphql', {
       method: 'POST',
@@ -266,6 +273,7 @@ const EditProjectView = (props) => {
             projectLink: basicData.proyectLink.url,
             projectDevLink: basicData.devLink.url,
             images,
+            logoUrl,
           },
         },
       }),
