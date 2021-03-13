@@ -74,132 +74,6 @@ const resolvers = {
           skill: null,
         }));
     },
-    /*
-    createProject: async (parent, args) => {
-      try {
-        const { project } = args;
-        // const { skills } = project;
-        const { projectLink, projectDevLink, skills, imageIds } = project;
-
-        let skillIds = null;
-        let createdProjectLink = null;
-        let createdProjectDevLink = null;
-        let iniDate = null;
-        let endDate = null;
-
-        if (project.initialDate) {
-          iniDate = new Date(+project.initialDate).toISOString();
-        }
-        if (project.finalDate) {
-          endDate = new Date(+project.finalDate).toISOString();
-        }
-
-        if (skills && skills.length > 0) {
-          skillIds = await Promise.all(
-            skills.map(
-              (skill) =>
-                new Promise((resolve) => {
-                  if (skill.id) {
-                    resolve(+skill.id);
-                  } else {
-                    prisma.skill
-                      .findFirst({
-                        where: {
-                          category: skill.category,
-                          name: skill.name,
-                        },
-                      })
-                      .then((existimgSkill) => {
-                        if (existimgSkill) {
-                          resolve(+existimgSkill.id);
-                        } else {
-                          prisma.skill
-                            .create({
-                              data: { name: skill.name, category: skill.category },
-                            })
-                            .then((sk) => resolve(+sk.id));
-                        }
-                      });
-                  }
-                })
-            )
-          );
-        }
-
-        if (projectLink && projectLink.url) {
-          createdProjectLink = await prisma.link.create({
-            data: { ...projectLink },
-          });
-        }
-        if (projectDevLink && projectDevLink.url) {
-          createdProjectDevLink = await prisma.link.create({
-            data: { ...projectDevLink },
-          });
-        }
-
-        const createdProject = await prisma.project.create({
-          data: {
-            userId: +project.userId,
-            name: project.name,
-            description: project.description,
-            initialDate: iniDate,
-            finalDate: endDate,
-            otherInfo: project.otherInfo,
-            projectLinkId: createdProjectLink && createdProjectLink.id,
-            projectDevLinkId: createdProjectDevLink && createdProjectDevLink.id,
-            skills: {
-              create: skillIds.map((skill) => ({
-                skillId: skill,
-              })),
-            },
-            ...(imageIds &&
-              imageIds.length > 0 && {
-                images: {
-                  connect: imageIds.map((imgId) => ({ id: +imgId })),
-                },
-              }),
-          },
-        });
-
-        return {
-          code: 201,
-          success: true,
-          message: 'PROJECT_CREATED',
-          project: createdProject,
-        };
-      } catch (err) {
-        return {
-          code: 500,
-          success: false,
-          message: 'ERROR',
-          project: null,
-        };
-      }
-    },
-    updateProject: (parent, args) => {
-      const { projectId, project } = args;
-      const { id, userId, ...projectData } = project;
-
-      return prisma.project
-        .update({
-          where: {
-            id: +projectId,
-          },
-          data: { ...projectData },
-        })
-        .then((updatedProject) => ({
-          code: 200,
-          success: true,
-          message: 'PROJECT_UPDATED',
-          project: updatedProject,
-        }))
-        .catch(() => ({
-          code: 500,
-          success: false,
-          message: 'ERROR',
-          project,
-        }));
-    }, */
     saveProject: async (parent, args, context) => {
       try {
         const { projectId, project } = args;
@@ -250,7 +124,7 @@ const resolvers = {
         }
         const savedProject = await prisma.project.upsert({
           where: {
-            id: projectId || -1,
+            id: +projectId || -1,
           },
           create: {
             userId,
@@ -296,32 +170,6 @@ const resolvers = {
             logoUrl,
           },
         });
-        console.log(savedProject);
-        /*
-        const createdProject = await prisma.project.create({
-          data: {
-            userId: +project.userId,
-            name: project.name,
-            description: project.description,
-            initialDate: iniDate,
-            finalDate: endDate,
-            otherInfo: project.otherInfo,
-            projectLinkId: createdProjectLink && createdProjectLink.id,
-            projectDevLinkId: createdProjectDevLink && createdProjectDevLink.id,
-            skills: {
-              create: skillIds.map((skill) => ({
-                skillId: skill,
-              })),
-            },
-            ...(imageIds &&
-              imageIds.length > 0 && {
-                images: {
-                  connect: imageIds.map((imgId) => ({ id: +imgId })),
-                },
-              }),
-          },
-        }); */
-
         return {
           code: 201,
           success: true,

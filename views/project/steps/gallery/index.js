@@ -91,7 +91,7 @@ const GalleryForm = (props) => {
             <ReactProfileImage
               camera
               returnImage={() => {}}
-              defaultImage={image.img}
+              defaultImage={image.url}
               uploadBtnProps={{ disabled: true, label: lang.galleryStep.body.uploadBtn }}
               cameraBtnProps={{ disabled: true, label: lang.galleryStep.body.cameraBtn }}
               maxImgSize={0}

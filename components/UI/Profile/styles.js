@@ -129,7 +129,7 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   avatar: {
-    color: theme.palette.getContrastText(theme.palette.primary.light),
-    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.getContrastText(theme.palette.secondary.main),
+    backgroundColor: theme.palette.secondary.main,
   },
 }));

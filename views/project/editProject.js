@@ -56,6 +56,7 @@ const initialState = {
   saving: false,
   error: false,
 };
+
 const actions = {
   SET_REPOSITORY_DATA: 'SET_REPOSITORY_DATA',
   START_SAVING: 'START_SAVING',
@@ -135,10 +136,13 @@ const reducer = (state, action) => {
 };
 
 const EditProjectView = (props) => {
-  const { handleClose, projectId } = props;
+  const { handleClose, projectId, data } = props;
   // Hooks
   const { lang } = useLang();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(
+    reducer,
+    data ? { ...initialState, data: data } : initialState
+  );
 
   const setRepoSyncData = useCallback(
     (data) => {
@@ -248,7 +252,6 @@ const EditProjectView = (props) => {
     }));
     const skills = [...proglangs, ...techs];
     const images = state.data.images.map((img) => img.url);
-
     const basicData = state.data.basicInfoData;
     const logoUrl = basicData.proyectLink.imageUrl || basicData.devLink.imageUrl || null;
 
