@@ -128,4 +128,8 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
+  avatar: {
+    color: theme.palette.getContrastText(theme.palette.primary.light),
+    backgroundColor: theme.palette.primary.light,
+  },
 }));

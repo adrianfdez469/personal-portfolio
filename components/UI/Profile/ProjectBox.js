@@ -39,7 +39,11 @@ const ProjectBox = () => {
               <Card className={styles.card}>
                 <CardHeader
                   avatar={
-                    <Avatar aria-label="recipe" className={styles.avatar} src={element.logoUrl}>
+                    <Avatar
+                      aria-label="recipe"
+                      className={!element.logoUrl && styles.avatar}
+                      src={element.logoUrl}
+                    >
                       {element.name[0].toUpperCase()}
                     </Avatar>
                   }

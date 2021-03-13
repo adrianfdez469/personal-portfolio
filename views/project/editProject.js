@@ -91,7 +91,7 @@ const reducer = (state, action) => {
         saving: false,
         error: false,
       };
-    case actions.CHANGE_BASIC_DATA: {
+    case actions.CHANGE_BASIC_DATA:
       return {
         ...state,
         data: {
@@ -102,8 +102,6 @@ const reducer = (state, action) => {
           },
         },
       };
-    }
-
     case actions.CHANGE_SKILLS_DATA:
       return {
         ...state,
