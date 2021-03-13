@@ -6,7 +6,7 @@ import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 const useSmallPhotoCameraButtonStyle = makeStyles((theme) => ({
   iconButton: {
     backgroundColor: theme.palette.background.default,
-    boxShadow: `0 0 5px ${theme.palette.action.disabled}`,
+    boxShadow: `0 0 8px ${theme.palette.text.secondary}`,
     '&:hover': {
       backgroundColor: theme.palette.background.paper,
     },
@@ -15,8 +15,6 @@ const useSmallPhotoCameraButtonStyle = makeStyles((theme) => ({
 
 const EditableAvatarPhoto = ({ children, size, onClick }) => {
   const styles = useSmallPhotoCameraButtonStyle();
-
-  console.log('Entra en el avatar edit');
 
   return (
     <Badge
