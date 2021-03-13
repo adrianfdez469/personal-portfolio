@@ -29,12 +29,10 @@ import { useProfile } from '../../../store/contexts/profileContext';
   { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
 ]; */
 
-const ProjectBox = (props) => {
+const ProjectBox = () => {
   const styles = useProjectBoxStyles();
   const [expanded, setExpanded] = useState(false);
   const { user } = useProfile();
-
-  console.log(user);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
