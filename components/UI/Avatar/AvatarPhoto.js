@@ -39,7 +39,7 @@ const AvatarPhoto = (props) => {
   const avatarStyle = size === 'small' ? styles.avatarSmall : styles.avatarLong;
 
   const [AvatarCmp, setAvatarCmp] = useState(
-    <Avatar className={avatarStyle} src={src} variant="circular" />
+    <Avatar className={avatarStyle} src={src} variant="circular" sizes={size} />
   );
 
   useEffect(() => {
