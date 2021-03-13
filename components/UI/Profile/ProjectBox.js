@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -13,23 +13,28 @@ import {
   Collapse,
   Avatar,
 } from '@material-ui/core';
-
 import { ThumbUpAltOutlined, ShareOutlined, EditOutlined } from '@material-ui/icons';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SkillCategoriesConst from '../../../constants/skillsCategorysConst';
 import { useProjectBoxStyles } from './styles';
 
-const list = [
+import { useProfile } from '../../../store/contexts/profileContext';
+
+/* const list = [
   { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
   { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
   { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
   { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
   { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-];
+]; */
 
 const ProjectBox = (props) => {
-  const classes = useProjectBoxStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const styles = useProjectBoxStyles();
+  const [expanded, setExpanded] = useState(false);
+  const { user } = useProfile();
+
+  console.log(user);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -37,14 +42,14 @@ const ProjectBox = (props) => {
 
   return (
     <div>
-      <div className={classes.box}>
-        <div className={classes.gridList}>
-          {list.map((element, index) => (
-            <div key={index} className={classes.listBox}>
-              <Card className={classes.card}>
+      <div className={styles.box}>
+        <div className={styles.gridList}>
+          {user.projects.map((element) => (
+            <div key={element.id} className={styles.listBox}>
+              <Card className={styles.card}>
                 <CardHeader
                   avatar={
-                    <Avatar aria-label="recipe" className={classes.avatar}>
+                    <Avatar aria-label="recipe" className={styles.avatar}>
                       A
                     </Avatar>
                   }
@@ -53,23 +58,30 @@ const ProjectBox = (props) => {
                       <EditOutlined />
                     </IconButton>
                   }
-                  title={element.title}
-                  subheader={`Lenguage: ${element.subtitle}`}
+                  title={element.name}
+                  // subheader={`Lenguage: ${element.subtitle}`}
+                  subheader={`${element.skills
+                    .filter((skill) => skill.category === SkillCategoriesConst.PROG_LANG)
+                    .map((skill) => skill.name)
+                    .join(' - ')}`}
                 />
                 <CardMedia
-                  className={classes.media}
-                  image={element.img}
-                  title="Nombre del proyecto"
+                  className={styles.media}
+                  image={
+                    element.images && element.images.length > 0
+                      ? element.images[0].imageUrl
+                      : '/images/no-image-red-2.png'
+                  }
+                  title={element.name}
                 />
                 <CardContent>
                   <Typography
-                    className={classes.description}
+                    className={styles.description}
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    Descripción del proyecto. Una pequeña síntesis de en que consiste el proyecto o
-                    el mensaje que el usuario quiere hacer llegar.
+                    {element.description}
                   </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
@@ -80,7 +92,7 @@ const ProjectBox = (props) => {
                     <ShareOutlined />
                   </IconButton>
                   <IconButton
-                    className={clsx(classes.expand, { [classes.expandOpen]: expanded })}
+                    className={clsx(styles.expand, { [styles.expandOpen]: expanded })}
                     onClick={handleExpandClick}
                     aria-expanded={expanded}
                     aria-label="show more"
@@ -90,10 +102,7 @@ const ProjectBox = (props) => {
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                   <CardContent>
-                    <Typography paragraph>
-                      Acá puede ir algunos datos adicionales que quiera poner el usuario como:
-                      colaboradores, tecnologías y etc.
-                    </Typography>
+                    <Typography paragraph>{element.otherInfo}</Typography>
                   </CardContent>
                 </Collapse>
               </Card>

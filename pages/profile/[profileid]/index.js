@@ -22,7 +22,27 @@ const queryUserData = (id) => `
       title
       description
       slug
+      projects {
+        id
+        name
+        description
+        initialDate
+        finalDate
+        skills {
+          id
+          name
+          category
+        }
+        projectLink
+        projectDevLink
+        otherInfo
+        images {
+          id
+          imageUrl
+        }
+      }
     }
+
   }
 `;
 

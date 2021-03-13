@@ -383,6 +383,14 @@ const resolvers = {
           },
         },
       }),
+    images: (project) =>
+      prisma.image.findMany({
+        where: {
+          projectId: {
+            equals: project.id,
+          },
+        },
+      }),
   },
   DevProviderRepo: {
     ownerId: (repo) => {
