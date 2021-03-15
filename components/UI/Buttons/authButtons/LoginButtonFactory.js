@@ -9,7 +9,6 @@ import {
   createSvgIcon,
 } from 'react-social-login-buttons';
 import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
 import { useLang } from '../../../../store/contexts/langContext';
 
 const CustomGithubLoginButton = (props) => {
