@@ -13,28 +13,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LanguageButton = (props) => {
+  const { withColor, styles, title } = props;
   const classes = useStyles();
-  const [locale, setLocale] = useRecoilState(atomLocale);
-  const language = useRecoilValue(atomButtonLanguage);
-  const [title, setTitle] = useState(null);
 
-  // const [title, setTitle] = useState(language.languageButton)
-
-  useEffect(() => {
-    if (language) {
-      console.log('>>>>>>>>>>>>', language.languageButton);
-      setTitle(language.languageButton);
-    }
-  }, [language]);
-
-  const onCLicklanguageHandle = () => {
-    locale === 'es' ? setLocale('en') : setLocale('es');
-  };
+  const onCLicklanguageHandle = () => {};
 
   return (
     <Tooltip title={title}>
-      <IconButton onClick={onCLicklanguageHandle}>
-        <Language className={classes.root} />
+      <IconButton onClick={onCLicklanguageHandle} style={styles}>
+        <Language className={withColor && classes.root} />
       </IconButton>
     </Tooltip>
   );

@@ -20,7 +20,7 @@ const IntroHeader = ({ mainHeadingVariant, secondaryHeadingVariant }) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Link href="/auth/signin?callbackUrl=http://localhost:3000/" passHref>
+          <Link href="/auth/signin" passHref>
             <Button
               variant="contained"
               size="large"

@@ -79,18 +79,6 @@ model UserTokens {
   @@map(name: "user_tokens")
 }
 
-model Link {
-  id               Int      @id @default(autoincrement())
-  url              String   @unique
-  title            String   @default("")
-  description      String   @default("")
-  imageUrl         String   @default("")
-  projectlink      Project? @relation("projectlink")
-  projectDevLinkId Project? @relation("projectDevLinkId")
-
-  @@map(name: "links")
-}
-
 model Skill {
   id       Int             @id @default(autoincrement())
   name     String
@@ -111,20 +99,19 @@ model Image {
 }
 
 model Project {
-  id               Int             @id @default(autoincrement())
-  name             String
-  description      String?
-  initialDate      DateTime?       @map("initial_date")
-  finalDate        DateTime?       @map("end_date")
-  otherInfo        String?         @map("other_info")
-  userId           Int             @map("userid")
-  projectLinkId    Int?            @map("project_link_id")
-  projectDevLinkId Int?            @map("project_devlink_id")
-  user             User            @relation(fields: [userId], references: [id])
-  projectLink      Link?           @relation("projectlink", fields: [projectLinkId], references: [id])
-  projectDevLink   Link?           @relation("projectDevLinkId", fields: [projectDevLinkId], references: [id])
-  skills           ProjectSkills[]
-  images           Image[]
+  id             Int             @id @default(autoincrement())
+  name           String
+  description    String?
+  initialDate    DateTime?       @map("initial_date")
+  finalDate      DateTime?       @map("end_date")
+  otherInfo      String?         @map("other_info")
+  userId         Int             @map("userid")
+  projectLink    String?         @map("project_link")
+  projectDevLink String?         @map("project_devlink")
+  logoUrl        String?         @map("url_logo")
+  user           User            @relation(fields: [userId], references: [id])
+  skills         ProjectSkills[]
+  images         Image[]
 
   @@map(name: "projects")
 }

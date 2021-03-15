@@ -1,7 +1,5 @@
 import React from 'react';
 
-import clsx from 'clsx';
-
 import {
   Card,
   CardHeader,
@@ -10,98 +8,77 @@ import {
   Typography,
   CardActions,
   IconButton,
-  Collapse,
   Avatar,
+  Grid,
 } from '@material-ui/core';
-
 import { ThumbUpAltOutlined, ShareOutlined, EditOutlined } from '@material-ui/icons';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SkillCategoriesConst from '../../../constants/skillsCategorysConst';
 import { useProjectBoxStyles } from './styles';
 
-const list = [
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-  { title: 'Portafolio-Personal', subtitle: 'Javascript', img: '/images/no-image-red-2.png' },
-];
+import { useProfile } from '../../../store/contexts/profileContext';
 
-const ProjectBox = (props) => {
-  const classes = useProjectBoxStyles();
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+const ProjectBox = () => {
+  const styles = useProjectBoxStyles();
+  const { user } = useProfile();
 
   return (
-    <div>
-      <div className={classes.box}>
-        <div className={classes.gridList}>
-          {list.map((element, index) => (
-            <div key={index} className={classes.listBox}>
-              <Card className={classes.card}>
-                <CardHeader
-                  avatar={
-                    <Avatar aria-label="recipe" className={classes.avatar}>
-                      A
-                    </Avatar>
-                  }
-                  action={
-                    <IconButton aria-label="settings">
-                      <EditOutlined />
-                    </IconButton>
-                  }
-                  title={element.title}
-                  subheader={`Lenguage: ${element.subtitle}`}
-                />
-                <CardMedia
-                  className={classes.media}
-                  image={element.img}
-                  title="Nombre del proyecto"
-                />
-                <CardContent>
-                  <Typography
-                    className={classes.description}
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    Descripción del proyecto. Una pequeña síntesis de en que consiste el proyecto o
-                    el mensaje que el usuario quiere hacer llegar.
-                  </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="">
-                    <ThumbUpAltOutlined />
-                  </IconButton>
-                  <IconButton aria-label="">
-                    <ShareOutlined />
-                  </IconButton>
-                  <IconButton
-                    className={clsx(classes.expand, { [classes.expandOpen]: expanded })}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <CardContent>
-                    <Typography paragraph>
-                      Acá puede ir algunos datos adicionales que quiera poner el usuario como:
-                      colaboradores, tecnologías y etc.
-                    </Typography>
-                  </CardContent>
-                </Collapse>
-              </Card>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <Grid container spacing={2} justify="center" className={styles.grid}>
+      {user.projects.map((element) => (
+        <Grid item key={element.id}>
+          <Card className={styles.card}>
+            <CardHeader
+              avatar={
+                <Avatar
+                  aria-label="recipe"
+                  className={!element.logoUrl && styles.avatar}
+                  src={element.logoUrl}
+                >
+                  {element.name[0].toUpperCase()}
+                </Avatar>
+              }
+              action={
+                <IconButton aria-label="settings">
+                  <EditOutlined />
+                </IconButton>
+              }
+              title={element.name}
+              subheader={`${element.skills
+                .filter((skill) => skill.category === SkillCategoriesConst.PROG_LANG)
+                .map((skill) => skill.name)
+                .join(' - ')}`}
+            />
+            <CardMedia
+              className={styles.media}
+              image={
+                element.images && element.images.length > 0
+                  ? element.images[0].imageUrl
+                  : '/images/no-image-red-2.png'
+              }
+              title={element.name}
+            />
+            <CardContent>
+              <Typography
+                className={styles.description}
+                variant="body2"
+                color="textSecondary"
+                component="p"
+              >
+                {element.description}
+              </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+              <IconButton aria-label="">
+                <ThumbUpAltOutlined />
+              </IconButton>
+              <IconButton aria-label="">
+                <ShareOutlined />
+              </IconButton>
+            </CardActions>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 

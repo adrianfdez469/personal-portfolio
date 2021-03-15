@@ -11,7 +11,6 @@ import useStyles from './styles';
 const getLinkPrevQuery = (url) => `
   query {
     link(url:"${url}") {
-      id
       url
       title
       description
@@ -153,6 +152,7 @@ const LinkPreview = (props) => {
       type: 'CHANGE_LINK',
       value: event.target.value,
     });
+    setLink(event.target.value);
   };
 
   let previewView = null;
@@ -209,11 +209,12 @@ const LinkPreview = (props) => {
 
 LinkPreview.propTypes = {
   setLink: PropTypes.func.isRequired,
-  setPreview: PropTypes.func.isRequired,
+  setPreview: PropTypes.func,
   url: PropTypes.string,
 };
 LinkPreview.defaultProps = {
   url: null,
+  setPreview: () => {},
 };
 
 export default React.memo(LinkPreview);

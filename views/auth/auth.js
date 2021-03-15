@@ -10,7 +10,7 @@ import useStyles from './styles';
 // Components
 import { LoginButtonFactory } from '../../components/UI/index';
 
-const AuthenticationPage = ({ providers, csrfToken }) => {
+const AuthenticationPage = ({ providers, csrfToken, baseUrl }) => {
   const classes = useStyles();
   const greaterXsSize = useMediaQuery((theme) => theme.breakpoints.up(390));
   const router = useRouter();
@@ -18,7 +18,6 @@ const AuthenticationPage = ({ providers, csrfToken }) => {
 
   return (
     <Container maxWidth="xs" className={classes.overAllContainer}>
-      {/* smallerXsSize ? contentBox : <Card className={classes.card}>{contentBox}</Card> */}
       <Paper className={classes.card} style={{ display: greaterXsSize ? 'block' : 'contents' }}>
         {router.query && router.query.error === 'OAuthAccountNotLinked' && (
           <Typography align="center" color="primary">
@@ -44,11 +43,7 @@ const AuthenticationPage = ({ providers, csrfToken }) => {
           </div>
 
           <div my={2} className={classes.separator}>
-            <Divider
-              className={classes.divider}
-              // orientation={greaterMdSize ? 'vertical' : 'horizontal'}
-              orientation="horizontal"
-            />
+            <Divider className={classes.divider} orientation="horizontal" />
             <div className={classes.circle}>
               <Typography variant="button" className={classes.circleText}>
                 {lang.orSeparator}
@@ -60,7 +55,7 @@ const AuthenticationPage = ({ providers, csrfToken }) => {
             {Object.values(providers)
               .filter((provider) => provider.id !== 'email')
               .map((provider) => (
-                <LoginButtonFactory id={provider.id} key={provider.id} />
+                <LoginButtonFactory id={provider.id} key={provider.id} baseUrl={baseUrl} />
               ))}
           </div>
         </div>
@@ -72,6 +67,7 @@ const AuthenticationPage = ({ providers, csrfToken }) => {
 AuthenticationPage.propTypes = {
   providers: PropTypes.objectOf(PropTypes.object).isRequired,
   csrfToken: PropTypes.string.isRequired,
+  baseUrl: PropTypes.string.isRequired,
 };
 
 export default AuthenticationPage;

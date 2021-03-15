@@ -1,65 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { Avatar, makeStyles } from '@material-ui/core';
-
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
+import { Avatar, makeStyles, useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
 
+const Editable = dynamic(() => import('./EditAvatarPhoto'));
+
 const useStyle = makeStyles((theme) => ({
-  borderLong: {
-    width: '160px',
-    height: '160px',
+  border: {
     borderRadius: '50%',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow:
-      ' 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
+    backgroundColor: theme.palette.background.default,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: `0 0 8px ${theme.palette.text.primary}`,
   },
-  avatarLong: {
-    width: '154px',
-    height: '154px',
+  borderLong: {
+    width: theme.spacing(20),
+    height: theme.spacing(20),
+  },
+  borderMedium: {
+    width: theme.spacing(13.75),
+    height: theme.spacing(13.75),
   },
   borderSmall: {
-    width: '60px',
-    height: '60px',
-    borderRadius: '50%',
-    backgroundColor: '#fff',
+    width: theme.spacing(9.5),
+    height: theme.spacing(9.5),
+  },
+
+  avatarLong: {
+    width: theme.spacing(19.25),
+    height: theme.spacing(19.25),
+  },
+  avatarMedium: {
+    width: theme.spacing(13),
+    height: theme.spacing(13),
   },
   avatarSmall: {
-    width: '56px',
-    height: '56px',
-  },
-  marginSmall: {
-    margin: '-3.6rem 0.5rem 0.0rem 0.18rem',
-  },
-  marginLong: {
-    margin: '-9.8rem 0.5rem 0.0rem 0.19rem',
+    width: theme.spacing(9),
+    height: theme.spacing(9),
   },
 }));
 
 const AvatarPhoto = (props) => {
-  const { src, size } = props;
-  const classes = useStyle();
+  const { src, size, edit } = props;
+  const styles = useStyle();
+  const upSmSize = useMediaQuery((theme) => theme.breakpoints.up('sm'));
+  const upMdSize = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
-  const [border, setBorder] = useState('long');
-  const [avatar, setAvatar] = useState('long');
-  const [margin, setMargin] = useState('long');
-
-  useEffect(() => {
-    if (size === 'small') {
-      setBorder(classes.borderSmall);
-      setAvatar(classes.avatarSmall);
-      setMargin(classes.marginSmall);
+  let realSize = size;
+  if (realSize === 'adjustable') {
+    if (upMdSize) {
+      realSize = 'long';
+    } else if (upSmSize) {
+      realSize = 'default';
     } else {
-      setBorder(classes.borderLong);
-      setAvatar(classes.avatarLong);
-      setMargin(classes.marginLong);
+      realSize = 'small';
     }
-  });
+  }
 
-  return (
-    <div style={{ backgroundColor: 'transparent' }}>
-      <div className={border} />
-      <Avatar className={clsx(avatar, margin)} src={src} variant="circular" />
-    </div>
+  let borderStyle;
+  let avatarStyle;
+  switch (realSize) {
+    case 'small':
+      {
+        borderStyle = styles.borderSmall;
+        avatarStyle = styles.avatarSmall;
+      }
+      break;
+    case 'long':
+      {
+        borderStyle = styles.borderLong;
+        avatarStyle = styles.avatarLong;
+      }
+      break;
+    default:
+      borderStyle = styles.borderMedium;
+      avatarStyle = styles.avatarMedium;
+  }
+
+  const AvatarCmp = edit ? (
+    <Editable size={realSize} onClick={() => {}}>
+      <Avatar className={avatarStyle} src={src} variant="circular" />
+    </Editable>
+  ) : (
+    <Avatar className={avatarStyle} src={src} variant="circular" />
   );
+
+  return <div className={clsx(styles.border, borderStyle)}>{AvatarCmp}</div>;
+};
+
+AvatarPhoto.propTypes = {
+  src: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(['small', 'long', 'adjustable']).isRequired,
+  edit: PropTypes.bool.isRequired,
 };
 
 export default AvatarPhoto;

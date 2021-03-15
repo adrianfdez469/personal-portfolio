@@ -4,6 +4,7 @@ import { makeStyles, IconButton, Tooltip } from '@material-ui/core';
 import { ExitToAppOutlined } from '@material-ui/icons';
 
 import { useRecoilValue, useRecoilState } from 'recoil';
+import clsx from 'clsx';
 import { atomLocale, atomButtonLanguage } from '../../../store/atoms';
 
 const useStyles = makeStyles((theme) => ({
@@ -13,25 +14,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LogoutButton = (props) => {
+  const { withColor, styles, title } = props;
   const classes = useStyles();
-  const [locale, setLocale] = useRecoilState(atomLocale);
-  const language = useRecoilValue(atomButtonLanguage);
-  const [title, setTitle] = useState(null);
-
-  // const [title, setTitle] = useState(language.languageButton)
-
-  useEffect(() => {
-    if (language) {
-      setTitle(language.logoutButton);
-    }
-  }, [language]);
 
   const onCLickHandle = () => {};
 
   return (
     <Tooltip title={title}>
-      <IconButton onClick={onCLickHandle}>
-        <ExitToAppOutlined className={classes.root} />
+      <IconButton onClick={onCLickHandle} style={styles}>
+        <ExitToAppOutlined className={withColor && classes.root} />
       </IconButton>
     </Tooltip>
   );

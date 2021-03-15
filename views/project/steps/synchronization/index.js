@@ -20,14 +20,15 @@ import LockIcon from '@material-ui/icons/LockOutlined';
 import LockOpenIcon from '@material-ui/icons/LockOpenOutlined';
 
 import { useRouter } from 'next/router';
+// components
+import StepItem from '../../../../components/UI/StepForm/StepItem';
+import SyncButton from '../../../../components/UI/Buttons/SyncButton';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
-import { useStepsStyles } from '../../styles';
 import useSyncStyles from './styles';
 // Custom icons
 import GitLabIcon from '../../../../components/UI/icons/GitlabIcon';
-
 // TODO: Sacar estas consultas de aqui y ponerlas en un lugar determinado para esto
 const getReposQuery = (provider) => `
   query {
@@ -198,35 +199,8 @@ const reducer = (state, action) => {
   }
 };
 
-const SyncButton = (props) => {
-  // eslint-disable-next-line react/prop-types
-  const { variant, Icon, handleSelect, text, syncProviderText } = props;
-  return (
-    <Grid item>
-      <Button
-        variant={variant}
-        size="large"
-        startIcon={<Icon fontSize="large" />}
-        onClick={handleSelect}
-      >
-        <Box style={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography
-            variant="body1"
-            style={{ textTransform: 'none', fontSize: 10, textAlign: 'left' }}
-          >
-            {text}
-          </Typography>
-          <Typography variant="button" style={{ fontSize: 14, textAlign: 'left' }}>
-            {syncProviderText}
-          </Typography>
-        </Box>
-      </Button>
-    </Grid>
-  );
-};
-
 const SyncForm = (props) => {
-  const { show, selectRepo } = props;
+  const { selectRepo } = props;
   // hooks
   const [state, dispatch] = useReducer(reducer, initialState);
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
@@ -254,7 +228,7 @@ const SyncForm = (props) => {
   } = state;
 
   // styles
-  const stepStyles = useStepsStyles();
+
   const styles = useSyncStyles();
 
   // handlers
@@ -362,13 +336,7 @@ const SyncForm = (props) => {
   }, [selectedGithubRepo]);
 
   return (
-    <Box className={stepStyles.mainContent} hidden={!show}>
-      <Box className={stepStyles.stepDescriptor}>
-        <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-          {lang.syncStep.header.label}
-        </Typography>
-      </Box>
-
+    <StepItem label={lang.syncStep.header.label}>
       <Grid container justify="center" spacing={4}>
         <SyncButton
           variant={buttonGithubSelected ? 'contained' : 'outlined'}
@@ -498,16 +466,12 @@ const SyncForm = (props) => {
           </FormControl>
         </Box>
       )}
-    </Box>
+    </StepItem>
   );
 };
 
 SyncForm.propTypes = {
   selectRepo: PropTypes.func.isRequired,
-  show: PropTypes.bool,
-};
-SyncForm.defaultProps = {
-  show: false,
 };
 
 export default React.memo(SyncForm);

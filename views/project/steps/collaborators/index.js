@@ -1,8 +1,7 @@
 // Ext libs
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Box,
   Typography,
   Accordion,
   AccordionSummary,
@@ -16,13 +15,13 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
 import { useLang } from '../../../../store/contexts/langContext';
+// Components
+import StepItem from '../../../../components/UI/StepForm/StepItem';
 // Styles
-import { useStepsStyles } from '../../styles';
 import useCollaboratorsStyles from './styles';
 
 const CollaboratorsForm = (props) => {
-  const { show, collaborators, changeData } = props;
-  const stepStyles = useStepsStyles();
+  const { collaborators, changeData } = props;
   const styles = useCollaboratorsStyles();
   // const [profiles, setProfiles] = useState([]);
   const [expanded, setExpanded] = useState(null);
@@ -43,17 +42,8 @@ const CollaboratorsForm = (props) => {
     setExpanded(isExpanded ? expandedIdx : false);
   };
 
-  // TODO: Add a remove button
-  // TODO: Disable the Save Button if no name is entered
-
   return (
-    <Box className={stepStyles.mainContent} hidden={!show}>
-      <Box className={stepStyles.stepDescriptor}>
-        <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-          {lang.collaboratorsStep.header.title}
-        </Typography>
-      </Box>
-
+    <StepItem label={lang.collaboratorsStep.header.title}>
       {collaborators.map((profile, idx) => (
         <Accordion key={idx.toString()} expanded={idx === expanded} onChange={handleChange(idx)}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -105,7 +95,7 @@ const CollaboratorsForm = (props) => {
         </AccordionSummary>
         <AccordionDetails className={styles.accordionDetails} />
       </Accordion>
-    </Box>
+    </StepItem>
   );
 };
 
@@ -122,11 +112,9 @@ CollaboratorsForm.propTypes = {
       isOwner: PropTypes.bool,
     })
   ),
-  show: PropTypes.bool,
 };
 CollaboratorsForm.defaultProps = {
   collaborators: [],
-  show: false,
 };
 
 export default React.memo(CollaboratorsForm);

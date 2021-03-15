@@ -1,57 +1,40 @@
 // Ext libs
 import PropTypes from 'prop-types';
 import React /* , { useState, useEffect } */ from 'react';
-import { Box, Typography, Grid, TextField } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
-import {} from 'next/router';
+import { Grid, TextField } from '@material-ui/core';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+// Languages (dates)
+import esLocale from 'date-fns/locale/es';
+import enLocale from 'date-fns/locale/en-US';
 // Components
 import LinkPreview from '../../../../components/UI/LinkPreview';
+import StepItem from '../../../../components/UI/StepForm/StepItem';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
-// Styles
-import { useStepsStyles } from '../../styles';
+
+const dateLocales = {
+  en: enLocale,
+  es: esLocale,
+};
 
 const BasicInfoForm = (props) => {
   // constants
-  const { show, data, changeData } = props;
-  // styles
-  const stepStyles = useStepsStyles();
+  const { data, changeData } = props;
 
-  // hooks
-  // const [name, setName] = useState('');
-  // const [initialDate, setInitialDate] = useState(null);
-  // const [endDate, setEndDate] = useState(null);
-  // const [description, setDescription] = useState('');
-  // const [otherText, setOtherText] = useState('');
-  //  const [proyectLink, setProjectLink] = useState(null);
-  // const [devLink, setDevLink] = useState(null);
-  const { lang } = useLang();
+  const { lang, locale } = useLang();
 
   // handlers
-  const handleNameChange = (event) => {
-    // setName(event.target.value);
-    changeData({ name: event.target.value });
-  };
-  const handleInitialDateChange = (date) => {
-    // setInitialDate(date);
-    changeData({ initialDate: new Date(date).getTime() });
-  };
-  const handleEndDateChange = (date) => {
-    // setEndDate(date);
-    changeData({ endDate: new Date(date).getTime() });
-  };
-  const handleDescriptionChange = (event) => {
-    // setDescription(event.target.value);
-    changeData({ description: event.target.value });
-  };
-  const hanclerOtherChange = (event) => {
-    // setOtherText(event.target.value);
-    changeData({ otherText: event.target.value });
+  const handleChange = (field, value) => {
+    changeData({ [field]: value });
   };
   const handleSetProjectLink = (text) => {
     changeData({
       proyectLink: {
         url: text,
+        imageUrl: '',
+        title: '',
+        description: '',
       },
     });
   };
@@ -62,19 +45,18 @@ const BasicInfoForm = (props) => {
     changeData({
       devLink: {
         url: text,
+        imageUrl: '',
+        title: '',
+        description: '',
       },
     });
   };
   const handleSetProjectDevPreview = (previewData) => {
     changeData({ devLink: previewData });
   };
-
   return (
-    <Box className={stepStyles.mainContent} hidden={!show}>
-      <Typography align="center" variant="overline" className={stepStyles.stepDescriptionText}>
-        {lang.infoStep.header.label}
-      </Typography>
-      <Box>
+    <StepItem label={lang.infoStep.header.label}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={dateLocales[locale]}>
         <Grid container justify="space-between" spacing={1}>
           <Grid item xs={12} sm={8} md={6}>
             <TextField
@@ -82,7 +64,7 @@ const BasicInfoForm = (props) => {
               placeholder={lang.infoStep.form.inputName.placeholder}
               required
               margin="dense"
-              onChange={handleNameChange}
+              onChange={(event) => handleChange('name', event.target.value)}
               value={data.name}
               variant="outlined"
               fullWidth
@@ -102,7 +84,7 @@ const BasicInfoForm = (props) => {
               format={lang.infoStep.form.inputDate.formatDate}
               inputVariant="outlined"
               value={data.initialDate}
-              onChange={handleInitialDateChange}
+              onChange={(date) => handleChange('initialDate', new Date(date).getTime())}
               KeyboardButtonProps={{
                 'aria-label': 'change start date',
               }}
@@ -125,7 +107,7 @@ const BasicInfoForm = (props) => {
               format={lang.infoStep.form.inputDate.formatDate}
               inputVariant="outlined"
               value={data.endDate}
-              onChange={handleEndDateChange}
+              onChange={(date) => handleChange('endDate', new Date(date).getTime())}
               KeyboardButtonProps={{
                 'aria-label': 'change end date',
               }}
@@ -145,7 +127,7 @@ const BasicInfoForm = (props) => {
               rows="5"
               margin="dense"
               value={data.description}
-              onChange={handleDescriptionChange}
+              onChange={(event) => handleChange('description', event.target.value)}
               variant="outlined"
               fullWidth
             />
@@ -159,7 +141,7 @@ const BasicInfoForm = (props) => {
               label={lang.infoStep.form.inputMore.label}
               placeholder={lang.infoStep.form.inputMore.placeholder}
               value={data.otherText}
-              onChange={hanclerOtherChange}
+              onChange={(event) => handleChange('otherText', event.target.value)}
               fullWidth
             />
           </Grid>
@@ -184,8 +166,8 @@ const BasicInfoForm = (props) => {
             />
           </Grid>
         </Grid>
-      </Box>
-    </Box>
+      </MuiPickersUtilsProvider>
+    </StepItem>
   );
 };
 
@@ -210,10 +192,6 @@ BasicInfoForm.propTypes = {
       imageUrl: PropTypes.string.isRequired,
     }),
   }).isRequired,
-  show: PropTypes.bool,
-};
-BasicInfoForm.defaultProps = {
-  show: false,
 };
 
 export default React.memo(BasicInfoForm);

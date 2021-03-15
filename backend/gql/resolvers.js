@@ -1,3 +1,4 @@
+import { getSession } from 'next-auth/client';
 import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
 import getPreviewData from '../../libs/metascraper';
@@ -15,7 +16,12 @@ const resolvers = {
       prisma.user.findMany({
         where: { ...args },
       }), */
-
+    user: (parent, args) =>
+      prisma.user.findUnique({
+        where: {
+          id: +args.id,
+        },
+      }),
     projects: (parent, args) =>
       prisma.project.findMany({
         where: { ...args },
@@ -24,25 +30,7 @@ const resolvers = {
       prisma.skill.findMany({
         where: { ...args },
       }),
-    link: (parent, args) => {
-      const { url } = args;
-      return prisma.link
-        .findFirst({
-          where: {
-            url,
-          },
-        })
-        .then((link) => {
-          if (link) {
-            return {
-              ...link,
-              img: link.imageUrl,
-            };
-          }
-          return getPreviewData(url);
-        })
-        .catch((err) => console.log(err));
-    },
+    link: (parent, args) => getPreviewData(args.url),
     providerRepos: async (parent, args, context) => {
       switch (args.provider) {
         case 'github':
@@ -86,15 +74,13 @@ const resolvers = {
           skill: null,
         }));
     },
-    createProject: async (parent, args) => {
+    saveProject: async (parent, args, context) => {
       try {
-        const { project } = args;
-        // const { skills } = project;
-        const { projectLink, projectDevLink, skills, imageIds } = project;
+        const { projectId, project } = args;
+        const { userId } = await getSession(context);
+        const { projectLink, projectDevLink, skills, images, logoUrl } = project;
 
         let skillIds = null;
-        let createdProjectLink = null;
-        let createdProjectDevLink = null;
         let iniDate = null;
         let endDate = null;
 
@@ -136,49 +122,62 @@ const resolvers = {
             )
           );
         }
-
-        if (projectLink && projectLink.url) {
-          createdProjectLink = await prisma.link.create({
-            data: { ...projectLink },
-          });
-        }
-        if (projectDevLink && projectDevLink.url) {
-          createdProjectDevLink = await prisma.link.create({
-            data: { ...projectDevLink },
-          });
-        }
-
-        const createdProject = await prisma.project.create({
-          data: {
-            userId: +project.userId,
+        const savedProject = await prisma.project.upsert({
+          where: {
+            id: +projectId || -1,
+          },
+          create: {
+            userId,
             name: project.name,
             description: project.description,
             initialDate: iniDate,
             finalDate: endDate,
             otherInfo: project.otherInfo,
-            projectLinkId: createdProjectLink && createdProjectLink.id,
-            projectDevLinkId: createdProjectDevLink && createdProjectDevLink.id,
+            projectLink,
+            projectDevLink,
             skills: {
               create: skillIds.map((skill) => ({
                 skillId: skill,
               })),
             },
-            ...(imageIds &&
-              imageIds.length > 0 && {
-                images: {
-                  connect: imageIds.map((imgId) => ({ id: +imgId })),
-                },
-              }),
+            images: {
+              create: images.map((img) => ({
+                imageUrl: img,
+              })),
+            },
+            logoUrl,
+          },
+          update: {
+            name: project.name,
+            description: project.description,
+            initialDate: iniDate,
+            finalDate: endDate,
+            otherInfo: project.otherInfo,
+            projectLink,
+            projectDevLink,
+            skills: {
+              deleteMany: {},
+              create: skillIds.map((skill) => ({
+                skillId: skill,
+              })),
+            },
+            images: {
+              deleteMany: {},
+              create: images.map((img) => ({
+                imageUrl: img,
+              })),
+            },
+            logoUrl,
           },
         });
-
         return {
           code: 201,
           success: true,
           message: 'PROJECT_CREATED',
-          project: createdProject,
+          project: savedProject,
         };
       } catch (err) {
+        console.log(err);
         return {
           code: 500,
           success: false,
@@ -186,30 +185,6 @@ const resolvers = {
           project: null,
         };
       }
-    },
-    updateProject: (parent, args) => {
-      const { projectId, project } = args;
-      const { id, userId, ...projectData } = project;
-
-      return prisma.project
-        .update({
-          where: {
-            id: +projectId,
-          },
-          data: { ...projectData },
-        })
-        .then((updatedProject) => ({
-          code: 200,
-          success: true,
-          message: 'PROJECT_UPDATED',
-          project: updatedProject,
-        }))
-        .catch(() => ({
-          code: 500,
-          success: false,
-          message: 'ERROR',
-          project,
-        }));
     },
     updateUser: (parent, args) => {
       const { userId, user } = args;
@@ -248,22 +223,6 @@ const resolvers = {
     initialDate: (project) =>
       project.initialDate ? new Date(project.initialDate).getTime() : null,
     finalDate: (project) => (project.finalDate ? new Date(project.finalDate).getTime() : null),
-    projectLink: (project) =>
-      project.projectLinkId
-        ? prisma.link.findUnique({
-            where: {
-              id: project.projectLinkId,
-            },
-          })
-        : null,
-    projectDevLink: (project) =>
-      project.projectDevLinkId
-        ? prisma.link.findUnique({
-            where: {
-              id: project.projectDevLinkId,
-            },
-          })
-        : null,
     skills: (project) =>
       prisma.skill.findMany({
         where: {
@@ -271,6 +230,14 @@ const resolvers = {
             some: {
               projectId: project.id,
             },
+          },
+        },
+      }),
+    images: (project) =>
+      prisma.image.findMany({
+        where: {
+          projectId: {
+            equals: project.id,
           },
         },
       }),
