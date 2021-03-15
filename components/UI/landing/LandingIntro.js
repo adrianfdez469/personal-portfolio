@@ -12,7 +12,6 @@ const LandingIntro = () => {
 
   const show = () => {
     showMessage(
-      'Informacion',
       'Lo hemos logrado, esto es lo que queriamos hacer asd asd asdasd asdasda asdasdad fwwfwefw casdasdad.',
       'success'
     );
