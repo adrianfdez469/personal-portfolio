@@ -5,8 +5,8 @@ import { Profile } from '../../../views';
 import { ProfileContext } from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
-import ES from '../../../i18n/locales/es/common.json';
-import EN from '../../../i18n/locales/en/common.json';
+import ES from '../../../i18n/locales/editProfilePage/profile.es.json';
+import EN from '../../../i18n/locales/editProfilePage/profile.en.json';
 
 const languageLocales = {
   en: EN,
