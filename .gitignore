@@ -32,3 +32,10 @@ yarn-error.log*
 
 # vercel
 .vercel
+.env
+TODOS
+.docker.env
+firebase.json
+
+# Uploads
+public/uploads/*

@@ -1,8 +1,6 @@
+import React from 'react';
+import Landing from '../views/landing/Landing';
 
-export default function Home() {
-  return (
-    <div>
-      <h1>Hello world!</h1>
-    </div>
-  );
+export default function myComponent() {
+  return <Landing />;
 }

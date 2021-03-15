@@ -1,0 +1,108 @@
+{
+  "redirecting": "Redirecting...",
+  "title": "New project",
+  "next": "Next",
+  "back": "Back",
+  "save": "Save",
+  "step": {
+    "syncyLabel": "Syncronization",
+    "infoLabel": "Information",
+    "galeryLabel": "Galery",
+    "sillsLabel": "Skills",
+    "collaboratorsLabel": "Collaborators",
+    "linksLabel": "Links"
+  },
+  "syncStep": {
+    "header": {
+      "label": "If you have your project on GitHub or GitLab, sync it up and show what you've achieved!"
+    },
+    "body": {
+      "buttons": {
+        "common": "Sync with",
+        "grantPrivateAccess": "Private repos",
+        "grantPublicAccess": "Public repos"
+      },
+      "select": {
+        "githubLabel": "Github repositories",
+        "gitlabLabel": "Gitlab repositories",
+        "selectNone": "None",
+        "errorLoadingReposMsg": "Can't load the repositories",
+        "errorLoadingDetailsReposMsg": "Something could go wrong",
+        "private": "Private"
+      }
+    }
+  },
+  "infoStep": {
+    "header": {
+      "label": "Complete the project information"
+    },
+    "form": {
+      "inputName": {
+        "label": "Name",
+        "placeholder": "Project name"
+      },
+      "inputDate": {
+        "clearLabel": "Clear",
+        "cancelLabel": "Cancel",
+        "okLabel": "Ok",
+        "formatDate": "MM/dd/yyyy",
+        "invalidDate": "Invalid date",
+        "maxDateMessage": "Date should not be after max date",
+        "minDateMessage": "Date should not be before min date"
+      },
+      "inputIniDate": {
+        "label": "Initial date"
+      },
+      "inputEndDate": {
+        "label": "Ending date"
+      },
+      "inputDescription": {
+        "label": "Description",
+        "placeholder": "Description about the project"
+      },
+      "inputMore": {
+        "label": "More",
+        "placeholder": "Share your experiences or any other information that you may find interesting"
+      },
+      "inputProjectLink": {
+        "label": "Project link",
+        "placeholder": "https://www.project.com"
+      },
+      "inputProjectDevLink": {
+        "label": "Development link",
+        "placeholder": "https://www.projectcode.com"
+      }
+    }
+  },
+  "galleryStep": {
+    "header": {
+      "title": "Show your results with images"
+    },
+    "body": {
+      "uploadBtn": "Upload",
+      "cameraBtn": "Camera",
+      "cancelBtn": "Cancel",
+      "takeBtn": "Take",
+      "sizeErrMsg": "Max size",
+      "typeErrMsg": "Only images"
+    }
+  },
+  "skillsStep": {
+    "header": {
+      "title": "Which skills you put into procatice to develop your project"
+    },
+    "form": {
+      "languagesLabel": "Languages",
+      "techLabel": "Technologies"
+    }
+  },
+  "collaboratorsStep": {
+    "header": {
+      "titile": "Did you work alone? Who collaborated with you?"
+    },
+    "form": {
+      "nameLabel": "Name",
+      "emailLabel": "Email"
+    }
+  }
+}

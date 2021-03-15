@@ -6,6 +6,12 @@
   "plugins": [
     "prettier"
   ],
+  "globals": {
+    "fetch": false,
+    "AbortController": false,
+    "document": false,
+    "FormData": false
+  },
   "rules": {
     "prettier/prettier": [
       "error",
@@ -23,11 +29,13 @@
       }
     ],
     "react/jsx-props-no-spreading": [
+      "off"
+    ],
+    "react/jsx-wrap-multilines": [
+      "error",
       {
-        "html": "ignore",
-        "custom": "ignore",
-        "explicitSpread": "ignore",
-        "exceptions": []
+        "declaration": false,
+        "assignment": false
       }
     ]
   }
