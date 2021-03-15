@@ -61,7 +61,7 @@ export const usePersonDataStyles = makeStyles((theme) => ({
       fontSize: theme.spacing(4),
     },
     [theme.breakpoints.up('md')]: {
-      fontSize: theme.spacing(6),
+      fontSize: theme.spacing(5),
     },
   },
   headerSecondary: {
@@ -71,7 +71,7 @@ export const usePersonDataStyles = makeStyles((theme) => ({
       fontSize: theme.spacing(2),
     },
     [theme.breakpoints.up('md')]: {
-      fontSize: theme.spacing(4),
+      fontSize: theme.spacing(3),
     },
   },
   text: {
