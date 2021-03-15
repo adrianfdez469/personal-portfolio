@@ -13,25 +13,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LanguageButton = (props) => {
+  const { withColor, styles, title } = props;
   const classes = useStyles();
-  const [locale, setLocale] = useRecoilState(atomLocale);
-  const language = useRecoilValue(atomButtonLanguage);
-  const [title, setTitle] = useState(null);
-
-  // const [title, setTitle] = useState(language.languageButton)
-
-  useEffect(() => {
-    if (language) {
-      setTitle(language.themeButton);
-    }
-  }, [language]);
 
   const onCLickHandle = () => {};
 
   return (
     <Tooltip title={title}>
-      <IconButton onClick={onCLickHandle}>
-        <Brightness4Outlined className={classes.root} />
+      <IconButton onClick={onCLickHandle} style={styles}>
+        <Brightness4Outlined className={withColor && classes.root} />
       </IconButton>
     </Tooltip>
   );

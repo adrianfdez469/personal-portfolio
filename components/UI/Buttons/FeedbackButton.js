@@ -13,27 +13,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FeedbackButton = (props) => {
+  const { withColor, styles, title } = props;
   const classes = useStyles();
-  const [locale, setLocale] = useRecoilState(atomLocale);
-  const language = useRecoilValue(atomButtonLanguage);
-  const [title, setTitle] = useState(null);
 
-  // const [title, setTitle] = useState(language.languageButton)
-
-  useEffect(() => {
-    if (language) {
-      setTitle(language.feedbackButton);
-    }
-  }, [language]);
-
-  const onCLickHandle = () => {
-    locale === 'es' ? setLocale('en') : setLocale('es');
-  };
+  const onCLickHandle = () => {};
 
   return (
     <Tooltip title={title}>
-      <IconButton onClick={onCLickHandle}>
-        <FeedbackOutlined className={classes.root} />
+      <IconButton onClick={onCLickHandle} style={styles}>
+        <FeedbackOutlined className={withColor && classes.root} />
       </IconButton>
     </Tooltip>
   );
