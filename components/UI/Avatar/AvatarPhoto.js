@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
-import { Avatar, makeStyles } from '@material-ui/core';
+import { Avatar, makeStyles, useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
+
+const Editable = dynamic(() => import('./EditAvatarPhoto'));
 
 const useStyle = makeStyles((theme) => ({
   border: {
@@ -17,48 +19,80 @@ const useStyle = makeStyles((theme) => ({
     width: theme.spacing(20),
     height: theme.spacing(20),
   },
+  borderMedium: {
+    width: theme.spacing(13.75),
+    height: theme.spacing(13.75),
+  },
+  borderSmall: {
+    width: theme.spacing(9.5),
+    height: theme.spacing(9.5),
+  },
+
   avatarLong: {
     width: theme.spacing(19.25),
     height: theme.spacing(19.25),
   },
-  borderSmall: {
-    width: theme.spacing(7.5),
-    height: theme.spacing(7.5),
+  avatarMedium: {
+    width: theme.spacing(13),
+    height: theme.spacing(13),
   },
   avatarSmall: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
+    width: theme.spacing(9),
+    height: theme.spacing(9),
   },
 }));
 
 const AvatarPhoto = (props) => {
   const { src, size, edit } = props;
   const styles = useStyle();
+  const upSmSize = useMediaQuery((theme) => theme.breakpoints.up('sm'));
+  const upMdSize = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
-  const borderStyle = size === 'small' ? styles.borderSmall : styles.borderLong;
-  const avatarStyle = size === 'small' ? styles.avatarSmall : styles.avatarLong;
-
-  const [AvatarCmp, setAvatarCmp] = useState(
-    <Avatar className={avatarStyle} src={src} variant="circular" sizes={size} />
-  );
-
-  useEffect(() => {
-    if (edit) {
-      const Editable = dynamic(() => import('./EditAvatarPhoto'));
-      setAvatarCmp(
-        <Editable size={size} onClick={() => {}}>
-          {AvatarCmp}
-        </Editable>
-      );
+  let realSize = size;
+  if (realSize === 'adjustable') {
+    if (upMdSize) {
+      realSize = 'long';
+    } else if (upSmSize) {
+      realSize = 'default';
+    } else {
+      realSize = 'small';
     }
-  }, []);
+  }
+
+  let borderStyle;
+  let avatarStyle;
+  switch (realSize) {
+    case 'small':
+      {
+        borderStyle = styles.borderSmall;
+        avatarStyle = styles.avatarSmall;
+      }
+      break;
+    case 'long':
+      {
+        borderStyle = styles.borderLong;
+        avatarStyle = styles.avatarLong;
+      }
+      break;
+    default:
+      borderStyle = styles.borderMedium;
+      avatarStyle = styles.avatarMedium;
+  }
+
+  const AvatarCmp = edit ? (
+    <Editable size={realSize} onClick={() => {}}>
+      <Avatar className={avatarStyle} src={src} variant="circular" />
+    </Editable>
+  ) : (
+    <Avatar className={avatarStyle} src={src} variant="circular" />
+  );
 
   return <div className={clsx(styles.border, borderStyle)}>{AvatarCmp}</div>;
 };
 
 AvatarPhoto.propTypes = {
   src: PropTypes.string.isRequired,
-  size: PropTypes.oneOf(['small', 'long']).isRequired,
+  size: PropTypes.oneOf(['small', 'long', 'adjustable']).isRequired,
   edit: PropTypes.bool.isRequired,
 };
 
