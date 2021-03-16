@@ -41,6 +41,7 @@ const actions = {
 
   EDIT_PERSONAL_DATA: 'EDIT_PERSONAL_DATA',
   EDIT_CONTACT_DATA: 'EDIT_CONTACT_DATA',
+  SET_PROVIDER_DATA: 'SET_PROVIDER_DATA',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -94,6 +95,28 @@ const reducer = (state, action) => {
           },
         },
       };
+    case actions.SET_PROVIDER_DATA:
+      return {
+        ...state,
+        data: {
+          personalData: {
+            name: action.value.name,
+            title: action.value.title,
+            description: action.value.about,
+            birthday: action.value.birthdate,
+            gender: action.value.gender,
+            experience: action.value.experience,
+          },
+          contactData: {
+            email: action.value.email,
+            phone: action.value.phone,
+            facebook: action.value.facebookUrl,
+            linkedin: action.value.linkedinUrl,
+            twitter: action.value.twitterUrl,
+            github: action.value.githubUrl,
+          },
+        },
+      };
     default:
       return state;
   }
@@ -109,6 +132,7 @@ const EditProjectView = (props) => {
   const handleSave = () => {
     console.log(state);
     dispatch({ type: actions.START_SAVING });
+    // TODO: Fetch graphql mutation to save data
   };
   const handleEditPersonalData = (field, value) => {
     dispatch({ type: actions.EDIT_PERSONAL_DATA, field, value });
@@ -117,9 +141,13 @@ const EditProjectView = (props) => {
     dispatch({ type: actions.EDIT_CONTACT_DATA, field, value });
   };
 
+  const setProvidersData = (data) => {
+    dispatch({ type: actions.SET_PROVIDER_DATA, value: data });
+  };
+
   const Steps = [
     {
-      cmp: <SyncForm />,
+      cmp: <SyncForm setProvidersData={setProvidersData} />,
       label: lang.step.syncyLabel,
     },
     {

@@ -122,7 +122,6 @@ const actions = {
   START_LOADING_DETAIL_GTIHUB_REPO: 'START_LOADING_DETAIL_GTIHUB_REPO',
   SET_ERROR_LOADING_GITHUB_DETAIL_REPO: 'SET_ERROR_LOADING_GITHUB_DETAIL_REPO',
   STOP_LOADING_DETAIL_GTIHUB_REPO: 'STOP_LOADING_DETAIL_GTIHUB_REPO',
-  NO_GITHUB_TOKEN: 'NO_GITHUB_TOKEN',
 
   SELECT_GITLAB_PROVIDER_BUTTON: 'SELECT_GITLAB_PROVIDER_BUTTON',
   START_LOADING_GITLAB_REPOS: 'START_LOADING_GITLAB_REPOS',
@@ -182,10 +181,6 @@ const reducer = (state, action) => {
         ...state,
         errorLoadingGithubDetailsRespo: true,
       };
-    case actions.NO_GITHUB_TOKEN:
-      return {
-        ...state,
-      };
 
     // GITLAB
     case actions.SELECT_GITLAB_PROVIDER_BUTTON:
@@ -206,7 +201,6 @@ const SyncForm = (props) => {
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const { lang } = useLang();
   const router = useRouter();
-
   // constants
   const maxTextLeng = greaterMdSize ? 150 : 35;
   const {
@@ -247,9 +241,9 @@ const SyncForm = (props) => {
   };
   const handleNavigateToGetAccess = (provider, showPrivates) => {
     router.push(
-      `/api/customAuth/providerLoginCall?provider=${provider}&showRepos=${
-        showPrivates ? 'privates' : 'publics'
-      }`
+      `/api/customAuth/providerLoginCall?provider=${provider}${
+        showPrivates ? '&scope=repo,read:user,user:email' : ''
+      }&originalPath=${router.asPath}`
     );
   };
 
@@ -279,9 +273,8 @@ const SyncForm = (props) => {
         .then((data) => {
           console.log(data);
           if (data.errors && data.errors.length > 0) {
-            if (data.errors[0].message === 'NO_GITHUB_TOKEN') {
-              // handleNavigateToGetAccess('github', false);
-              dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: 'NO_GITHUB_TOKEN' });
+            if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
+              dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: 'NO_PROVIDER_TOKEN' });
               return;
             }
             const error = new Error('Cant load api data');
@@ -356,7 +349,7 @@ const SyncForm = (props) => {
 
       {buttonGithubSelected && (
         <Box className={styles.formcontrolWrapper}>
-          {state.errorLoadingGithubRepos !== 'NO_GITHUB_TOKEN' && (
+          {state.errorLoadingGithubRepos !== 'NO_PROVIDER_TOKEN' && (
             <Box style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <FormControl variant="standard" className={styles.formControl} fullWidth>
                 <InputLabel id="github-repos-select">
@@ -432,7 +425,7 @@ const SyncForm = (props) => {
               {lang.syncStep.body.buttons.grantPrivateAccess}
             </Button>
           )}
-          {state.errorLoadingGithubRepos === 'NO_GITHUB_TOKEN' && (
+          {state.errorLoadingGithubRepos === 'NO_PROVIDER_TOKEN' && (
             <Button
               variant="contained"
               color="secondary"

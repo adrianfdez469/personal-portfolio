@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/client';
 import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
 import getPreviewData from '../../libs/metascraper';
-import { getGithubRepos, getGithubRepoData } from '../../libs/integrations/github.provider';
+import ProxyProvider from '../../libs/integrations/provider.proxy';
 
 const resolvers = {
   MutationResponse: {
@@ -32,23 +32,16 @@ const resolvers = {
       }),
     link: (parent, args) => getPreviewData(args.url),
     providerRepos: async (parent, args, context) => {
-      switch (args.provider) {
-        case 'github':
-          return getGithubRepos(context);
-        case 'gitlab':
-        default:
-          return [];
-      }
+      const provider = ProxyProvider(args.provider);
+      return provider.getRepos(context);
     },
     providerRepoData: async (parent, args, context) => {
-      switch (args.provider) {
-        case 'github': {
-          return getGithubRepoData(context, args.id);
-        }
-        case 'gitlab':
-        default:
-          return null;
-      }
+      const provider = ProxyProvider(args.provider);
+      return provider.getRepoData(context);
+    },
+    providerUserData: async (parent, args, context) => {
+      const provider = ProxyProvider(args.provider);
+      return provider.getUserData(context);
     },
   },
   Mutation: {
