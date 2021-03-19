@@ -37,7 +37,7 @@ const resolvers = {
     },
     providerRepoData: async (parent, args, context) => {
       const provider = ProxyProvider(args.provider);
-      return provider.getRepoData(context);
+      return provider.getRepoData(context, args.id);
     },
     providerUserData: async (parent, args, context) => {
       const provider = ProxyProvider(args.provider);

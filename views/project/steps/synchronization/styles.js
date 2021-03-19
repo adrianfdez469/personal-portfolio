@@ -10,13 +10,6 @@ const useSyncStyles = makeStyles((theme) => ({
     height: theme.spacing(4),
     marginRight: theme.spacing(1),
   },
-  progress: {
-    width: '100%',
-    // height: theme.spacing(0.),
-    // borderRadius: theme.spacing(0.2),
-    position: 'absolute',
-    bottom: 0,
-  },
   formcontrolWrapper: {
     display: 'flex',
     flexDirection: 'column',
