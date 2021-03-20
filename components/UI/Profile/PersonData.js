@@ -20,6 +20,7 @@ import FeedbackButton from '../Buttons/FeedbackButton';
 import LogoutButton from '../Buttons/LogoutButton';
 // eslint-disable-next-line import/no-named-as-default-member
 import AvatarPhoto from '../Avatar/AvatarPhoto';
+import EditablePhoto from '../Avatar/EditableAvatarPhoto';
 import { useProfile } from '../../../store/contexts/profileContext';
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
@@ -96,7 +97,9 @@ const PersonData = (props) => {
       <AppBar style={{ position: 'inherit', backgroundColor: 'transparent' }}>
         <div className={styles.north}>
           <div className={styles.avatar}>
-            <AvatarPhoto src={user.image} size="adjustable" edit={edit} />
+            <EditablePhoto size="adjustable" onClick={() => {}}>
+              <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
+            </EditablePhoto>
             <div className={styles.editButtonsDesktop}>
               {edit &&
                 editableActions.map((action) => (

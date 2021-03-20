@@ -16,6 +16,10 @@
     "body": {
       "buttons": {
         "common": "Sync with"
+      },
+      "avatars": {
+        "current": "Current avatar",
+        "avatar": "avatar"
       }
     }
   },

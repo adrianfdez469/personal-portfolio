@@ -12,7 +12,6 @@ import {
   Avatar,
   useMediaQuery,
   Button,
-  CircularProgress,
   FormLabel,
   Grid,
 } from '@material-ui/core';
@@ -23,6 +22,7 @@ import { useRouter } from 'next/router';
 // components
 import StepItem from '../../../../components/UI/StepForm/StepItem';
 import SyncButton from '../../../../components/UI/Buttons/SyncButton';
+import Backdrop from '../../../../components/UI/backdrop';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
@@ -225,7 +225,21 @@ const SyncForm = (props) => {
 
   const styles = useSyncStyles();
 
+  const handleNavigateToGetAccess = (provider, showPrivates) => {
+    router.push(
+      `/api/customAuth/providerLoginCall?provider=${provider}${
+        showPrivates ? '&scope=repo,read:user,user:email' : ''
+      }&originalPath=${router.asPath}`
+    );
+  };
+
   // handlers
+  const handleClickProviderButton = (provider) => {
+    const newArrPath = router.asPath.split('?');
+    const path = `${newArrPath[0]}?provider=${provider}`;
+    router.push(path, null, { shallow: true });
+  };
+
   const handleSelectGithubButton = useCallback(() => {
     dispatch({ type: actions.SELECT_GITHUB_PROVIDER_BUTTON });
   }, []);
@@ -238,13 +252,6 @@ const SyncForm = (props) => {
     } else {
       dispatch({ type: actions.SELECT_GITHUB_REPO });
     }
-  };
-  const handleNavigateToGetAccess = (provider, showPrivates) => {
-    router.push(
-      `/api/customAuth/providerLoginCall?provider=${provider}${
-        showPrivates ? '&scope=repo,read:user,user:email' : ''
-      }&originalPath=${router.asPath}`
-    );
   };
 
   // effect loading github repos
@@ -335,20 +342,29 @@ const SyncForm = (props) => {
     }
   }, [selectedGithubRepo]);
 
+  useEffect(() => {
+    if (router.query.provider === 'github') {
+      handleSelectGithubButton();
+    }
+    if (router.query.provider === 'gitlab') {
+      handleSelectGitlabButton();
+    }
+  }, [router.query.provider]);
+
   return (
     <StepItem label={lang.syncStep.header.label}>
       <Grid container justify="center" spacing={4}>
         <SyncButton
           variant={buttonGithubSelected ? 'contained' : 'outlined'}
           Icon={GitHubIcon}
-          handleSelect={handleSelectGithubButton}
+          handleSelect={() => handleClickProviderButton('github')}
           text={lang.syncStep.body.buttons.common}
           syncProviderText="Github"
         />
         <SyncButton
           variant={buttonGitlabSelected ? 'contained' : 'outlined'}
           Icon={GitLabIcon}
-          handleSelect={handleSelectGitlabButton}
+          hhandleSelect={() => handleClickProviderButton('gitlab')}
           text={lang.syncStep.body.buttons.common}
           syncProviderText="Gitlab"
         />
@@ -424,7 +440,6 @@ const SyncForm = (props) => {
               </FormControl>
             </Box>
           )}
-          {loadingGithubRepos && <CircularProgress />}
           {!state.hasPermissionForPrivateRepos && !loadingGithubRepos && (
             <Button
               variant="contained"
@@ -470,6 +485,7 @@ const SyncForm = (props) => {
           </FormControl>
         </Box>
       )}
+      <Backdrop open={loadingGithubRepos} />
     </StepItem>
   );
 };

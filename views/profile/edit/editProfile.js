@@ -12,6 +12,7 @@ import { useLang } from '../../../store/contexts/langContext';
 
 const initialState = {
   data: {
+    avatarUrl: null,
     personalData: {
       name: '',
       title: '',
@@ -39,6 +40,7 @@ const actions = {
   END_SAVING: 'END_SAVING',
   ERROR_SAVING: 'ERROR_SAVING',
 
+  EDIT_AVATAR_DATA: 'EDIT_AVATAR_DATA',
   EDIT_PERSONAL_DATA: 'EDIT_PERSONAL_DATA',
   EDIT_CONTACT_DATA: 'EDIT_CONTACT_DATA',
   SET_PROVIDER_DATA: 'SET_PROVIDER_DATA',
@@ -73,6 +75,14 @@ const reducer = (state, action) => {
         saving: false,
         error: false,
       };
+    case actions.EDIT_AVATAR_DATA:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          avatarUrl: action.value,
+        },
+      };
     case actions.EDIT_PERSONAL_DATA:
       return {
         ...state,
@@ -99,6 +109,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         data: {
+          avatarUrl: state.data.avatarUrl,
           personalData: {
             name: action.value.name,
             title: action.value.title,
@@ -132,7 +143,7 @@ const EditProjectView = (props) => {
   const handleSave = () => {
     console.log(state);
     dispatch({ type: actions.START_SAVING });
-    // TODO: Fetch graphql mutation to save data
+    // TODO: Fetch graphql mutation to save data and avatar
   };
   const handleEditPersonalData = (field, value) => {
     dispatch({ type: actions.EDIT_PERSONAL_DATA, field, value });
@@ -144,10 +155,13 @@ const EditProjectView = (props) => {
   const setProvidersData = (data) => {
     dispatch({ type: actions.SET_PROVIDER_DATA, value: data });
   };
+  const setProvidersAvatar = (avatarUrl) => {
+    dispatch({ type: actions.EDIT_AVATAR_DATA, value: avatarUrl });
+  };
 
   const Steps = [
     {
-      cmp: <SyncForm setProvidersData={setProvidersData} />,
+      cmp: <SyncForm setProvidersData={setProvidersData} setProvidersAvatar={setProvidersAvatar} />,
       label: lang.step.syncyLabel,
     },
     {

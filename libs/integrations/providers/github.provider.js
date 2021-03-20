@@ -287,6 +287,7 @@ export const getUserData = async (context) => {
       facebookUrl: '',
       linkedinUrl: '',
       twitterUrl,
+      avatarUrl: data.avatarUrl,
     };
   }
   if (response.status === 401) {

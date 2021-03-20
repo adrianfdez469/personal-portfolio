@@ -16,6 +16,10 @@
     "body": {
       "buttons": {
         "common": "Sincroniza con"
+      },
+      "avatars": {
+        "current": "Avatar actual",
+        "avatar": "avatar"
       }
     }
   },

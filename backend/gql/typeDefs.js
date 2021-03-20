@@ -135,6 +135,7 @@ const typeDefs = gql`
     repos: [DevProviderRepo!]
   }
   type ProviderUser {
+    avatarUrl: String
     name: String
     title: String
     about: String
