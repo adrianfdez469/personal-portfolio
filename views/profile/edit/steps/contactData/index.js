@@ -43,13 +43,13 @@ const PersonalDataForm = ({ data, edit }) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            label={lang.contactDataStep.form.facebookLink.label}
-            placeholder={lang.contactDataStep.form.facebookLink.placeholder}
+            label={lang.contactDataStep.form.gitlabLink.label}
+            placeholder={lang.contactDataStep.form.gitlabLink.placeholder}
             margin="dense"
             variant="outlined"
             fullWidth
-            value={data.facebook}
-            onChange={(event) => edit('facebook', event.target.value)}
+            value={data.gitlab}
+            onChange={(event) => edit('gitlab', event.target.value)}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -94,7 +94,6 @@ PersonalDataForm.propTypes = {
     email: PropTypes.string.isRequired,
     phone: PropTypes.string.isRequired,
     linkedin: PropTypes.string.isRequired,
-    facebook: PropTypes.string.isRequired,
     twitter: PropTypes.string.isRequired,
     github: PropTypes.string.isRequired,
     gitlab: PropTypes.string.isRequired,
