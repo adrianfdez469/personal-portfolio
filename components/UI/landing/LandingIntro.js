@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Box, Container, Grid, Hidden, IconButton } from '@material-ui/core';
+import { Box, Container, Grid, Hidden, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Brightness7, Language } from '@material-ui/icons';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import useStyles from './styles';
 import IntroHeader from './introHeader/IntroHeader';
 import useMessage from '../../../hooks/useMessage';
@@ -9,21 +11,63 @@ import useMessage from '../../../hooks/useMessage';
 const LandingIntro = () => {
   const classes = useStyles();
   const [showMessage] = useMessage();
+  const router = useRouter();
 
   const show = () => {
     showMessage(
       'Lo hemos logrado, esto es lo que queriamos hacer asd asd asdasd asdasda asdasdad fwwfwefw casdasdad.',
-      'success'
+      'default'
     );
+  };
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (language) => {
+    // router.push(`/`, `/`, { locale: language });
+    setAnchorEl(null);
   };
 
   return (
     <>
       <Container className={classes.root}>
         <Box align="end">
-          <IconButton className={classes.globalButtons}>
+          <IconButton
+            className={classes.globalButtons}
+            aria-controls="language-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
             <Language />
           </IconButton>
+          <Menu
+            id="language-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <Link href="/" locale="en">
+              <MenuItem
+                onClick={() => {
+                  handleClose('en');
+                }}
+              >
+                English
+              </MenuItem>
+            </Link>
+            <Link href="/" locale="es">
+              <MenuItem
+                onClick={() => {
+                  handleClose('es');
+                }}
+              >
+                Español
+              </MenuItem>
+            </Link>
+          </Menu>
           <IconButton className={classes.globalButtons} onClick={show}>
             <Brightness7 />
           </IconButton>

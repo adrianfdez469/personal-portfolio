@@ -9,7 +9,8 @@ export default makeStyles((theme) => ({
   },
   cardCSB: {
     // backgroundColor: '#fddc6c',
-    // width: '100%',
+    maxWidth: '35em',
+    marginRight: '0.7em',
   },
   typographyCSB: {
     fontWeight: 'bold',
@@ -20,6 +21,8 @@ export default makeStyles((theme) => ({
   },
   iconsCSB: {
     marginLeft: 'auto',
+    minWidth: '6em',
+    alignSelf: 'flex-end',
   },
   expandCSB: {
     padding: '8px 8px',
@@ -43,11 +46,28 @@ export default makeStyles((theme) => ({
     padding: 0,
     textTransform: 'none',
   },
-  success: { backgroundColor: green[500], color: 'white' },
-  error: { backgroundColor: red[300], color: 'white' },
-  warning: { backgroundColor: yellow[800], color: 'white' },
-  info: { backgroundColor: lightBlue[500], maxWidth: '30em', color: 'white' },
+  lightsuccess: { backgroundColor: green[200], color: 'black' },
+  success: { backgroundColor: green[700], color: 'white' },
+  lighterror: { backgroundColor: red[100], color: 'black' },
+  error: { backgroundColor: red[700], color: 'white' },
+  lightwarning: { backgroundColor: yellow[300], color: 'black' },
+  warning: { backgroundColor: yellow[800], color: 'black' },
+  lightinfo: { backgroundColor: lightBlue[200], color: 'black' },
+  info: { backgroundColor: lightBlue[700], color: 'white' },
+  lightdefault: { backgroundColor: 'white', color: 'black' },
   default: { backgroundColor: 'black', color: 'white' },
+  textOverflow: {
+    overflow: 'hidden',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 1,
+    '-webkit-box-orient': 'vertical',
+  },
+  textOverflowExpanded: {
+    overflow: 'hidden',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 1,
+    '-webkit-box-orient': 'vertical',
+  },
 
   /* rootCustSnack: {
     // minWidth: '85em',
