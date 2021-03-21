@@ -168,7 +168,7 @@ const SyncForm = (props) => {
           });
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           dispatch({ type: actions.ERROR_LOADING, error: 'ERROR' });
         });
     },

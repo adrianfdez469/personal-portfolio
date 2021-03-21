@@ -291,8 +291,7 @@ const EditProjectView = (props) => {
         dispatch({ type: actions.END_SAVING });
       })
       .catch((err) => {
-        console.log('Error');
-        console.log(err);
+        console.error(err);
         dispatch({ type: actions.ERROR_SAVING });
       });
   };

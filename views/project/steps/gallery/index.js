@@ -44,7 +44,7 @@ const GalleryForm = (props) => {
         changeData([...images, { id: imageId, img: base64Img, file: imageFile, url: resp.url }]);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       })
       .finally(() => {
         setUploading(false);

@@ -299,7 +299,7 @@ const SyncForm = (props) => {
           });
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: err.message });
         });
     }
@@ -334,7 +334,7 @@ const SyncForm = (props) => {
         })
         .catch((err) => {
           // TODO: Handle error
-          console.log(err);
+          console.error(err);
           dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_DETAIL_REPO });
         });
     }

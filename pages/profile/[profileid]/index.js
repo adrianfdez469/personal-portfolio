@@ -50,8 +50,8 @@ const queryUserData = (id) => `
 const createPropsObject = async (context) => {
   const lang = context.locale;
 
-  const session = await getSession(context);
   try {
+    const session = await getSession(context);
     const language = {
       locale: lang,
       lang: languageLocales[context.locale],
@@ -73,7 +73,7 @@ const createPropsObject = async (context) => {
     const resp = await response.json();
     return { language, profile: resp.data };
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
   return {};
 };

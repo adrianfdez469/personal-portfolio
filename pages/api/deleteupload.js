@@ -10,7 +10,7 @@ const handler = async (req, res) => {
     if (deleted) res.status(200).json({ status: 'OK' });
     else throw new Error('Error');
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
