@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Box, Container, Grid, Hidden, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Brightness7, Language } from '@material-ui/icons';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useStyles from './styles';
 import IntroHeader from './introHeader/IntroHeader';
@@ -11,7 +10,6 @@ import useMessage from '../../../hooks/useMessage';
 const LandingIntro = () => {
   const classes = useStyles();
   const [showMessage] = useMessage();
-  const router = useRouter();
 
   const show = () => {
     showMessage(
@@ -25,8 +23,7 @@ const LandingIntro = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (language) => {
-    // router.push(`/`, `/`, { locale: language });
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
@@ -50,22 +47,10 @@ const LandingIntro = () => {
             onClose={handleClose}
           >
             <Link href="/" locale="en">
-              <MenuItem
-                onClick={() => {
-                  handleClose('en');
-                }}
-              >
-                English
-              </MenuItem>
+              <MenuItem onClick={handleClose}>English</MenuItem>
             </Link>
             <Link href="/" locale="es">
-              <MenuItem
-                onClick={() => {
-                  handleClose('es');
-                }}
-              >
-                Español
-              </MenuItem>
+              <MenuItem onClick={handleClose}>Español</MenuItem>
             </Link>
           </Menu>
           <IconButton className={classes.globalButtons} onClick={show}>
