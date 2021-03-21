@@ -279,7 +279,6 @@ const SyncForm = (props) => {
           throw error;
         })
         .then((data) => {
-          console.log(data);
           if (data.errors && data.errors.length > 0) {
             if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
               dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: 'NO_PROVIDER_TOKEN' });
@@ -444,9 +443,9 @@ const SyncForm = (props) => {
               color="secondary"
               startIcon={<LockIcon />}
               style={{ margin: 8, width: 180 }}
-              onClick={() =>
-                handleNavigateToGetAccess('github', '&scope=repo,read:user,user:email')
-              }
+              onClick={() => {
+                handleNavigateToGetAccess('github', '&scope=repo,read:user,user:email');
+              }}
             >
               {lang.syncStep.body.buttons.grantPrivateAccess}
             </Button>
