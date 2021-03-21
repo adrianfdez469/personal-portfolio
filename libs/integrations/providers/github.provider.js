@@ -1,6 +1,7 @@
 import { getSession } from 'next-auth/client';
-import prisma from '../../prisma/prisma.instance';
-import { generateHash, checkHash } from '../bcrypt';
+import DateFnsAdapter from '@date-io/date-fns';
+import prisma from '../../../prisma/prisma.instance';
+import { generateHash, checkHash } from '../../bcrypt';
 
 const gqlRepos = (first = 50) => `
   query { 
@@ -63,6 +64,24 @@ const gqlRepoData = (projectId) => `
     }
   }`;
 
+const gqlUserData = () => `
+  query { 
+    viewer { 
+      login
+      name
+      bio
+      email
+      avatarUrl
+      url
+      twitterUsername
+      company
+      location
+      websiteUrl
+      createdAt
+    }
+  }
+`;
+
 const findEnhanceToken = async (userId) => {
   const userToken = await prisma.userTokens.findUnique({
     where: {
@@ -85,7 +104,7 @@ const getGithubToken = async (context) => {
   const accessToken = await findEnhanceToken(session.userId);
   if (!accessToken) {
     if (session.tokenProvider !== 'github') {
-      throw new Error('NO_GITHUB_TOKEN');
+      throw new Error('NO_PROVIDER_TOKEN');
     }
     if (!session.accessToken) {
       throw new Error('NO_ACCESS_TOKEN_ON_SESSION');
@@ -113,7 +132,7 @@ const requestGithubEnhanceToken = async (code, state) => {
   return accessToken.access_token;
 };
 
-export const getGithubRepos = async (context) => {
+export const getRepos = async (context) => {
   const accessToken = await getGithubToken(context);
   const response = await fetch('https://api.github.com/graphql', {
     method: 'POST',
@@ -142,7 +161,7 @@ export const getGithubRepos = async (context) => {
   throw new Error('INTERNAL_ERROR');
 };
 
-export const getGithubRepoData = async (context, projectId) => {
+export const getRepoData = async (context, projectId) => {
   const accessToken = await getGithubToken(context);
 
   const response = await fetch('https://api.github.com/graphql', {
@@ -166,18 +185,20 @@ export const getGithubRepoData = async (context, projectId) => {
   throw new Error('CANT_LOAD_PROVIDER_DATA');
 };
 
-export const getGithubLoginPageUrl = (showRepos) => {
-  const scope = showRepos === 'privates' ? '&scope=repo,read:user,user:email' : '';
-  const redirectUrl = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?provider=github`;
-
+export const getLoginPageUrl = (querys) => {
+  const scope = querys.scope ? `&scope=${querys.scope}` : '';
+  const param = JSON.stringify({
+    provider: 'github',
+    originalPath: `${process.env.NEXTAUTH_URL}${querys.originalPath}`,
+  });
+  const redirectUrl = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?param=${param}`;
   const hash = generateHash(process.env.BCRYPT_HASH_STRING);
 
   return `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_ID}&redirect_uri=${redirectUrl}${scope}&state=${hash}`;
 };
 
-export const respGithubMiddleware = async (req, res, code, state) => {
+export const respMiddleware = async (req, res, code, state, originalPath) => {
   const checked = checkHash(process.env.BCRYPT_HASH_STRING, state);
-
   if (checked) {
     const session = await getSession({ req });
     const accessToken = await requestGithubEnhanceToken(code, state);
@@ -198,13 +219,13 @@ export const respGithubMiddleware = async (req, res, code, state) => {
       },
     });
     res.writeHead(301, {
-      Location: `${process.env.NEXTAUTH_URL}/profile/${session.userId}/newproject`,
+      Location: `${originalPath}`,
     });
     res.end();
   }
 };
 
-export const deleteGithubEnhanceToken = async (userId) => {
+export const deleteEnhanceToken = async (userId) => {
   prisma.userTokens.delete({
     where: {
       userId_provider: {
@@ -213,4 +234,64 @@ export const deleteGithubEnhanceToken = async (userId) => {
       },
     },
   });
+};
+
+export const getUserData = async (context) => {
+  const accessToken = await getGithubToken(context);
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      query: gqlUserData(),
+    }),
+  });
+  if (response.ok) {
+    const scopes = response.headers.get('x-oauth-scopes');
+    console.log(scopes);
+
+    /* return {
+      repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
+        ...repository,
+        provider: 'github',
+      })),
+      scopes,
+    }; */
+
+    const getExpYears = (initialDate) => {
+      if (!initialDate) {
+        return 0;
+      }
+
+      const dateFns = new DateFnsAdapter();
+      return dateFns.getYearRange(new Date(initialDate), new Date().getTime()).length;
+    };
+
+    const resp = await response.json();
+    const data = resp.data.viewer;
+    const exp = getExpYears(data.createdAt);
+    const twitterUrl = data.twitterUsername ? `https://twitter.com/${data.twitterUsername}` : '';
+    return {
+      name: data.name,
+      title: '',
+      about: data.bio,
+      experience: exp,
+      birthdate: null,
+      gender: null,
+      email: data.email,
+      phone: null,
+      provider: 'github',
+      githubUrl: data.url,
+      facebookUrl: '',
+      linkedinUrl: '',
+      twitterUrl,
+      avatarUrl: data.avatarUrl,
+    };
+  }
+  if (response.status === 401) {
+    throw new Error('UNAUTHORIZED');
+  }
+  throw new Error('INTERNAL_ERROR');
 };

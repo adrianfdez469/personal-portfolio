@@ -10,8 +10,8 @@ const createPropsObject = async (locale) => {
     locale: locale === 'es' ? 'es' : 'en',
     lang:
       locale === 'es'
-        ? await (await import('../../i18n/locales/es/common.json')).default
-        : await (await import('../../i18n/locales/en/common.json')).default,
+        ? await (await import('../../i18n/locales/editProfilePage/profile.es.json')).default
+        : await (await import('../../i18n/locales/editProfilePage/profile.en.json')).default,
   };
   return { language };
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, makeStyles, Badge } from '@material-ui/core';
+import { IconButton, makeStyles, Badge, useMediaQuery } from '@material-ui/core';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 
 const useSmallPhotoCameraButtonStyle = makeStyles((theme) => ({
@@ -15,6 +15,19 @@ const useSmallPhotoCameraButtonStyle = makeStyles((theme) => ({
 
 const EditableAvatarPhoto = ({ children, size, onClick }) => {
   const styles = useSmallPhotoCameraButtonStyle();
+  const upMdSize = useMediaQuery((theme) => theme.breakpoints.up('md'));
+  const upSmSize = useMediaQuery((theme) => theme.breakpoints.up('sm'));
+
+  let realSize = size;
+  if (realSize === 'adjustable') {
+    if (upMdSize) {
+      realSize = 'long';
+    } else if (upSmSize) {
+      realSize = 'default';
+    } else {
+      realSize = 'small';
+    }
+  }
 
   return (
     <Badge
@@ -30,7 +43,7 @@ const EditableAvatarPhoto = ({ children, size, onClick }) => {
           className={styles.iconButton}
           onClick={onClick}
         >
-          <PhotoCameraOutlinedIcon fontSize={size === 'small' ? size : 'default'} />
+          <PhotoCameraOutlinedIcon fontSize={realSize} />
         </IconButton>
       }
     >
