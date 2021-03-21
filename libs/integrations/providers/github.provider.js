@@ -249,17 +249,6 @@ export const getUserData = async (context) => {
     }),
   });
   if (response.ok) {
-    const scopes = response.headers.get('x-oauth-scopes');
-    console.log(scopes);
-
-    /* return {
-      repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
-        ...repository,
-        provider: 'github',
-      })),
-      scopes,
-    }; */
-
     const getExpYears = (initialDate) => {
       if (!initialDate) {
         return 0;
@@ -284,7 +273,7 @@ export const getUserData = async (context) => {
       phone: null,
       provider: 'github',
       githubUrl: data.url,
-      facebookUrl: '',
+      gitlab: '',
       linkedinUrl: '',
       twitterUrl,
       avatarUrl: data.avatarUrl,

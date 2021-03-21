@@ -115,58 +115,65 @@ const SyncForm = (props) => {
   const { user } = useProfile();
   // constants
   const { buttonGithubSelected, buttonGitlabSelected, buttonLinkedinSelected } = state;
-  const handleNavigateToGetAccess = (provider) => {
-    router.push(
-      `/api/customAuth/providerLoginCall?provider=${provider}&originalPath=${router.asPath}?provider=${provider}`
-    );
-  };
+  const handleNavigateToGetAccess = useCallback(
+    (provider, scope = '') => {
+      const arrPath = router.asPath.split('?');
+      const path = arrPath[0];
+      router.push(
+        `/api/customAuth/providerLoginCall?provider=${provider}&originalPath=${path}?provider=${provider}${scope}`
+      );
+    },
+    [router]
+  );
 
-  const getProviderUserData = (provider) => {
-    fetch('/api/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: getUserQuery,
-        variables: {
-          provider,
+  const getProviderUserData = useCallback(
+    (provider, scope) => {
+      fetch('/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      }),
-    })
-      .then((resp) => {
-        if (resp.ok) {
-          return resp.json();
-        }
-        const error = new Error('Cant load api data');
-        error.status = resp.status;
-        throw error;
+        body: JSON.stringify({
+          query: getUserQuery,
+          variables: {
+            provider,
+          },
+        }),
       })
-      .then((data) => {
-        console.log(data);
-
-        if (data.errors && data.errors.length > 0) {
-          if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
-            console.log(router);
-            handleNavigateToGetAccess(provider);
-            dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: 'NO_PROVIDER_TOKEN' });
-            return;
+        .then((resp) => {
+          if (resp.ok) {
+            return resp.json();
           }
           const error = new Error('Cant load api data');
+          error.status = resp.status;
           throw error;
-        }
+        })
+        .then((data) => {
+          console.log(data);
 
-        setProvidersData(data.data.providerUserData);
-        dispatch({
-          type: actions.SUCCESS_LOADING,
-          avatarUrl: data.data.providerUserData.avatarUrl,
+          if (data.errors && data.errors.length > 0) {
+            if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
+              handleNavigateToGetAccess(provider, scope);
+              dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: 'NO_PROVIDER_TOKEN' });
+              return;
+            }
+            const error = new Error('Cant load api data');
+            throw error;
+          }
+
+          setProvidersData(data.data.providerUserData);
+          dispatch({
+            type: actions.SUCCESS_LOADING,
+            avatarUrl: data.data.providerUserData.avatarUrl,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          dispatch({ type: actions.ERROR_LOADING, error: 'ERROR' });
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch({ type: actions.ERROR_LOADING, error: 'ERROR' });
-      });
-  };
+    },
+    [handleNavigateToGetAccess, dispatch]
+  );
 
   const onAvatarChange = (selected) => {
     dispatch({ type: actions.SWITCH_AVATAR, selected });
@@ -190,7 +197,7 @@ const SyncForm = (props) => {
   }, []);
   const handleSelectGitlabButton = useCallback(() => {
     dispatch({ type: actions.SELECT_GITLAB_PROVIDER_BUTTON });
-    getProviderUserData('gitlab');
+    getProviderUserData('gitlab', '&scope=read_user+openid+profile+email');
   }, []);
   const handleSelectLinkedinButton = useCallback(() => {
     dispatch({ type: actions.SELECT_LINKEDIN_PROVIDER_BUTTON });

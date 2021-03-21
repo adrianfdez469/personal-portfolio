@@ -73,7 +73,7 @@ model UserTokens {
   id          Int      @id @default(autoincrement())
   userId      Int      @map(name: "user_id")
   provider    Provider
-  accessToken String   @unique @map(name: "access_token")
+  accessToken String   @map(name: "access_token")
 
   @@unique([userId, provider])
   @@map(name: "user_tokens")

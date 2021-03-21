@@ -225,11 +225,9 @@ const SyncForm = (props) => {
 
   const styles = useSyncStyles();
 
-  const handleNavigateToGetAccess = (provider, showPrivates) => {
+  const handleNavigateToGetAccess = (provider, scope = '') => {
     router.push(
-      `/api/customAuth/providerLoginCall?provider=${provider}${
-        showPrivates ? '&scope=repo,read:user,user:email' : ''
-      }&originalPath=${router.asPath}`
+      `/api/customAuth/providerLoginCall?provider=${provider}${scope}&originalPath=${router.asPath}`
     );
   };
 
@@ -446,7 +444,9 @@ const SyncForm = (props) => {
               color="secondary"
               startIcon={<LockIcon />}
               style={{ margin: 8, width: 180 }}
-              onClick={() => handleNavigateToGetAccess('github', true)}
+              onClick={() =>
+                handleNavigateToGetAccess('github', '&scope=repo,read:user,user:email')
+              }
             >
               {lang.syncStep.body.buttons.grantPrivateAccess}
             </Button>
@@ -457,7 +457,7 @@ const SyncForm = (props) => {
               color="secondary"
               startIcon={<LockOpenIcon />}
               style={{ margin: 8, width: 180 }}
-              onClick={() => handleNavigateToGetAccess('github', false)}
+              onClick={() => handleNavigateToGetAccess('github', '')}
             >
               {lang.syncStep.body.buttons.grantPublicAccess}
             </Button>

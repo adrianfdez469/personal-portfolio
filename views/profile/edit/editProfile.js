@@ -24,7 +24,7 @@ const initialState = {
     contactData: {
       email: '',
       phone: '',
-      facebook: null,
+      gitlab: null,
       linkedin: null,
       twitter: null,
       github: null,
@@ -121,7 +121,7 @@ const reducer = (state, action) => {
           contactData: {
             email: action.value.email,
             phone: action.value.phone,
-            facebook: action.value.facebookUrl,
+            gitlab: action.value.gitlabUrl,
             linkedin: action.value.linkedinUrl,
             twitter: action.value.twitterUrl,
             github: action.value.githubUrl,
