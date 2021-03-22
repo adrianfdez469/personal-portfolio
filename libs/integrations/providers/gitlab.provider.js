@@ -53,9 +53,6 @@ const getGitlabToken = async (context) => {
   return accessToken;
 };
 
-export const getRepos = async () => {};
-export const getRepoData = async () => {};
-
 export const getLoginPageUrl = (querys) => {
   const scope = querys.scope ? `&scope=${querys.scope}` : '';
   const param = JSON.stringify({
@@ -140,3 +137,67 @@ export const getUserData = async (context) => {
   }
   throw new Error('INTERNAL_ERROR');
 };
+
+export const getRepos = async (context) => {
+  // try {
+  const accessToken = await getGitlabToken(context);
+
+  const userResponse = await fetch('https://gitlab.com/api/v4/user', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  let userId;
+  if (userResponse.ok) {
+    const userData = await userResponse.json();
+    userId = userData.id;
+    const response = await fetch(`https://gitlab.com/api/v4/users/${userId}/projects`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+
+      return {
+        repos: data.map((repo) => ({
+          id: repo.id,
+          name: repo.name,
+          description: repo.description,
+          nameWithOwner: repo.path_with_namespace,
+          owner: repo.owner,
+          isPrivate: repo.visibility === 'private',
+          provider: 'gitlab',
+        })),
+        scopes: '',
+      };
+
+      /* const scopes = response.headers.get('x-oauth-scopes');
+          return {
+            repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
+              ...repository,
+              provider: 'github',
+            })),
+            scopes,
+          }; */
+    }
+    if (response.status === 401) {
+      throw new Error('UNAUTHORIZED');
+    }
+  }
+  if (userResponse.status === 401) {
+    throw new Error('UNAUTHORIZED');
+  }
+  throw new Error('INTERNAL_ERROR');
+  /* } catch (err) {
+    console.error(err);
+  } */
+};
+
+export const getRepoData = async () => {};

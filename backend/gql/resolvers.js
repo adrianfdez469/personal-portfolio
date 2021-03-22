@@ -239,8 +239,8 @@ const resolvers = {
     ownerId: (repo) => {
       switch (repo.provider) {
         case 'github':
-          return repo.owner.id;
         case 'gitlab':
+          return repo.owner.id;
         default:
           return null;
       }
@@ -250,6 +250,7 @@ const resolvers = {
         case 'github':
           return repo.owner.login;
         case 'gitlab':
+          return repo.owner.username;
         default:
           return null;
       }
@@ -259,6 +260,7 @@ const resolvers = {
         case 'github':
           return repo.owner.avatarUrl;
         case 'gitlab':
+          return repo.owner.avatar_url;
         default:
           return null;
       }

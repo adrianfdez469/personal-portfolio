@@ -86,108 +86,71 @@ const MenuProps = {
   },
 };
 
-const initialGithubState = {
-  buttonGithubSelected: false,
-  loadingGithubRepos: false,
-  errorLoadingGithubRepos: false,
-  selectedGithubRepo: { id: null },
-  githubRepos: [],
-  detailsGithubRepoSelected: null,
-  errorLoadingGithubDetailsRespo: false,
-  hasPermissionForPrivateRepos: false,
-};
-const initialGitlabState = {
-  buttonGitlabSelected: false,
-  loadingGitlabRepos: false,
-  errorLoadingGitlabRepos: false,
-  selectedGitlabRepo: null,
-  gitlabRepos: [],
-  detailsGitlabRepoSelected: null,
-  errorLoadingGitlabDetailsRespo: false,
-};
-
 const initialState = {
-  ...initialGithubState,
-  ...initialGitlabState,
+  providerSelected: false,
+  loadingProviderRepos: false,
+  errorLoadingProviderRepos: false,
+  providerRepos: [],
+  selectedProviderRepo: { id: null },
+  errorLoadingProviderDetailsRespo: false,
+  hasPermissionForPrivateRepos: false,
 };
 
 const actions = {
-  SELECT_GITHUB_PROVIDER_BUTTON: 'SELECT_GITHUB_PROVIDER_BUTTON',
-  START_LOADING_GITHUB_REPOS: 'START_LOADING_GITHUB_REPOS',
-  SET_ERROR_LOADING_GITHUB_REPOS: 'SET_ERROR_LOADING_GITHUB_REPOS',
-  SET_GITHUB_REPOS: 'SET_GITHUB_REPOS',
-  STOP_LOADING_GITHUB_REPOS: 'STOP_LOADING_GITHUB_REPOS',
-  SELECT_GITHUB_REPO: 'SELECT_GITHUB_REPO',
-  DESELECT_GITHUB_REPO: 'DESELECT_GITHUB_REPO',
-  START_LOADING_DETAIL_GTIHUB_REPO: 'START_LOADING_DETAIL_GTIHUB_REPO',
-  SET_ERROR_LOADING_GITHUB_DETAIL_REPO: 'SET_ERROR_LOADING_GITHUB_DETAIL_REPO',
-  STOP_LOADING_DETAIL_GTIHUB_REPO: 'STOP_LOADING_DETAIL_GTIHUB_REPO',
-
-  SELECT_GITLAB_PROVIDER_BUTTON: 'SELECT_GITLAB_PROVIDER_BUTTON',
-  START_LOADING_GITLAB_REPOS: 'START_LOADING_GITLAB_REPOS',
-  SET_ERROR_LOADING_GITLAB_REPOS: 'SET_ERROR_LOADING_GITLAB_REPOS',
-  SET_GITLAB_REPOS: 'SET_GITLAB_REPOS',
-  STOP_LOADING_GITLAB_REPOS: 'STOP_LOADING_GITLAB_REPOS',
-  SELECT_GITLAB_REPO: 'SELECT_GITLAB_REPO',
-  DESELECT_GITLAB_REPO: 'DESELECT_GITLAB_REPO',
-  START_LOADING_DETAIL_GTILAB_REPO: 'START_LOADING_DETAIL_GTILAB_REPO',
-  SET_ERROR_LOADING_GITLAB_DETAIL_REPO: 'SET_ERROR_LOADING_GITLAB_DETAIL_REPO',
-  STOP_LOADING_DETAIL_GTILAB_REPO: 'STOP_LOADING_DETAIL_GTILAB_REPO',
+  SELECT_PROVIDER_BUTTON: 'SELECT_PROVIDER_BUTTON',
+  START_LOADING_PROVIDER_REPOS: 'START_LOADING_PROVIDER_REPOS',
+  SET_ERROR_LOADING_PROVIDER_REPOS: 'SET_ERROR_LOADING_PROVIDER_REPOS',
+  SET_PROVIDER_REPOS: 'SET_PROVIDER_REPOS',
+  SELECT_PROVIDER_REPO: 'SELECT_PROVIDER_REPO',
+  DESELECT_PROVIDER_REPO: 'DESELECT_PROVIDER_REPO',
+  // START_LOADING_DETAIL_PROVIDER_REPO: 'START_LOADING_DETAIL_PROVIDER_REPO',
+  SET_ERROR_LOADING_PROVIDER_DETAIL_REPO: 'SET_ERROR_LOADING_PROVIDER_DETAIL_REPO',
+  // STOP_LOADING_DETAIL_PROVIDER_REPO: 'STOP_LOADING_DETAIL_PROVIDER_REPO',
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case actions.SELECT_GITHUB_PROVIDER_BUTTON:
+    case actions.SELECT_PROVIDER_BUTTON:
       return {
         ...state,
-        buttonGitlabSelected: false,
-        buttonGithubSelected: true,
+        providerSelected: action.value,
       };
-
-    case actions.START_LOADING_GITHUB_REPOS:
+    case actions.START_LOADING_PROVIDER_REPOS:
       return {
         ...state,
-        loadingGithubRepos: true,
-        errorLoadingGithubRepos: false,
+        loadingProviderRepos: true,
+        errorLoadingProviderRepos: false,
       };
-    case actions.SET_GITHUB_REPOS:
+    case actions.SET_ERROR_LOADING_PROVIDER_REPOS:
       return {
         ...state,
-        githubRepos: action.data,
-        loadingGithubRepos: false,
-        errorLoadingGithubRepos: false,
+        errorLoadingProviderRepos: action.data,
+        loadingProviderRepos: false,
+      };
+    case actions.SET_PROVIDER_REPOS:
+      return {
+        ...state,
+        providerRepos: action.data,
+        loadingProviderRepos: false,
+        errorLoadingProviderRepos: false,
         hasPermissionForPrivateRepos: action.hasPermision,
       };
-    case actions.SET_ERROR_LOADING_GITHUB_REPOS:
+    case actions.SELECT_PROVIDER_REPO:
       return {
         ...state,
-        errorLoadingGithubRepos: action.data,
-        loadingGithubRepos: false,
+        selectedProviderRepo: action.data,
+        errorLoadingProviderDetailsRespo: false,
       };
-    case actions.SELECT_GITHUB_REPO:
+    case actions.DESELECT_PROVIDER_REPO:
       return {
         ...state,
-        selectedGithubRepo: action.data,
-        errorLoadingGithubDetailsRespo: false,
+        selectedProviderRepo: null,
+        errorLoadingProviderDetailsRespo: false,
       };
-    case actions.DESELECT_GITHUB_REPO:
+    case actions.SET_ERROR_LOADING_PROVIDER_DETAIL_REPO:
       return {
         ...state,
-        selectedGithubRepo: null,
-        errorLoadingGithubDetailsRespo: false,
-      };
-    case actions.SET_ERROR_LOADING_GITHUB_DETAIL_REPO:
-      return {
-        ...state,
-        errorLoadingGithubDetailsRespo: true,
-      };
-
-    // GITLAB
-    case actions.SELECT_GITLAB_PROVIDER_BUTTON:
-      return {
-        ...state,
-        buttonGitlabSelected: true,
-        buttonGithubSelected: false,
+        errorLoadingProviderDetailsRespo: true,
       };
     default:
       return state;
@@ -204,32 +167,29 @@ const SyncForm = (props) => {
   // constants
   const maxTextLeng = greaterMdSize ? 150 : 35;
   const {
-    buttonGithubSelected,
-    loadingGithubRepos,
-    errorLoadingGithubRepos,
-    selectedGithubRepo,
-    githubRepos,
-    // detailsGithubRepoSelected,
-    errorLoadingGithubDetailsRespo,
-    buttonGitlabSelected,
-
-    // loadingGitlabRepos,
-    // errorLoadingGitlabRepos,
-    selectedGitlabRepo,
-    // gitlabRepos,
-    // detailsGitlabRepoSelected,
-    // errorLoadingGitlabDetailsRespo,
+    providerSelected,
+    loadingProviderRepos,
+    errorLoadingProviderRepos,
+    providerRepos,
+    selectedProviderRepo,
+    errorLoadingProviderDetailsRespo,
+    hasPermissionForPrivateRepos,
   } = state;
 
   // styles
 
   const styles = useSyncStyles();
 
-  const handleNavigateToGetAccess = (provider, scope = '') => {
-    router.push(
-      `/api/customAuth/providerLoginCall?provider=${provider}${scope}&originalPath=${router.asPath}`
-    );
-  };
+  const handleNavigateToGetAccess = useCallback(
+    (provider, scope = '') => {
+      const arrPath = router.asPath.split('?');
+      const path = arrPath[0];
+      router.push(
+        `/api/customAuth/providerLoginCall?provider=${provider}${scope}&originalPath=${path}?provider=${provider}`
+      );
+    },
+    [router]
+  );
 
   // handlers
   const handleClickProviderButton = (provider) => {
@@ -238,113 +198,108 @@ const SyncForm = (props) => {
     router.push(path, null, { shallow: true });
   };
 
-  const handleSelectGithubButton = useCallback(() => {
-    dispatch({ type: actions.SELECT_GITHUB_PROVIDER_BUTTON });
-  }, []);
-  const handleSelectGitlabButton = useCallback(() => {
-    dispatch({ type: actions.SELECT_GITLAB_PROVIDER_BUTTON });
-  }, []);
-  const handleSelectGithubRepo = (event) => {
-    if (event.target.value && event.target.value.id) {
-      dispatch({ type: actions.SELECT_GITHUB_REPO, data: event.target.value });
-    } else {
-      dispatch({ type: actions.SELECT_GITHUB_REPO });
-    }
-  };
+  const loadProviderRepos = (provider) => {
+    dispatch({ type: actions.START_LOADING_PROVIDER_REPOS });
 
-  // effect loading github repos
-  useEffect(() => {
-    if (Array.isArray(githubRepos) && githubRepos.length === 0 && buttonGithubSelected === true) {
-      dispatch({ type: actions.START_LOADING_GITHUB_REPOS });
-      // TODO: Implementarle paginacion y busqueda por repositorio (adaptar el componente que desarrollé para que permita realizar estas acciones)
-
-      fetch('/api/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    fetch('/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: getReposQuery,
+        variables: {
+          provider,
         },
-        body: JSON.stringify({
-          query: getReposQuery,
-          variables: {
-            provider: 'github',
-          },
-        }),
+      }),
+    })
+      .then((resp) => {
+        if (resp.ok) {
+          return resp.json();
+        }
+        const error = new Error('Cant load api data');
+        error.status = resp.status;
+        throw error;
       })
-        .then((resp) => {
-          if (resp.ok) {
-            return resp.json();
+      .then((data) => {
+        if (data.errors && data.errors.length > 0) {
+          if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
+            dispatch({ type: actions.SET_ERROR_LOADING_PROVIDER_REPOS, data: 'NO_PROVIDER_TOKEN' });
+            if (providerSelected === 'gitlab') {
+              handleNavigateToGetAccess('gitlab', '&scope=read_user+openid+profile+email+read_api');
+            }
+            return;
           }
           const error = new Error('Cant load api data');
-          error.status = resp.status;
           throw error;
-        })
-        .then((data) => {
-          if (data.errors && data.errors.length > 0) {
-            if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
-              dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: 'NO_PROVIDER_TOKEN' });
-              return;
-            }
-            const error = new Error('Cant load api data');
-            throw error;
-          }
-          let hasPermision = true;
-          if (data.data.providerRepos.scopes === 'user') {
+        }
+        let hasPermision = true;
+        if (provider === 'github') {
+          if (data.data.providerRepos.scopes !== 'read:user, repo, user:email') {
             hasPermision = false;
           }
-          dispatch({
-            type: actions.SET_GITHUB_REPOS,
-            data: data.data.providerRepos.repos,
-            hasPermision,
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-          dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_REPOS, data: err.message });
-        });
-    }
-  }, [buttonGithubSelected, githubRepos]);
+        }
 
-  // effect loading details github repo
-  useEffect(() => {
-    if (selectedGithubRepo && selectedGithubRepo.id) {
-      fetch('/api/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: getRepoData,
-          variables: {
-            provider: 'github',
-            id: selectedGithubRepo.id,
-          },
-        }),
+        dispatch({
+          type: actions.SET_PROVIDER_REPOS,
+          data: data.data.providerRepos.repos,
+          hasPermision,
+        });
       })
-        .then((resp) => {
-          if (resp.ok) {
-            return resp.json();
-          }
-          const error = new Error('Cant load api data');
-          error.status = resp.status;
-          throw error;
-        })
-        .then((data) => {
-          selectRepo(data.data.providerRepoData);
-        })
-        .catch((err) => {
-          // TODO: Handle error
-          console.error(err);
-          dispatch({ type: actions.SET_ERROR_LOADING_GITHUB_DETAIL_REPO });
-        });
+      .catch((err) => {
+        console.error(err);
+        dispatch({ type: actions.SET_ERROR_LOADING_PROVIDER_REPOS, data: err.message });
+      });
+  };
+
+  const handleSelectButton = (provider) => {
+    dispatch({ type: actions.SELECT_PROVIDER_BUTTON, value: provider });
+    loadProviderRepos(provider);
+  };
+
+  const handleSelectProviderRepo = (event) => {
+    if (!event.target.value || !event.target.value.id) {
+      dispatch({ type: actions.DESELECT_PROVIDER_REPO });
+      selectRepo(null);
+      return;
     }
-  }, [selectedGithubRepo]);
+
+    dispatch({ type: actions.SELECT_PROVIDER_REPO, data: event.target.value });
+
+    fetch('/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: getRepoData,
+        variables: {
+          provider: providerSelected,
+          id: event.target.value.id,
+        },
+      }),
+    })
+      .then((resp) => {
+        if (resp.ok) {
+          return resp.json();
+        }
+        const error = new Error('Cant load api data');
+        error.status = resp.status;
+        throw error;
+      })
+      .then((data) => {
+        selectRepo(data.data.providerRepoData);
+      })
+      .catch((err) => {
+        // TODO: Handle error
+        console.error(err);
+        dispatch({ type: actions.SET_ERROR_LOADING_PROVIDER_DETAIL_REPO });
+      });
+  };
 
   useEffect(() => {
-    if (router.query.provider === 'github') {
-      handleSelectGithubButton();
-    }
-    if (router.query.provider === 'gitlab') {
-      handleSelectGitlabButton();
+    if (router.query.provider) {
+      handleSelectButton(router.query.provider);
     }
   }, [router.query.provider]);
 
@@ -352,44 +307,46 @@ const SyncForm = (props) => {
     <StepItem label={lang.syncStep.header.label}>
       <Grid container justify="center" spacing={4}>
         <SyncButton
-          variant={buttonGithubSelected ? 'contained' : 'outlined'}
+          variant={providerSelected === 'github' ? 'contained' : 'outlined'}
           Icon={GitHubIcon}
           handleSelect={() => handleClickProviderButton('github')}
           text={lang.syncStep.body.buttons.common}
           syncProviderText="Github"
         />
         <SyncButton
-          variant={buttonGitlabSelected ? 'contained' : 'outlined'}
+          variant={providerSelected === 'gitlab' ? 'contained' : 'outlined'}
           Icon={GitLabIcon}
-          hhandleSelect={() => handleClickProviderButton('gitlab')}
+          handleSelect={() => handleClickProviderButton('gitlab')}
           text={lang.syncStep.body.buttons.common}
           syncProviderText="Gitlab"
         />
       </Grid>
 
-      {buttonGithubSelected && (
+      {providerSelected && (
         <Box className={styles.formcontrolWrapper}>
-          {state.errorLoadingGithubRepos !== 'NO_PROVIDER_TOKEN' && (
+          {errorLoadingProviderRepos !== 'NO_PROVIDER_TOKEN' && (
             <Box style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <FormControl variant="standard" className={styles.formControl} fullWidth>
-                {!loadingGithubRepos && (
+                {!loadingProviderRepos && (
                   <>
-                    <InputLabel id="github-repos-select">
-                      {lang.syncStep.body.select.githubLabel}
+                    <InputLabel id="repos-select">
+                      {providerSelected === 'github'
+                        ? lang.syncStep.body.select.githubLabel
+                        : lang.syncStep.body.select.gitlabLabel}
                     </InputLabel>
                     <Select
-                      labelId="github-repos-select"
-                      id="github-repos-select"
-                      value={selectedGithubRepo || ''}
-                      onChange={handleSelectGithubRepo}
+                      labelId="repos-select"
+                      id="repos-select"
+                      value={selectedProviderRepo || ''}
+                      onChange={handleSelectProviderRepo}
                       label={lang.syncStep.body.select.githubLabel}
                       MenuProps={MenuProps}
                     >
                       <MenuItem value={{ id: null, name: '' }}>
                         <em>{lang.syncStep.body.select.selectNone}</em>
                       </MenuItem>
-                      {Array.isArray(githubRepos) &&
-                        githubRepos.map((repository) => (
+                      {Array.isArray(providerRepos) &&
+                        providerRepos.map((repository) => (
                           <MenuItem value={repository} key={repository.id}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                               {greaterMdSize && (
@@ -426,10 +383,10 @@ const SyncForm = (props) => {
                     </Select>
                   </>
                 )}
-                {errorLoadingGithubRepos && (
+                {errorLoadingProviderRepos && (
                   <FormLabel error>{lang.syncStep.body.select.errorLoadingReposMsg}</FormLabel>
                 )}
-                {errorLoadingGithubDetailsRespo && (
+                {errorLoadingProviderDetailsRespo && (
                   <FormLabel error>
                     {lang.syncStep.body.select.errorLoadingDetailsReposMsg}
                   </FormLabel>
@@ -437,54 +394,43 @@ const SyncForm = (props) => {
               </FormControl>
             </Box>
           )}
-          {!state.hasPermissionForPrivateRepos && !loadingGithubRepos && (
+          {!hasPermissionForPrivateRepos && !loadingProviderRepos && !errorLoadingProviderRepos && (
             <Button
               variant="contained"
               color="secondary"
               startIcon={<LockIcon />}
               style={{ margin: 8, width: 180 }}
               onClick={() => {
-                handleNavigateToGetAccess('github', '&scope=repo,read:user,user:email');
+                if (providerSelected === 'github') {
+                  handleNavigateToGetAccess('github', '&scope=repo,read:user,user:email');
+                }
+                if (providerSelected === 'gitlab') {
+                  handleNavigateToGetAccess('gitlab', '&scope=read_repository');
+                }
               }}
             >
               {lang.syncStep.body.buttons.grantPrivateAccess}
             </Button>
           )}
-          {state.errorLoadingGithubRepos === 'NO_PROVIDER_TOKEN' && (
+          {errorLoadingProviderRepos === 'NO_PROVIDER_TOKEN' && providerSelected === 'github' && (
             <Button
               variant="contained"
               color="secondary"
               startIcon={<LockOpenIcon />}
               style={{ margin: 8, width: 180 }}
-              onClick={() => handleNavigateToGetAccess('github', '')}
+              onClick={() => {
+                if (providerSelected === 'github') {
+                  handleNavigateToGetAccess('github', '');
+                }
+              }}
             >
               {lang.syncStep.body.buttons.grantPublicAccess}
             </Button>
           )}
         </Box>
       )}
-      {buttonGitlabSelected && (
-        <Box className={styles.formcontrolWrapper}>
-          <FormControl variant="standard" className={styles.formControl} fullWidth>
-            <InputLabel id="gitlab-repos-select">
-              {lang.syncStep.body.select.gitlabLabel}
-            </InputLabel>
-            <Select
-              labelId="gitlab-repos-select"
-              id="gitlab-repos-select"
-              value={selectedGitlabRepo || ''}
-              // onChange={handleChange}
-              label={lang.syncStep.body.select.gitlabLabel}
-              MenuProps={MenuProps}
-            >
-              <MenuItem value={{ id: null, name: '' }}>
-                <em>{lang.syncStep.body.select.selectNone}</em>
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-      )}
-      <Backdrop open={loadingGithubRepos} />
+
+      <Backdrop open={loadingProviderRepos} />
     </StepItem>
   );
 };

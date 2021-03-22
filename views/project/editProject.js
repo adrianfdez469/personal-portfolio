@@ -147,7 +147,10 @@ const EditProjectView = (props) => {
   const setRepoSyncData = useCallback(
     (data) => {
       console.log(data);
-
+      if (!data) {
+        dispatch({ type: actions.SET_REPOSITORY_DATA, data: initialState.data });
+        return;
+      }
       const basicInfoData = {
         ...initialState.data.basicInfoData,
         name:

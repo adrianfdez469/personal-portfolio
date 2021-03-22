@@ -132,59 +132,6 @@ const requestGithubEnhanceToken = async (code, state) => {
   return accessToken.access_token;
 };
 
-export const getRepos = async (context) => {
-  const accessToken = await getGithubToken(context);
-  const response = await fetch('https://api.github.com/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      query: gqlRepos(),
-    }),
-  });
-  if (response.ok) {
-    const scopes = response.headers.get('x-oauth-scopes');
-    console.log(scopes);
-    return {
-      repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
-        ...repository,
-        provider: 'github',
-      })),
-      scopes,
-    };
-  }
-  if (response.status === 401) {
-    throw new Error('UNAUTHORIZED');
-  }
-  throw new Error('INTERNAL_ERROR');
-};
-
-export const getRepoData = async (context, projectId) => {
-  const accessToken = await getGithubToken(context);
-
-  const response = await fetch('https://api.github.com/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      query: gqlRepoData(projectId),
-    }),
-  });
-
-  if (response.ok) {
-    const { data } = await response.json();
-    return {
-      ...data.node,
-      provider: 'github',
-    };
-  }
-  throw new Error('CANT_LOAD_PROVIDER_DATA');
-};
-
 export const getLoginPageUrl = (querys) => {
   const scope = querys.scope ? `&scope=${querys.scope}` : '';
   const param = JSON.stringify({
@@ -283,4 +230,56 @@ export const getUserData = async (context) => {
     throw new Error('UNAUTHORIZED');
   }
   throw new Error('INTERNAL_ERROR');
+};
+
+export const getRepos = async (context) => {
+  const accessToken = await getGithubToken(context);
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      query: gqlRepos(),
+    }),
+  });
+  if (response.ok) {
+    const scopes = response.headers.get('x-oauth-scopes');
+    return {
+      repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
+        ...repository,
+        provider: 'github',
+      })),
+      scopes,
+    };
+  }
+  if (response.status === 401) {
+    throw new Error('UNAUTHORIZED');
+  }
+  throw new Error('INTERNAL_ERROR');
+};
+
+export const getRepoData = async (context, projectId) => {
+  const accessToken = await getGithubToken(context);
+
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      query: gqlRepoData(projectId),
+    }),
+  });
+
+  if (response.ok) {
+    const { data } = await response.json();
+    return {
+      ...data.node,
+      provider: 'github',
+    };
+  }
+  throw new Error('CANT_LOAD_PROVIDER_DATA');
 };
