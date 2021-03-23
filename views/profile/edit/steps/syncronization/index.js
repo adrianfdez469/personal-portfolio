@@ -197,7 +197,7 @@ const SyncForm = (props) => {
   }, []);
   const handleSelectGitlabButton = useCallback(() => {
     dispatch({ type: actions.SELECT_GITLAB_PROVIDER_BUTTON });
-    getProviderUserData('gitlab', '&scope=read_user+openid+profile+email');
+    getProviderUserData('gitlab', '&scope=read_user+openid+profile+email+read_api');
   }, []);
   const handleSelectLinkedinButton = useCallback(() => {
     dispatch({ type: actions.SELECT_LINKEDIN_PROVIDER_BUTTON });

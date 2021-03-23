@@ -45,6 +45,13 @@ const gqlRepoData = (projectId) => `
             name
           }
         }
+        repositoryTopics(last: 20){
+          nodes{
+            topic {
+              name
+            }
+          }
+        }
         mentionableUsers (first: 6) {
           nodes {
             login

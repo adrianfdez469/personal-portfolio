@@ -125,6 +125,7 @@ const typeDefs = gql`
     url: String
     deploymentUrl: String
     languages: [String!]
+    topics: [String!]
     collaborators: [Collaborator!]
     totalCollaborators: String
     isPrivate: Boolean

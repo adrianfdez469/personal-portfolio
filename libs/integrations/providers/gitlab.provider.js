@@ -139,7 +139,6 @@ export const getUserData = async (context) => {
 };
 
 export const getRepos = async (context) => {
-  // try {
   const accessToken = await getGitlabToken(context);
 
   const userResponse = await fetch('https://gitlab.com/api/v4/user', {
@@ -160,11 +159,8 @@ export const getRepos = async (context) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
-
       return {
         repos: data.map((repo) => ({
           id: repo.id,
@@ -177,15 +173,6 @@ export const getRepos = async (context) => {
         })),
         scopes: '',
       };
-
-      /* const scopes = response.headers.get('x-oauth-scopes');
-          return {
-            repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
-              ...repository,
-              provider: 'github',
-            })),
-            scopes,
-          }; */
     }
     if (response.status === 401) {
       throw new Error('UNAUTHORIZED');
@@ -195,9 +182,70 @@ export const getRepos = async (context) => {
     throw new Error('UNAUTHORIZED');
   }
   throw new Error('INTERNAL_ERROR');
-  /* } catch (err) {
-    console.error(err);
-  } */
 };
 
-export const getRepoData = async () => {};
+export const getRepoData = async (context, projectId) => {
+  const accessToken = await getGitlabToken(context);
+
+  const response = await fetch(`https://gitlab.com/api/v4/projects/${projectId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (response.ok) {
+    const repo = await response.json();
+
+    const members = await fetch(`${repo._links.members}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((users) => {
+        const userPromises = users.map((user) =>
+          fetch(`https://gitlab.com/api/v4/users/${user.id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }).then((resp) => resp.json())
+        );
+        return Promise.all(userPromises);
+      });
+
+    const languages = await fetch(`https://gitlab.com/api/v4/projects/${projectId}/languages`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((resp) => resp.json());
+
+    return {
+      id: repo.id,
+      name: repo.name,
+      description: repo.description,
+      nameWithOwner: repo.path_with_namespace,
+      owner: repo.owner,
+      isPrivate: repo.visibility === 'private',
+      provider: 'gitlab',
+      createdAt: repo.created_at,
+      url: repo.web_url,
+      deploymentUrl: '',
+      languages, // repo._links.labels,
+      topics: repo.tag_list,
+      collaborators: members,
+      totalCollaborators: 0, // repo.members,
+    };
+  }
+  if (response.status === 401) {
+    throw new Error('UNAUTHORIZED');
+  }
+  throw new Error('INTERNAL_ERROR');
+};

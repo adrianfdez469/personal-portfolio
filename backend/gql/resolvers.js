@@ -272,6 +272,7 @@ const resolvers = {
             ? repo.deployments.nodes[0].latestStatus.environmentUrl
             : '';
         case 'gitlab':
+          return repo.deploymentUrl;
         default:
           return null;
       }
@@ -283,6 +284,19 @@ const resolvers = {
             ? repo.languages.nodes.map((lang) => lang.name)
             : [];
         case 'gitlab':
+          return Object.keys(repo.languages);
+        default:
+          return null;
+      }
+    },
+    topics: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.repositoryTopics.nodes.length > 0
+            ? repo.repositoryTopics.nodes.map((node) => node.topic.name)
+            : [];
+        case 'gitlab':
+          return repo.topics;
         default:
           return null;
       }
@@ -298,6 +312,17 @@ const resolvers = {
               }))
             : [];
         case 'gitlab':
+          return repo.collaborators && repo.collaborators.length > 0
+            ? repo.collaborators.map((user) => ({
+                login: user.username,
+                avatarUrl: user.avatar_url,
+                email: user.public_email,
+                bio: user.job_title,
+                name: user.name,
+                url: user.web_url,
+                isOwner: repo.owner.id === user.id,
+              }))
+            : [];
         default:
           return null;
       }
@@ -307,6 +332,7 @@ const resolvers = {
         case 'github':
           return repo.mentionableUsers.totalCount;
         case 'gitlab':
+          return repo.totalCollaborators.length;
         default:
           return null;
       }

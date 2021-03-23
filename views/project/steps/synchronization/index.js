@@ -62,6 +62,7 @@ const getRepoData = `
       url
       deploymentUrl
       languages
+      topics
       collaborators {
         login
         avatarUrl
@@ -69,6 +70,7 @@ const getRepoData = `
         bio
         name
         url
+        isOwner
       }
       totalCollaborators
       provider
@@ -249,6 +251,11 @@ const SyncForm = (props) => {
       .catch((err) => {
         console.error(err);
         dispatch({ type: actions.SET_ERROR_LOADING_PROVIDER_REPOS, data: err.message });
+        dispatch({
+          type: actions.SET_PROVIDER_REPOS,
+          data: null,
+        });
+        selectRepo(null);
       });
   };
 
