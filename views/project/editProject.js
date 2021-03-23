@@ -172,6 +172,7 @@ const EditProjectView = (props) => {
       const skillsData = {
         ...initialState.data.skillsData,
         languages: data.languages.length > 0 ? data.languages.map((lg) => ({ text: lg })) : [],
+        technologies: data.topics.length > 0 ? data.topics.map((tech) => ({ text: tech })) : [],
       };
       const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
 
