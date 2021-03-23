@@ -48,7 +48,13 @@ const CollaboratorsForm = (props) => {
         <Accordion key={idx.toString()} expanded={idx === expanded} onChange={handleChange(idx)}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Avatar alt={profile.name} src={profile.avatarUrl} className={styles.smallAvatar} />
-            <Typography color={profile.isOwner ? 'primary' : 'inherit'}>{profile.name}</Typography>
+
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography color="inherit">{profile.name}</Typography>
+              <Typography variant="caption" color="textSecondary">
+                {`${profile.isOwner ? '(owner)' : '(collaborator)'}`}
+              </Typography>
+            </div>
           </AccordionSummary>
           <AccordionDetails className={styles.accordionDetails}>
             <Typography color="textPrimary">{profile.bio}</Typography>

@@ -102,7 +102,9 @@
     },
     "form": {
       "nameLabel": "Nombre",
-      "emailLabel": "Correo electrónico"
+      "emailLabel": "Correo electrónico",
+      "collaborator": "colaborador",
+      "owner": "propietario"
     }
   }
 }
