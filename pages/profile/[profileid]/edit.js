@@ -53,7 +53,7 @@ const createPropsObject = async (context) => {
     const resp = await response.json();
     return { language, profile: resp.data };
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
   return {};
 };

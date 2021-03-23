@@ -1,0 +1,9 @@
+{
+  "expandedMessageTitle": {
+    "info": "Information",
+    "warning": "Warning",
+    "success": "Success",
+    "error": "Error",
+    "default": "Message"
+  }
+}

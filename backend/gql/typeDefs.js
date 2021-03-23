@@ -125,6 +125,7 @@ const typeDefs = gql`
     url: String
     deploymentUrl: String
     languages: [String!]
+    topics: [String!]
     collaborators: [Collaborator!]
     totalCollaborators: String
     isPrivate: Boolean
@@ -134,16 +135,27 @@ const typeDefs = gql`
     scopes: String
     repos: [DevProviderRepo!]
   }
-  
-  
+  type ProviderUser {
+    avatarUrl: String
+    name: String
+    title: String
+    about: String
+    birthdate: String
+    experience: Int
+    gender: gender
+    email: String
+    phone: String
+    provider: userProviders
+    githubUrl: String
+    facebookUrl: String
+    linkedinUrl: String
+    twitterUrl: String
+  }
 
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
-    # createProject(project: ProjectParams!): ProjectParams!
-    # updateProject(projectId: ID!, project: ProjectParams!): ProjectParams!
-    saveProject(projectId: ID, project: ProjectParams!): Project!
-    
+    saveProject(projectId: ID, project: ProjectParams!): Project!    
   }
 
   enum CamelMode {
@@ -181,6 +193,15 @@ const typeDefs = gql`
     github
     gitlab
   }
+  enum userProviders {
+    github
+    gitlab
+    linkedin
+  }
+  enum gender {
+    male
+    female
+  }
 
   type Query {
     #users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
@@ -191,6 +212,7 @@ const typeDefs = gql`
 
     providerRepos(provider: devProviders!): ProvidersResposResponse!
     providerRepoData(provider: devProviders!, id: ID!): DevProviderRepo!
+    providerUserData(provider: userProviders!): ProviderUser!
   }
 `;
 

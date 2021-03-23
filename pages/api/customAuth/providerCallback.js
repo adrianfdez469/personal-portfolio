@@ -1,19 +1,17 @@
-import { respGithubMiddleware } from '../../../libs/integrations/github.provider';
+import ProxyProvider from '../../../libs/integrations/provider.proxy';
 
 const handler = async (req, res) => {
-  const { code, state, provider } = req.query;
-
-  if (provider === 'github') {
-    await respGithubMiddleware(req, res, code, state);
+  const { code, state, param } = req.query;
+  const { provider, originalPath } = JSON.parse(param);
+  const providerObj = ProxyProvider(provider);
+  if (!providerObj) {
+    res.writeHead(301, {
+      Location: `${process.env.NEXTAUTH_URL}`,
+    });
+    res.end();
     return;
   }
-  if (provider === 'gitlab') {
-    console.log('Not implemented!!!');
-  }
-  res.writeHead(301, {
-    Location: `${process.env.NEXTAUTH_URL}`,
-  });
-  res.end();
+  await providerObj.respMiddleware(req, res, code, state, originalPath);
 };
 
 export default handler;

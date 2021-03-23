@@ -25,8 +25,8 @@ const MyApp = (props) => {
         <title>Personal Portfolio</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <SnackbarProvider>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <Provider session={pageProps.session}>
@@ -35,8 +35,8 @@ const MyApp = (props) => {
               <Component {...pageProps} />
             </RecoilRoot>
           </Provider>
-        </ThemeProvider>
-      </SnackbarProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
     </>
   );
 };
