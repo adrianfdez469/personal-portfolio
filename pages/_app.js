@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { Provider } from 'next-auth/client';
-import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { SnackbarProvider } from 'notistack';
@@ -31,9 +30,7 @@ const MyApp = (props) => {
           <CssBaseline />
           <Provider session={pageProps.session}>
             {/* Put the basic layout here to share between pages */}
-            <RecoilRoot>
-              <Component {...pageProps} />
-            </RecoilRoot>
+            <Component {...pageProps} />
           </Provider>
         </SnackbarProvider>
       </ThemeProvider>

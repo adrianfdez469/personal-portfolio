@@ -1,8 +1,4 @@
-import React, { useState, useEffect } from 'react';
-
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { atomLocale, atomButtonLanguage } from '../store/atoms';
-
+import React from 'react';
 import { Profile } from '../views';
 
 const createPropsObject = async (locale) => {

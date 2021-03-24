@@ -88,6 +88,7 @@ export const getServerSideProps = async (context) => {
 
 const Edit = (props) => {
   const { language, profile } = props;
+
   return (
     <LangContext.Provider value={language}>
       <ProfileContext.Provider value={profile}>

@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
-
+import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles, IconButton, Tooltip } from '@material-ui/core';
 import { PostAddOutlined } from '@material-ui/icons';
-
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { atomLocale, atomButtonLanguage } from '../../../store/atoms';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,28 +10,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddProjectButton = (props) => {
+  const { withColor, title, styles } = props;
   const classes = useStyles();
-  const [locale, setLocale] = useRecoilState(atomLocale);
-  const language = useRecoilValue(atomButtonLanguage);
-  const [title, setTitle] = useState(null);
-
-  // const [title, setTitle] = useState(language.languageButton)
-
-  useEffect(() => {
-    if (language) {
-      setTitle(language.addProjectButton);
-    }
-  }, [language]);
 
   const onCLickHandle = () => {};
 
   return (
     <Tooltip title={title}>
-      <IconButton onClick={onCLickHandle}>
-        <PostAddOutlined />
+      <IconButton onClick={onCLickHandle} style={styles}>
+        <PostAddOutlined className={withColor && classes.root} />
       </IconButton>
     </Tooltip>
   );
+};
+
+AddProjectButton.propTypes = {
+  withColor: PropTypes.bool,
+  styles: PropTypes.shape(PropTypes.any).isRequired,
+  title: PropTypes.string.isRequired,
+};
+AddProjectButton.defaultProps = {
+  withColor: false,
 };
 
 export default AddProjectButton;

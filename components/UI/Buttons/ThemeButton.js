@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { makeStyles, IconButton, Tooltip } from '@material-ui/core';
 import { Brightness4Outlined } from '@material-ui/icons';
-
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { atomLocale, atomButtonLanguage } from '../../../store/atoms';
 
 const useStyles = makeStyles((theme) => ({
   root: {

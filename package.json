@@ -40,7 +40,6 @@
     "react-material-selectable-inputtext": "^1.0.3",
     "react-social-login-buttons": "^3.1.2",
     "react-webcam": "^5.2.3",
-    "recoil": "^0.1.2",
     "sharp": "^0.27.1",
     "uuid-v4": "^0.1.0"
   },
