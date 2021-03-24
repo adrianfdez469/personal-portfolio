@@ -2,6 +2,7 @@
 // libs
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
@@ -70,6 +71,7 @@ export const getStaticProps = async (context) => {
 
 const NewProject = (props) => {
   const { language } = props;
+  const router = useRouter();
 
   if (!language) {
     return <></>;
@@ -77,7 +79,12 @@ const NewProject = (props) => {
 
   return (
     <LangContext.Provider value={language}>
-      <EditProject open handleClose={() => {}} />
+      <EditProject
+        open
+        handleClose={() => {
+          router.replace(`/profile/${router.query.profileid}`);
+        }}
+      />
     </LangContext.Provider>
   );
 };
