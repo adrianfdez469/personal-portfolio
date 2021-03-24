@@ -74,7 +74,7 @@ const Edit = (props) => {
       <ProfileContext.Provider value={profile}>
         <EditProfile
           handleClose={() => {
-            router.back();
+            router.replace(`/profile/${router.query.profileid}`);
           }}
         />
       </ProfileContext.Provider>
