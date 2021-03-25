@@ -21,8 +21,8 @@ export const usePersonDataStyles = makeStyles((theme) => ({
   },
   north: {
     height: 'auto',
-    background:
-      'linear-gradient(90deg, rgba(191,123,53,1) 0%, rgba(255,145,0,1) 50%, rgba(201,127,51,1) 100%)',
+    // background: `linear-gradient(90deg, rgba(191,123,53,1) 0%, rgba(255,145,0,1) 50%, rgba(201,127,51,1) 100%)`,
+    background: `linear-gradient(90deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 50%, ${theme.palette.primary.light} 100%)`,
     display: 'flex',
     [theme.breakpoints.up('md')]: {
       height: theme.spacing(15),
@@ -118,7 +118,7 @@ export const usePersonDataStyles = makeStyles((theme) => ({
 
 export const useProjectBoxStyles = makeStyles((theme) => ({
   grid: {
-    margin: 0,
+    margin: theme.spacing(1),
     width: 'auto',
   },
   card: {
@@ -126,6 +126,8 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
     // height: '100%',
     height: theme.spacing(50),
     display: 'inline-grid',
+    boxShadow:
+      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
   },
   avatar: {
     color: theme.palette.getContrastText(theme.palette.secondary.main),
