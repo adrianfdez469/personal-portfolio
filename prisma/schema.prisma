@@ -49,6 +49,7 @@ model User {
   slug          String?   @unique
   title         String?
   description   String?
+  theme         String?   @default("orangeDark")
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { providers as providersFunc, csrfToken } from 'next-auth/client';
 import { LoginView } from '../../views';
+import { preRenderLanguage, preRenderUserTheme } from '../../backend/preRenderingData';
 import ES from '../../i18n/locales/auth/auth.es.json';
 import EN from '../../i18n/locales/auth/auth.en.json';
 import { LangContext } from '../../store/contexts/langContext';
@@ -10,25 +11,16 @@ const languageLocales = {
   es: ES,
 };
 
-const createPropsObject = async (locale) => {
-  const lang = locale;
-  const language = {
-    locale: lang,
-    lang: languageLocales[locale],
-  };
-
-  return { language };
-};
-
 export async function getServerSideProps(context) {
-  const { locale } = context;
-  const { language } = { ...(await createPropsObject(locale)) };
+  const language = await preRenderLanguage(context, languageLocales);
+  const theme = await preRenderUserTheme(context);
   const baseUrl = process.env.NEXTAUTH_URL;
 
   return {
     props: {
       providers: await providersFunc(context),
       language,
+      theme,
       csrftoken: await csrfToken(context),
       baseUrl,
     },

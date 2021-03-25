@@ -10,7 +10,8 @@
     "fetch": false,
     "AbortController": false,
     "document": false,
-    "FormData": false
+    "FormData": false,
+    "localStorage": false
   },
   "rules": {
     "prettier/prettier": [
