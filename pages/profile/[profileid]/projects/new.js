@@ -2,7 +2,8 @@
 // libs
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { useRouter } from 'next/router';
+import { preRenderLanguage, staticRenderUserTheme } from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
 import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
@@ -15,16 +16,6 @@ import prisma from '../../../../prisma/prisma.instance';
 const languageLocales = {
   en: EN,
   es: ES,
-};
-
-const createPropsObject = async (locale) => {
-  const lang = locale;
-  const language = {
-    locale: lang,
-    lang: languageLocales[locale],
-  };
-
-  return { language };
 };
 
 export const getStaticPaths = async () => {
@@ -51,7 +42,6 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async (context) => {
-  const { locale } = context;
   const { profileid } = context.params;
   const user = await prisma.user.findUnique({
     where: {
@@ -62,7 +52,10 @@ export const getStaticProps = async (context) => {
     return { notFound: true };
   }
 
-  const obj = { ...(await createPropsObject(locale)) };
+  const obj = {
+    language: await preRenderLanguage(context, languageLocales),
+    theme: await staticRenderUserTheme(+profileid),
+  };
   return {
     props: obj,
   };
@@ -70,6 +63,7 @@ export const getStaticProps = async (context) => {
 
 const NewProject = (props) => {
   const { language } = props;
+  const router = useRouter();
 
   if (!language) {
     return <></>;
@@ -77,7 +71,12 @@ const NewProject = (props) => {
 
   return (
     <LangContext.Provider value={language}>
-      <EditProject open handleClose={() => {}} />
+      <EditProject
+        open
+        handleClose={() => {
+          router.replace(`/profile/${router.query.profileid}`);
+        }}
+      />
     </LangContext.Provider>
   );
 };

@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/client';
 import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
 import getPreviewData from '../../libs/metascraper';
-import { getGithubRepos, getGithubRepoData } from '../../libs/integrations/github.provider';
+import ProxyProvider from '../../libs/integrations/provider.proxy';
 
 const resolvers = {
   MutationResponse: {
@@ -32,23 +32,16 @@ const resolvers = {
       }),
     link: (parent, args) => getPreviewData(args.url),
     providerRepos: async (parent, args, context) => {
-      switch (args.provider) {
-        case 'github':
-          return getGithubRepos(context);
-        case 'gitlab':
-        default:
-          return [];
-      }
+      const provider = ProxyProvider(args.provider);
+      return provider.getRepos(context);
     },
     providerRepoData: async (parent, args, context) => {
-      switch (args.provider) {
-        case 'github': {
-          return getGithubRepoData(context, args.id);
-        }
-        case 'gitlab':
-        default:
-          return null;
-      }
+      const provider = ProxyProvider(args.provider);
+      return provider.getRepoData(context, args.id);
+    },
+    providerUserData: async (parent, args, context) => {
+      const provider = ProxyProvider(args.provider);
+      return provider.getUserData(context);
     },
   },
   Mutation: {
@@ -177,7 +170,7 @@ const resolvers = {
           project: savedProject,
         };
       } catch (err) {
-        console.log(err);
+        console.error(err);
         return {
           code: 500,
           success: false,
@@ -246,8 +239,8 @@ const resolvers = {
     ownerId: (repo) => {
       switch (repo.provider) {
         case 'github':
-          return repo.owner.id;
         case 'gitlab':
+          return repo.owner.id;
         default:
           return null;
       }
@@ -257,6 +250,7 @@ const resolvers = {
         case 'github':
           return repo.owner.login;
         case 'gitlab':
+          return repo.owner.username;
         default:
           return null;
       }
@@ -266,6 +260,7 @@ const resolvers = {
         case 'github':
           return repo.owner.avatarUrl;
         case 'gitlab':
+          return repo.owner.avatar_url;
         default:
           return null;
       }
@@ -277,6 +272,7 @@ const resolvers = {
             ? repo.deployments.nodes[0].latestStatus.environmentUrl
             : '';
         case 'gitlab':
+          return repo.deploymentUrl;
         default:
           return null;
       }
@@ -288,6 +284,19 @@ const resolvers = {
             ? repo.languages.nodes.map((lang) => lang.name)
             : [];
         case 'gitlab':
+          return Object.keys(repo.languages);
+        default:
+          return null;
+      }
+    },
+    topics: (repo) => {
+      switch (repo.provider) {
+        case 'github':
+          return repo.repositoryTopics.nodes.length > 0
+            ? repo.repositoryTopics.nodes.map((node) => node.topic.name)
+            : [];
+        case 'gitlab':
+          return repo.topics;
         default:
           return null;
       }
@@ -303,6 +312,17 @@ const resolvers = {
               }))
             : [];
         case 'gitlab':
+          return repo.collaborators && repo.collaborators.length > 0
+            ? repo.collaborators.map((user) => ({
+                login: user.username,
+                avatarUrl: user.avatar_url,
+                email: user.public_email,
+                bio: user.job_title,
+                name: user.name,
+                url: user.web_url,
+                isOwner: repo.owner.id === user.id,
+              }))
+            : [];
         default:
           return null;
       }
@@ -312,6 +332,7 @@ const resolvers = {
         case 'github':
           return repo.mentionableUsers.totalCount;
         case 'gitlab':
+          return repo.totalCollaborators.length;
         default:
           return null;
       }

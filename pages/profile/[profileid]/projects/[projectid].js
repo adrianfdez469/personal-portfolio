@@ -2,7 +2,7 @@
 // libs
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { preRenderLanguage, preRenderUserTheme } from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
 import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
@@ -17,18 +17,7 @@ const languageLocales = {
   es: ES,
 };
 
-const createPropsObject = async (locale) => {
-  const lang = locale;
-  const language = {
-    locale: lang,
-    lang: languageLocales[locale],
-  };
-
-  return { language };
-};
-
 export const getServerSideProps = async (context) => {
-  const { locale } = context;
   const { projectid } = context.params;
 
   const project = await prisma.project.findUnique({
@@ -92,7 +81,12 @@ export const getServerSideProps = async (context) => {
     provider: null,
   };
 
-  const obj = { ...(await createPropsObject(locale)), projectData, projectId: +projectid };
+  const obj = {
+    language: await preRenderLanguage(context, languageLocales),
+    theme: await preRenderUserTheme(context),
+    projectData,
+    projectId: +projectid,
+  };
   return {
     props: obj,
   };

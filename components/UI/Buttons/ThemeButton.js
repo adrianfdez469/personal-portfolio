@@ -1,10 +1,25 @@
-import React, { useState, useEffect } from 'react';
-
-import { makeStyles, IconButton, Tooltip } from '@material-ui/core';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { getSession } from 'next-auth/client';
+import { makeStyles, IconButton, Tooltip, Menu, MenuItem } from '@material-ui/core';
 import { Brightness4Outlined } from '@material-ui/icons';
+import { useChangeTheme } from '../../../store/contexts/themeContext';
+import { useLang } from '../../../store/contexts/langContext';
+// eslint-disable-next-line import/named
+import { themesLoader } from '../../../themes';
 
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { atomLocale, atomButtonLanguage } from '../../../store/atoms';
+const saveUserTheme = `
+    mutation updateUser($userId: ID!, $user: UserParams!) {
+      updateUser(userId: $userId, user: $user){
+        code
+        success
+        message
+        user {
+          theme
+        }
+      }
+    }
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,19 +27,76 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LanguageButton = (props) => {
+const ThemeButton = (props) => {
   const { withColor, styles, title } = props;
   const classes = useStyles();
+  const setTheme = useChangeTheme();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { lang } = useLang();
 
-  const onCLickHandle = () => {};
+  // Handlers
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const selectTheme = async (themeKey) => {
+    const theme = await themesLoader[themeKey].getTheme();
+    setTheme(theme);
+    handleClose();
+    localStorage.setItem('theme', themeKey);
+    const session = await getSession();
+    if (session && session.userId) {
+      fetch('/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: saveUserTheme,
+          variables: {
+            userId: session.userId,
+            user: {
+              theme: themeKey,
+            },
+          },
+        }),
+      });
+    }
+  };
 
   return (
-    <Tooltip title={title}>
-      <IconButton onClick={onCLickHandle} style={styles}>
-        <Brightness4Outlined className={withColor && classes.root} />
-      </IconButton>
-    </Tooltip>
+    <>
+      <Tooltip title={title}>
+        <IconButton onClick={handleClick} style={styles}>
+          <Brightness4Outlined className={withColor && classes.root} />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        id="language-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {Object.keys(themesLoader).map((theme) => (
+          <MenuItem key={theme} onClick={() => selectTheme(theme)}>
+            {lang.themes[theme]}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
   );
 };
 
-export default LanguageButton;
+ThemeButton.propTypes = {
+  withColor: PropTypes.bool,
+  styles: PropTypes.shape(PropTypes.any).isRequired,
+  title: PropTypes.string.isRequired,
+};
+ThemeButton.defaultProps = {
+  withColor: false,
+};
+
+export default ThemeButton;

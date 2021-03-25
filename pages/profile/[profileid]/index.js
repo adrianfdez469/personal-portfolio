@@ -4,6 +4,8 @@ import { getSession } from 'next-auth/client';
 import { Profile } from '../../../views';
 import { ProfileContext } from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
+// eslint-disable-next-line import/named
+import { preRenderLanguage, preRenderUserTheme } from '../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../i18n/locales/editProfilePage/profile.es.json';
 import EN from '../../../i18n/locales/editProfilePage/profile.en.json';
@@ -48,14 +50,15 @@ const queryUserData = (id) => `
 `;
 
 const createPropsObject = async (context) => {
-  const lang = context.locale;
-
-  const session = await getSession(context);
   try {
-    const language = {
-      locale: lang,
-      lang: languageLocales[context.locale],
-    };
+    const session = await getSession(context);
+    const language = await preRenderLanguage(context, languageLocales);
+    const theme = await preRenderUserTheme(context);
+    if (context.query.profileid.toString() !== session.userId.toString()) {
+      return {
+        notFound: true,
+      };
+    }
 
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
       method: 'POST',
@@ -71,15 +74,19 @@ const createPropsObject = async (context) => {
     }
 
     const resp = await response.json();
-    return { language, profile: resp.data };
+    return { language, theme, profile: resp.data };
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
   return {};
 };
 
 export const getServerSideProps = async (context) => {
   const obj = await createPropsObject(context);
+
+  if (obj.notFound) {
+    return obj;
+  }
 
   return {
     props: obj,
@@ -88,6 +95,7 @@ export const getServerSideProps = async (context) => {
 
 const Edit = (props) => {
   const { language, profile } = props;
+
   return (
     <LangContext.Provider value={language}>
       <ProfileContext.Provider value={profile}>

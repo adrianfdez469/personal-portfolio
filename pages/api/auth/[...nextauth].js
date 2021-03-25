@@ -3,7 +3,7 @@ import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
 import prisma from '../../../prisma/prisma.instance';
 import { getHashSlug } from '../../../libs/generators';
-import { deleteGithubEnhanceToken } from '../../../libs/integrations/github.provider';
+import ProxyProvider from '../../../libs/integrations/provider.proxy';
 
 export default (req, res) =>
   NextAuth(req, res, {
@@ -101,9 +101,11 @@ export default (req, res) =>
         }
       },
       async signIn(data) {
-        if (data.account.provider === 'github') {
-          deleteGithubEnhanceToken(data.user.id);
+        const provider = ProxyProvider(data.account.provider);
+        if (!provider) {
+          return;
         }
+        provider.deleteEnhanceToken(data.user.id);
       },
     },
     secret: process.env.NEXTAUTH_SHA_SECRET,

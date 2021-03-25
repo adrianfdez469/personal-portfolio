@@ -1,6 +1,8 @@
 /* eslint-disable import/no-named-as-default */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import {
   AppBar,
   Typography,
@@ -20,16 +22,18 @@ import FeedbackButton from '../Buttons/FeedbackButton';
 import LogoutButton from '../Buttons/LogoutButton';
 // eslint-disable-next-line import/no-named-as-default-member
 import AvatarPhoto from '../Avatar/AvatarPhoto';
+import EditablePhoto from '../Avatar/EditableAvatarPhoto';
 import { useProfile } from '../../../store/contexts/profileContext';
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
 
 const PersonData = (props) => {
   const { edit } = props;
-  const styles = usePersonDataStyles();
   const { user } = useProfile();
   const { lang } = useLang();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const router = useRouter();
+  const styles = usePersonDataStyles();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleMobileMenuClose = () => {
@@ -44,16 +48,19 @@ const PersonData = (props) => {
       icon: <EditOutlined className={styles.editableButtonsIcons} />,
       name: lang.buttons.editButton,
       onClick: () => {},
+      link: `${router.asPath}/edit`,
     },
     {
       icon: <PostAddOutlined className={styles.editableButtonsIcons} />,
       name: lang.buttons.addProjectButton,
       onClick: () => {},
+      link: `${router.asPath}/projects/new`,
     },
     {
       icon: <ShareOutlined className={styles.editableButtonsIcons} />,
       name: lang.buttons.sharedPortfolioButton,
       onClick: () => {},
+      link: `${router.asPath}/edit`,
     },
   ];
 
@@ -96,31 +103,43 @@ const PersonData = (props) => {
       <AppBar style={{ position: 'inherit', backgroundColor: 'transparent' }}>
         <div className={styles.north}>
           <div className={styles.avatar}>
-            <AvatarPhoto src={user.image} size="adjustable" edit={edit} />
+            <EditablePhoto size="adjustable" onClick={() => {}}>
+              <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
+            </EditablePhoto>
             <div className={styles.editButtonsDesktop}>
               {edit &&
                 editableActions.map((action) => (
-                  <Tooltip key={action.name} title={action.name}>
-                    <IconButton onClick={action.onClick}>{action.icon}</IconButton>
-                  </Tooltip>
+                  <Link key={action.name} href={action.link} passHref>
+                    <Tooltip title={action.name}>
+                      <IconButton onClick={action.onClick}>{action.icon}</IconButton>
+                    </Tooltip>
+                  </Link>
                 ))}
             </div>
           </div>
-          <div className={styles.titleBox}>
+          <div
+            className={styles.titleBox}
+            style={{
+              flexDirection: user.title && user.title !== '' ? 'column' : 'column-reverse',
+            }}
+          >
             <Typography variant="h3" component="h1" className={styles.headerPrimary}>
               {user.name}
             </Typography>
+
             <Typography variant="h6" component="h2" className={styles.headerSecondary}>
               {user.title}
             </Typography>
             <div className={styles.editButtonsMobile}>
               {edit &&
                 editableActions.map((action) => (
-                  <Tooltip key={action.name} title={action.name}>
-                    <IconButton onClick={action.onClick} size="small">
-                      {action.icon}
-                    </IconButton>
-                  </Tooltip>
+                  <Link key={action.name} href={action.link} passHref>
+                    <Tooltip title={action.name}>
+                      <IconButton onClick={action.onClick} size="small">
+                        {action.icon}
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
                 ))}
             </div>
           </div>

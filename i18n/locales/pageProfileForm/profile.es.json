@@ -16,6 +16,10 @@
     "body": {
       "buttons": {
         "common": "Sincroniza con"
+      },
+      "avatars": {
+        "current": "Avatar actual",
+        "avatar": "avatar"
       }
     }
   },
@@ -73,21 +77,21 @@
         "label": "Teléfono",
         "placeholder": "Número de teléfono"
       },
-      "facebookLink": {
-        "label": "Facebook",
-        "placeholder": "https://www.facebook.com/profilename"
+      "gitlabLink": {
+        "label": "Gitlab",
+        "placeholder": "https://gitlab.com/nombreperfil"
       },
       "linkedinLink": {
         "label": "LinkedIn",
-        "placeholder": "https://www.linkedin.com/in/profilename"
+        "placeholder": "https://www.linkedin.com/in/nombreperfil"
       },
       "twitterLink": {
         "label": "Twitter",
-        "placeholder": "https://twitter.com/profilename"
+        "placeholder": "https://twitter.com/nombreperfil"
       },
       "githubLink": {
         "label": "Github",
-        "placeholder": "https://github.com/profilename"
+        "placeholder": "https://github.com/nombreperfil"
       }
     }
   }

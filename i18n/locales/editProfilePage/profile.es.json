@@ -1,9 +1,19 @@
 {
+  "en": "English",
+  "es": "Español",
+  "themes": {
+    "orange": "Anaranjado",
+    "orangeDark": "Anaranjado Oscuro",
+    "default": "Azul",
+    "dark": "Azul Oscuro",
+    "pink": "Rosado",
+    "purple": "Morado"
+  },
   "buttons": {
     "editButton": "Editar Perfil",
     "themeButton": "Cambiar Tema",
     "logoutButton": "Salir",
-    "languageButton": "Cambiar a Inglés",
+    "languageButton": "Cambiar a idioma",
     "addProjectButton": "Adicionar Proyecto",
     "sharedPortfolioButton": "Compartir Portafolio",
     "feedbackButton": "Reportar error"

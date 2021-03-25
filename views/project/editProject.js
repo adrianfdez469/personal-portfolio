@@ -147,7 +147,10 @@ const EditProjectView = (props) => {
   const setRepoSyncData = useCallback(
     (data) => {
       console.log(data);
-
+      if (!data) {
+        dispatch({ type: actions.SET_REPOSITORY_DATA, data: initialState.data });
+        return;
+      }
       const basicInfoData = {
         ...initialState.data.basicInfoData,
         name:
@@ -169,6 +172,7 @@ const EditProjectView = (props) => {
       const skillsData = {
         ...initialState.data.skillsData,
         languages: data.languages.length > 0 ? data.languages.map((lg) => ({ text: lg })) : [],
+        technologies: data.topics.length > 0 ? data.topics.map((tech) => ({ text: tech })) : [],
       };
       const collaborators = data.collaborators.length === 0 ? null : data.collaborators;
 
@@ -291,8 +295,7 @@ const EditProjectView = (props) => {
         dispatch({ type: actions.END_SAVING });
       })
       .catch((err) => {
-        console.log('Error');
-        console.log(err);
+        console.error(err);
         dispatch({ type: actions.ERROR_SAVING });
       });
   };

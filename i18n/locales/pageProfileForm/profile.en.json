@@ -16,6 +16,10 @@
     "body": {
       "buttons": {
         "common": "Sync with"
+      },
+      "avatars": {
+        "current": "Current avatar",
+        "avatar": "avatar"
       }
     }
   },
@@ -73,9 +77,9 @@
         "label": "Phone",
         "placeholder": "Phone number"
       },
-      "facebookLink": {
-        "label": "Facebook",
-        "placeholder": "https://www.facebook.com/profilename"
+      "gitlabLink": {
+        "label": "Gitlab",
+        "placeholder": "https://gitlab.com/profilename"
       },
       "linkedinLink": {
         "label": "LinkedIn",
