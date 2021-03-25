@@ -1,29 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { getSession } from 'next-auth/client';
 import { makeStyles, IconButton, Tooltip, Menu, MenuItem } from '@material-ui/core';
 import { Brightness4Outlined } from '@material-ui/icons';
 import { useChangeTheme } from '../../../store/contexts/themeContext';
+import { useLang } from '../../../store/contexts/langContext';
+// eslint-disable-next-line import/named
+import { themesLoader } from '../../../themes';
 
-const themes = {
-  orange: async () => {
-    return (await import('../../../themes/theme.orange')).default;
-  },
-  orangeDart: async () => {
-    return (await import('../../../themes/theme.orange-dark')).default;
-  },
-  default: async () => {
-    return (await import('../../../themes/theme.default')).default;
-  },
-  dark: async () => {
-    return (await import('../../../themes/theme.dark')).default;
-  },
-  pink: async () => {
-    return (await import('../../../themes/theme.pink')).default;
-  },
-  purple: async () => {
-    return (await import('../../../themes/theme.purple')).default;
-  },
-};
+const saveUserTheme = `
+    mutation updateUser($userId: ID!, $user: UserParams!) {
+      updateUser(userId: $userId, user: $user){
+        code
+        success
+        message
+        user {
+          theme
+        }
+      }
+    }
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +32,8 @@ const ThemeButton = (props) => {
   const classes = useStyles();
   const setTheme = useChangeTheme();
   const [anchorEl, setAnchorEl] = useState(null);
+  const { lang } = useLang();
+
   // Handlers
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,8 +42,28 @@ const ThemeButton = (props) => {
     setAnchorEl(null);
   };
   const selectTheme = async (themeKey) => {
-    const theme = await themes[themeKey]();
+    const theme = await themesLoader[themeKey].getTheme();
     setTheme(theme);
+    handleClose();
+    localStorage.setItem('theme', themeKey);
+    const session = await getSession();
+    if (session && session.userId) {
+      fetch('/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: saveUserTheme,
+          variables: {
+            userId: session.userId,
+            user: {
+              theme: themeKey,
+            },
+          },
+        }),
+      });
+    }
   };
 
   return (
@@ -62,13 +80,11 @@ const ThemeButton = (props) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {Object.keys(themes).map((theme) => {
-          return (
-            <MenuItem key={theme} onClick={() => selectTheme(theme)}>
-              {theme}
-            </MenuItem>
-          );
-        })}
+        {Object.keys(themesLoader).map((theme) => (
+          <MenuItem key={theme} onClick={() => selectTheme(theme)}>
+            {lang.themes[theme]}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );

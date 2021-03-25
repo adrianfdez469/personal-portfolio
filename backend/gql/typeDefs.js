@@ -46,6 +46,7 @@ const typeDefs = gql`
     slug: String!
     title: String
     description: String
+    theme: String
     projects: [Project]
   }
 
@@ -102,6 +103,7 @@ const typeDefs = gql`
     slug: String
     title: String
     description: String
+    theme: String
   }
 
   type Collaborator {
@@ -155,7 +157,8 @@ const typeDefs = gql`
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
-    saveProject(projectId: ID, project: ProjectParams!): Project!    
+    saveProject(projectId: ID, project: ProjectParams!): Project!
+
   }
 
   enum CamelMode {

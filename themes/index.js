@@ -1,6 +1,32 @@
-export { default as ligth } from './theme.default';
-export { default as dark } from './theme.dark';
-export { default as orange } from './theme.orange';
-export { default as orangeDark } from './theme.orange-dark';
-export { default as pink } from './theme.pink';
-export { default as purple } from './theme.purple';
+export const themesLoader = {
+  orange: {
+    getTheme: async () => {
+      return (await import('./theme.orange')).default;
+    },
+  },
+  orangeDark: {
+    getTheme: async () => {
+      return (await import('./theme.orange-dark')).default;
+    },
+  },
+  default: {
+    getTheme: async () => {
+      return (await import('./theme.default')).default;
+    },
+  },
+  dark: {
+    getTheme: async () => {
+      return (await import('./theme.dark')).default;
+    },
+  },
+  pink: {
+    getTheme: async () => {
+      return (await import('./theme.pink')).default;
+    },
+  },
+  purple: {
+    getTheme: async () => {
+      return (await import('./theme.purple')).default;
+    },
+  },
+};
