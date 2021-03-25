@@ -1,9 +1,11 @@
 {
+  "en": "English",
+  "es": "Español",
   "buttons": {
     "editButton": "Edit Profile",
     "themeButton": "Change Theme",
     "logoutButton": "Logout",
-    "languageButton": "Change to Spanish",
+    "languageButton": "Change idiom",
     "addProjectButton": "Add Project",
     "sharedPortfolioButton": "Share Portfolio",
     "feedbackButton": "Report Bugs"

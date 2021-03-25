@@ -56,6 +56,11 @@ const createPropsObject = async (context) => {
       locale: lang,
       lang: languageLocales[context.locale],
     };
+    if (context.query.profileid.toString() !== session.userId.toString()) {
+      return {
+        notFound: true,
+      };
+    }
 
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
       method: 'POST',
@@ -81,6 +86,10 @@ const createPropsObject = async (context) => {
 export const getServerSideProps = async (context) => {
   const obj = await createPropsObject(context);
 
+  if (obj.notFound) {
+    return obj;
+  }
+
   return {
     props: obj,
   };
@@ -88,6 +97,7 @@ export const getServerSideProps = async (context) => {
 
 const Edit = (props) => {
   const { language, profile } = props;
+
   return (
     <LangContext.Provider value={language}>
       <ProfileContext.Provider value={profile}>

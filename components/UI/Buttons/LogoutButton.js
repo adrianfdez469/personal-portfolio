@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
-
+import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles, IconButton, Tooltip } from '@material-ui/core';
 import { ExitToAppOutlined } from '@material-ui/icons';
-
-import { useRecoilValue, useRecoilState } from 'recoil';
-import clsx from 'clsx';
-import { atomLocale, atomButtonLanguage } from '../../../store/atoms';
+import { signOut } from 'next-auth/client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +14,11 @@ const LogoutButton = (props) => {
   const { withColor, styles, title } = props;
   const classes = useStyles();
 
-  const onCLickHandle = () => {};
+  const onCLickHandle = () => {
+    signOut({
+      callbackUrl: '/',
+    });
+  };
 
   return (
     <Tooltip title={title}>
@@ -26,6 +27,15 @@ const LogoutButton = (props) => {
       </IconButton>
     </Tooltip>
   );
+};
+
+LogoutButton.propTypes = {
+  withColor: PropTypes.bool,
+  styles: PropTypes.shape(PropTypes.any).isRequired,
+  title: PropTypes.string.isRequired,
+};
+LogoutButton.defaultProps = {
+  withColor: false,
 };
 
 export default LogoutButton;
