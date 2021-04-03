@@ -17,5 +17,19 @@
     "addProjectButton": "Add Project",
     "sharedPortfolioButton": "Share Portfolio",
     "feedbackButton": "Report Bugs"
+  },
+  "publicUrl": {
+    "title": "Public URL",
+    "label": "User route",
+    "helperText": "Personalize the URL for your profile",
+    "errorText": "Invalid route",
+    "note": "Note: Your custom URL must contain 5-100 letters or numbers. We recomend to include an identification string, such as your name. Please, do not use spaces, symbols, or special characters.",
+    "buttons": {
+      "copy": "copy",
+      "save": "save",
+      "close": "close"
+    },
+    "hideProfile": "Hide your profile",
+    "publicProfile": "Make public your profile"
   }
 }

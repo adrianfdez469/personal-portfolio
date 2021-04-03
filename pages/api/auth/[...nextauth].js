@@ -76,9 +76,6 @@ export default (req, res) =>
     },
     events: {
       async createUser(user) {
-        // console.log('EVENTS createUser');
-        // console.log(user);
-
         if (user && user.id) {
           let slug = '';
           if (user.name && user.name !== '') {
@@ -105,7 +102,30 @@ export default (req, res) =>
         if (!provider) {
           return;
         }
-        provider.deleteEnhanceToken(data.user.id);
+        if (!data.isNewUser) {
+          provider.deleteEnhanceToken(data.user.id);
+          return;
+        }
+        if (data.account.accessToken && data.account.accessToken !== '') {
+          const userProviderData = await provider.getUserDataByToken(data.account.accessToken);
+          await prisma.user.update({
+            data: {
+              name: userProviderData.name,
+              email: userProviderData.email,
+              image: userProviderData.avatarUrl,
+              title: userProviderData.title,
+              description: userProviderData.about,
+              githubLink: userProviderData.githubUrl,
+              linkedinLink: userProviderData.linkedinUrl,
+              gitlabLink: userProviderData.gitlabUrl,
+              twitterLink: userProviderData.twitterUrl,
+              experience: userProviderData.experience,
+            },
+            where: {
+              id: data.user.id,
+            },
+          });
+        }
       },
     },
     secret: process.env.NEXTAUTH_SHA_SECRET,

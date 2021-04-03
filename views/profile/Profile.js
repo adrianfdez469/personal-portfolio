@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { CssBaseline, Container, makeStyles } from '@material-ui/core';
 import { PersonData, ProjectBox } from '../../components/UI';
 
@@ -23,6 +23,10 @@ const Profile = (props) => {
       </Container>
     </>
   );
+};
+
+Profile.propTypes = {
+  edit: PropTypes.bool.isRequired,
 };
 
 export default Profile;

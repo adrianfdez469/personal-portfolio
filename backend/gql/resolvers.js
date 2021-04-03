@@ -22,6 +22,13 @@ const resolvers = {
           id: +args.id,
         },
       }),
+    userBySlug: (parent, args) =>
+      prisma.user.findFirst({
+        where: {
+          slug: args.slug,
+          publicProfile: true,
+        },
+      }),
     projects: (parent, args) =>
       prisma.project.findMany({
         where: { ...args },
@@ -41,7 +48,7 @@ const resolvers = {
     },
     providerUserData: async (parent, args, context) => {
       const provider = ProxyProvider(args.provider);
-      return provider.getUserData(context);
+      return provider.getUserDataByContext(context);
     },
   },
   Mutation: {

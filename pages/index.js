@@ -3,7 +3,7 @@ import Landing from '../views/landing/Landing';
 import ES from '../i18n/locales/pageProfileForm/profile.es.json';
 import EN from '../i18n/locales/pageProfileForm/profile.en.json';
 import { LangContext } from '../store/contexts/langContext';
-import { preRenderLanguage, preRenderUserTheme } from '../backend/preRenderingData';
+import { getLanguageByLocale, getThemeByContext } from '../backend/preRenderingData';
 
 const languageLocales = {
   en: EN,
@@ -11,8 +11,8 @@ const languageLocales = {
 };
 
 export const getServerSideProps = async (context) => {
-  const language = await preRenderLanguage(context, languageLocales);
-  const theme = await preRenderUserTheme(context);
+  const language = await getLanguageByLocale(context.locale, languageLocales);
+  const theme = await getThemeByContext(context);
 
   return {
     props: {

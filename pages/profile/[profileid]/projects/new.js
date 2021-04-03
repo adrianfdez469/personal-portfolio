@@ -1,9 +1,8 @@
 /* eslint-disable import/named */
 // libs
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { preRenderLanguage, staticRenderUserTheme } from '../../../../backend/preRenderingData';
+import { getLanguageByLocale, getThemeByUserId } from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
 import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
@@ -11,57 +10,30 @@ import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
 import { EditProject } from '../../../../views/index';
 import { LangContext } from '../../../../store/contexts/langContext';
 
-import prisma from '../../../../prisma/prisma.instance';
-
 const languageLocales = {
   en: EN,
   es: ES,
 };
 
-export const getStaticPaths = async () => {
-  // Cargar todos los usuarios
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-    },
-  });
-
-  return {
-    paths: [
-      ...users.map((user) => ({
-        params: { profileid: user.id.toString() },
-        locale: 'en',
-      })),
-      ...users.map((user) => ({
-        params: { profileid: user.id.toString() },
-        locale: 'es',
-      })),
-    ],
-    fallback: true,
-  };
-};
+export const getStaticPaths = async () => ({
+  paths: [],
+  fallback: true,
+});
 
 export const getStaticProps = async (context) => {
   const { profileid } = context.params;
-  const user = await prisma.user.findUnique({
-    where: {
-      id: +profileid,
-    },
-  });
-  if (!user) {
-    return { notFound: true };
-  }
 
-  const obj = {
-    language: await preRenderLanguage(context, languageLocales),
-    theme: await staticRenderUserTheme(+profileid),
-  };
+  const language = await getLanguageByLocale(context.locale, languageLocales);
+  const theme = await getThemeByUserId(+profileid);
+  const resp = { language, theme };
+
   return {
-    props: obj,
+    props: resp,
   };
 };
 
 const NewProject = (props) => {
+  // eslint-disable-next-line react/prop-types
   const { language } = props;
   const router = useRouter();
 
@@ -79,10 +51,6 @@ const NewProject = (props) => {
       />
     </LangContext.Provider>
   );
-};
-
-NewProject.propTypes = {
-  language: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default NewProject;

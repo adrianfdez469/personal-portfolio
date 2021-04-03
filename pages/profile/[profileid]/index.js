@@ -1,11 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { getSession } from 'next-auth/client';
 import { Profile } from '../../../views';
-import { ProfileContext } from '../../../store/contexts/profileContext';
+import ProfileProvider from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
-// eslint-disable-next-line import/named
-import { preRenderLanguage, preRenderUserTheme } from '../../../backend/preRenderingData';
+import {
+  getLanguageByLocale,
+  getThemeByThemeKey,
+  getProfileDataById,
+  // eslint-disable-next-line import/named
+} from '../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../i18n/locales/editProfilePage/profile.es.json';
 import EN from '../../../i18n/locales/editProfilePage/profile.en.json';
@@ -15,66 +18,19 @@ const languageLocales = {
   es: ES,
 };
 
-const queryUserData = (id) => `
-  {
-    user(id: ${id}) {
-      id
-      name
-      image
-      title
-      description
-      slug
-      projects {
-        id
-        name
-        description
-        initialDate
-        finalDate
-        skills {
-          id
-          name
-          category
-        }
-        projectLink
-        projectDevLink
-        otherInfo
-        images {
-          id
-          imageUrl
-        }
-        logoUrl
-      }
-    }
-
-  }
-`;
-
 const createPropsObject = async (context) => {
   try {
     const session = await getSession(context);
-    const language = await preRenderLanguage(context, languageLocales);
-    const theme = await preRenderUserTheme(context);
     if (context.query.profileid.toString() !== session.userId.toString()) {
       return {
         notFound: true,
       };
     }
-
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: queryUserData(session.userId),
-      }),
-    });
-    if (!response.ok) {
-      throw new Error('Error');
-    }
-
-    const resp = await response.json();
-    return { language, theme, profile: resp.data };
+    const language = await getLanguageByLocale(context.locale, languageLocales);
+    const profileData = await getProfileDataById(+session.userId, true);
+    const theme = await getThemeByThemeKey(profileData.user.theme);
+    const resp = { language, theme, profile: profileData };
+    return resp;
   } catch (err) {
     console.error(err);
   }
@@ -93,21 +49,16 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-const Edit = (props) => {
+const ProfilePage = (props) => {
+  // eslint-disable-next-line react/prop-types
   const { language, profile } = props;
-
   return (
     <LangContext.Provider value={language}>
-      <ProfileContext.Provider value={profile}>
+      <ProfileProvider value={profile}>
         <Profile edit />
-      </ProfileContext.Provider>
+      </ProfileProvider>
     </LangContext.Provider>
   );
 };
 
-Edit.propTypes = {
-  language: PropTypes.shape(PropTypes.any).isRequired,
-  profile: PropTypes.shape(PropTypes.any).isRequired,
-};
-
-export default Edit;
+export default ProfilePage;

@@ -17,5 +17,19 @@
     "addProjectButton": "Adicionar Proyecto",
     "sharedPortfolioButton": "Compartir Portafolio",
     "feedbackButton": "Reportar error"
+  },
+  "publicUrl": {
+    "title": "URL Pública",
+    "label": "Ruta de usuario",
+    "helperText": "Personalice la URL para su perfil",
+    "errorText": "Ruta inválida",
+    "note": "Nota: La URL personalizada debe contener 5-100 letras o números. Recomendamos incluir una cadena que lo identifique, como su nombre. Por favor, no use espacios, símbolos, o caracteres especiales.",
+    "buttons": {
+      "copy": "copiar",
+      "save": "salvar",
+      "close": "cerrar"
+    },
+    "hideProfile": "Esconde tu perfil",
+    "publicProfile": "Publica tu perfil"
   }
 }

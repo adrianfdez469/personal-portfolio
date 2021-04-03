@@ -15,14 +15,11 @@ const useSmallPhotoCameraButtonStyle = makeStyles((theme) => ({
 
 const EditableAvatarPhoto = ({ children, size, onClick }) => {
   const styles = useSmallPhotoCameraButtonStyle();
-  const upMdSize = useMediaQuery((theme) => theme.breakpoints.up('md'));
   const upSmSize = useMediaQuery((theme) => theme.breakpoints.up('sm'));
 
   let realSize = size;
   if (realSize === 'adjustable') {
-    if (upMdSize) {
-      realSize = 'long';
-    } else if (upSmSize) {
+    if (upSmSize) {
       realSize = 'default';
     } else {
       realSize = 'small';

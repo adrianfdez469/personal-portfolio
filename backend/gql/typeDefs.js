@@ -48,6 +48,15 @@ const typeDefs = gql`
     description: String
     theme: String
     projects: [Project]
+    publicProfile: Boolean
+    twitterLink: String
+    linkedinLink: String
+    githubLink: String
+    gitlabLink: String
+    experience: Int
+    phone: String
+    gender: gender
+    birthday: Date
   }
 
   interface MutationResponse {
@@ -104,6 +113,15 @@ const typeDefs = gql`
     title: String
     description: String
     theme: String
+    publicProfile: Boolean
+    twitterLink: String
+    linkedinLink: String
+    githubLink: String
+    gitlabLink: String
+    experience: Int
+    phone: String
+    gender: gender
+    birthday: String
   }
 
   type Collaborator {
@@ -209,6 +227,7 @@ const typeDefs = gql`
   type Query {
     #users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
     user(id: ID!): User!
+    userBySlug(slug: String!): User
     projects(id: IntComparer, name: StringComparer): [Project!]
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
     link(url: String): Link!

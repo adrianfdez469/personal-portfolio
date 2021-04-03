@@ -49,11 +49,20 @@ model User {
   slug          String?   @unique
   title         String?
   description   String?
-  theme         String?   @default("orangeDark")
+  theme         String    @default("orangeDark")
+  gitlabLink    String?   @map("gitlab_link")
+  githubLink    String?   @map("github_link")
+  linkedinLink  String?   @map("linkedin_link")
+  twitterLink   String?   @map("twitter_link")
+  phone         String?
+  experience    Int?
+  birthday      DateTime?
+  gender        Gender?
+  publicProfile Boolean   @default(false) @map(name: "public_profile")
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  Project       Project[]
 
-  Project Project[]
   @@map(name: "users")
 }
 
@@ -137,4 +146,9 @@ enum Provider {
   github
   gitlab
   linkedIn
+}
+
+enum Gender {
+  male
+  female
 }

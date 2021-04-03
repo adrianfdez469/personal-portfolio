@@ -190,8 +190,7 @@ export const deleteEnhanceToken = async (userId) => {
   });
 };
 
-export const getUserData = async (context) => {
-  const accessToken = await getGithubToken(context);
+export const getUserDataByToken = async (accessToken) => {
   const response = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: {
@@ -227,7 +226,7 @@ export const getUserData = async (context) => {
       phone: null,
       provider: 'github',
       githubUrl: data.url,
-      gitlab: '',
+      gitlabUrl: '',
       linkedinUrl: '',
       twitterUrl,
       avatarUrl: data.avatarUrl,
@@ -237,6 +236,11 @@ export const getUserData = async (context) => {
     throw new Error('UNAUTHORIZED');
   }
   throw new Error('INTERNAL_ERROR');
+};
+
+export const getUserDataByContext = async (context) => {
+  const accessToken = await getGithubToken(context);
+  return getUserDataByToken(accessToken);
 };
 
 export const getRepos = async (context) => {

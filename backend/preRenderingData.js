@@ -1,45 +1,126 @@
 import { getSession } from 'next-auth/client';
-import prisma from '../prisma/prisma.instance';
+// import prisma from '../prisma/prisma.instance';
 
-export const preRenderLanguage = async (context, languageLocales) => {
-  const lang = context.locale;
+export const getLanguageByLocale = async (locale, languageLocales) => {
+  const lang = locale;
 
   const language = {
     locale: lang,
-    lang: languageLocales[context.locale],
+    lang: languageLocales[locale],
   };
 
   return language;
 };
 
-const loadUser = async (userId) => {
-  return prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+const queryUserBody = (includeProjects) => `
+id
+name
+image
+title
+description
+slug
+publicProfile
+theme
+email
+phone
+gitlabLink
+githubLink
+linkedinLink
+twitterLink
+experience
+birthday
+gender
+${
+  includeProjects
+    ? `projects {
+    id
+    name
+    description
+    initialDate
+    finalDate
+    skills {
+      id
+      name
+      category
+    }
+    projectLink
+    projectDevLink
+    otherInfo
+    images {
+      id
+      imageUrl
+    }
+    logoUrl
+  }`
+    : ''
+}
+`;
+const queryUserDataById = (id, includeProjects = false) => {
+  return `
+    {
+      user(id: ${id}) {
+        ${queryUserBody(includeProjects)}
+      }
+    }
+  `;
 };
-
-export const preRenderUserTheme = async (context) => {
-  const session = await getSession(context);
-  const themesLoader = await import('../themes').then((cmp) => cmp.themesLoader);
-  if (session && session.userId) {
-    const user = await loadUser(+session.userId);
-    if (user.theme) {
-      const theme = await themesLoader[user.theme].getTheme();
-      console.log('Le mando el tema ', user.theme);
-      return theme;
+const queryUserDataBySlug = (slug, includeProjects = false) => `
+  {
+    userBySlug(slug: "${slug}") {
+      ${queryUserBody(includeProjects)}
     }
   }
+`;
+
+const getProfileDataByKey = async (query) => {
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error('Error');
+  }
+  const resp = await response.json();
+  return resp;
+};
+
+export const getThemeByThemeKey = async (themeKey) => {
+  const themesLoader = await import('../themes').then((cmp) => cmp.themesLoader);
+  const theme = await themesLoader[themeKey].getTheme();
+  return theme;
+};
+
+export const getThemeByUserId = async (userId) => {
+  const { user } = await getProfileDataByKey(queryUserDataById(id, false));
+  if (user && user.theme) {
+    return getThemeByThemeKey(user.theme);
+  }
   return null;
 };
 
-export const staticRenderUserTheme = async (userId) => {
-  const themesLoader = await import('../themes').then((cmp) => cmp.themesLoader);
-  const user = await loadUser(+userId);
-  if (user.theme) {
-    const theme = await themesLoader[user.theme].getTheme();
-    return theme;
+export const getThemeByContext = async (context) => {
+  const session = await getSession(context);
+  if (session && session.userId) {
+    return getThemeByUserId(+session.userId);
   }
   return null;
+};
+
+export const getProfileDataById = async (id, includeProjects = false) => {
+  const profileData = await getProfileDataByKey(queryUserDataById(id, includeProjects));
+  return profileData.data;
+};
+export const getProfileDataBySlug = async (slug, includeProjects = false) => {
+  const profileData = await getProfileDataByKey(queryUserDataBySlug(slug, includeProjects));
+  if (!profileData || !profileData.data || !profileData.data.userBySlug) {
+    return null;
+  }
+  return {
+    user: { ...profileData.data.userBySlug },
+  };
 };
