@@ -11,7 +11,9 @@
     "AbortController": false,
     "document": false,
     "FormData": false,
-    "localStorage": false
+    "localStorage": false,
+    "window": false,
+    "navigator": false
   },
   "rules": {
     "prettier/prettier": [
