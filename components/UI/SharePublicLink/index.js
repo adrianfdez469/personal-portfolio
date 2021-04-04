@@ -131,7 +131,7 @@ const SharePublicLink = (props) => {
             }
             throw new Error(data.updateUser.message);
           })
-          .catch((err) => {
+          .catch(() => {
             dispatch({ type: actions.ERROR_SAVING, originalSlug: user.slug });
           });
       }
