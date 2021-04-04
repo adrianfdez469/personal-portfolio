@@ -177,7 +177,6 @@ const resolvers = {
           project: savedProject,
         };
       } catch (err) {
-        console.error(err);
         return {
           code: 500,
           success: false,

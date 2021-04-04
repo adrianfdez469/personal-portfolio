@@ -166,8 +166,6 @@ const SyncForm = (props) => {
           throw error;
         })
         .then((data) => {
-          console.log(data);
-
           if (data.errors && data.errors.length > 0) {
             if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
               handleNavigateToGetAccess(provider, scope);
@@ -179,14 +177,12 @@ const SyncForm = (props) => {
           }
 
           // setProvidersData(data.data.providerUserData);
-          console.log(data.data.providerUserData);
           dispatch({
             type: actions.SUCCESS_LOADING,
             user: data.data.providerUserData,
           });
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(() => {
           dispatch({ type: actions.ERROR_LOADING, error: 'ERROR' });
         });
     },

@@ -11,10 +11,6 @@ const PersonalDataForm = ({ data, edit }) => {
   // constants
   const { lang } = useLang();
 
-  /* const handleChange = (field, value) => {
-    console.log('Changing data');
-  }; */
-
   return (
     <StepItem label={lang.contactDataStep.header.label}>
       <Grid container justify="space-between" spacing={1}>

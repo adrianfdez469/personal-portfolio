@@ -146,7 +146,6 @@ const EditProjectView = (props) => {
 
   const setRepoSyncData = useCallback(
     (data) => {
-      console.log(data);
       if (!data) {
         dispatch({ type: actions.SET_REPOSITORY_DATA, data: initialState.data });
         return;
@@ -243,7 +242,6 @@ const EditProjectView = (props) => {
 
   const handleSave = () => {
     dispatch({ type: actions.START_SAVING });
-    console.log(state.data);
     const proglangs = state.data.skillsData.languages.map((lang) => ({
       id: lang.id || null,
       name: lang.text,
@@ -290,12 +288,9 @@ const EditProjectView = (props) => {
         throw new Error('Error saving data');
       })
       .then((resp) => {
-        console.log('Salvado correctamente');
-        console.log(resp);
         dispatch({ type: actions.END_SAVING });
       })
       .catch((err) => {
-        console.error(err);
         dispatch({ type: actions.ERROR_SAVING });
       });
   };

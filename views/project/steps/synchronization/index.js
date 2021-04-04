@@ -249,7 +249,6 @@ const SyncForm = (props) => {
         });
       })
       .catch((err) => {
-        console.error(err);
         dispatch({ type: actions.SET_ERROR_LOADING_PROVIDER_REPOS, data: err.message });
         dispatch({
           type: actions.SET_PROVIDER_REPOS,
@@ -297,9 +296,7 @@ const SyncForm = (props) => {
       .then((data) => {
         selectRepo(data.data.providerRepoData);
       })
-      .catch((err) => {
-        // TODO: Handle error
-        console.error(err);
+      .catch(() => {
         dispatch({ type: actions.SET_ERROR_LOADING_PROVIDER_DETAIL_REPO });
       });
   };
