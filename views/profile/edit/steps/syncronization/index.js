@@ -2,17 +2,13 @@
 // Ext libs
 import React, { useReducer, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import LinkedinIcon from '@material-ui/icons/LinkedIn';
 import { useRouter } from 'next/router';
 // Components
 import StepItem from '../../../../../components/UI/StepForm/StepItem';
 import SyncButton from '../../../../../components/UI/Buttons/SyncButton';
-// eslint-disable-next-line import/no-named-as-default
-import AvatarPhoto from '../../../../../components/UI/Avatar/AvatarPhoto';
-import SelectableAvatarPhoto from '../../../../../components/UI/Avatar/SelectableAvatarPhoto';
-
+import SelectData from './selector';
 import Backdrop from '../../../../../components/UI/backdrop';
 // hooks
 import { useLang } from '../../../../../store/contexts/langContext';
@@ -30,13 +26,13 @@ const getUserQuery = `
       title
       about
       experience
-      birthdate
+      birthday
       gender
       email
       phone
       provider
       githubUrl
-      facebookUrl
+      gitlabUrl
       linkedinUrl
       twitterUrl 
     }
@@ -47,20 +43,34 @@ const initialState = {
   buttonGithubSelected: false,
   buttonGitlabSelected: false,
   buttonLinkedinSelected: false,
-  providerAvatarUrl: null,
   loading: false,
   error: null,
-  selectedAvatar: 'current',
+  user: {
+    avatarUrl: null,
+    name: null,
+    title: null,
+    about: null,
+    birthday: null,
+    experience: null,
+    gender: null,
+    email: null,
+    phone: null,
+    provider: null,
+    githubUrl: null,
+    gitlabUrl: null,
+    linkedinUrl: null,
+    twitterUrl: null,
+  },
 };
 
 const actions = {
   SELECT_GITHUB_PROVIDER_BUTTON: 'SELECT_GITHUB_PROVIDER_BUTTON',
   SELECT_GITLAB_PROVIDER_BUTTON: 'SELECT_GITLAB_PROVIDER_BUTTON',
   SELECT_LINKEDIN_PROVIDER_BUTTON: 'SELECT_LINKEDIN_PROVIDER_BUTTON',
+  DESELECT_ALL_PROVIDERS: 'DESELECT_ALL_PROVIDERS',
 
   ERROR_LOADING: 'ERROR_LOADING',
   SUCCESS_LOADING: 'SUCCESS_LOADING',
-  SWITCH_AVATAR: 'SWITCH_AVATAR',
 };
 
 const reducer = (state, action) => {
@@ -83,6 +93,13 @@ const reducer = (state, action) => {
         buttonLinkedinSelected: true,
         loading: true,
       };
+    case actions.DESELECT_ALL_PROVIDERS:
+      return {
+        ...initialState,
+        buttonLinkedinSelected: false,
+        buttonGitlabSelected: false,
+        buttonGithubSelected: false,
+      };
     case actions.ERROR_LOADING:
       return {
         ...state,
@@ -93,12 +110,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         loading: false,
-        providerAvatarUrl: action.avatarUrl,
-      };
-    case actions.SWITCH_AVATAR:
-      return {
-        ...state,
-        selectedAvatar: action.selected,
+        user: action.user,
       };
     default:
       return state;
@@ -106,13 +118,18 @@ const reducer = (state, action) => {
 };
 
 const SyncForm = (props) => {
-  const { setProvidersData, setProvidersAvatar } = props;
+  const { setProvidersData, resetUrl } = props;
   // hooks
   const styles = useStyles();
-  const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
   const { lang } = useLang();
   const { user } = useProfile();
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    user: {
+      ...user,
+    },
+  });
   // constants
   const { buttonGithubSelected, buttonGitlabSelected, buttonLinkedinSelected } = state;
   const handleNavigateToGetAccess = useCallback(
@@ -161,10 +178,11 @@ const SyncForm = (props) => {
             throw error;
           }
 
-          setProvidersData(data.data.providerUserData);
+          // setProvidersData(data.data.providerUserData);
+          console.log(data.data.providerUserData);
           dispatch({
             type: actions.SUCCESS_LOADING,
-            avatarUrl: data.data.providerUserData.avatarUrl,
+            user: data.data.providerUserData,
           });
         })
         .catch((err) => {
@@ -175,19 +193,19 @@ const SyncForm = (props) => {
     [handleNavigateToGetAccess, dispatch]
   );
 
-  const onAvatarChange = (selected) => {
-    dispatch({ type: actions.SWITCH_AVATAR, selected });
-    if (selected === 'current') {
-      setProvidersAvatar(user.image);
-    } else if (selected === 'provider') {
-      setProvidersAvatar(state.providerAvatarUrl);
-    }
+  const onDataChange = (field, data) => {
+    setProvidersData({
+      [field]: data,
+    });
   };
 
   // handlers
   const handleClickProviderButton = (provider) => {
     const newArrPath = router.asPath.split('?');
-    const path = `${newArrPath[0]}?provider=${provider}`;
+    let path = newArrPath[0];
+    if (provider) {
+      path += `?provider=${provider}`;
+    }
     router.push(path, null, { shallow: true });
   };
 
@@ -205,10 +223,6 @@ const SyncForm = (props) => {
   }, []);
 
   useEffect(() => {
-    setProvidersAvatar(user.image);
-  }, []);
-
-  useEffect(() => {
     if (router.query.provider === 'github') {
       handleSelectGithubButton();
     }
@@ -219,6 +233,13 @@ const SyncForm = (props) => {
       handleSelectLinkedinButton();
     }
   }, [router.query.provider]);
+
+  useEffect(() => {
+    if (resetUrl) {
+      handleClickProviderButton();
+      dispatch({ type: actions.DESELECT_ALL_PROVIDERS });
+    }
+  }, [resetUrl]);
 
   return (
     <StepItem label={lang.syncStep.header.label}>
@@ -247,32 +268,7 @@ const SyncForm = (props) => {
           />
         </div>
 
-        <div className={styles.avatarWrapper}>
-          <div className={styles.avatar}>
-            <SelectableAvatarPhoto
-              selected={state.selectedAvatar === 'current'}
-              onClick={() => onAvatarChange('current')}
-            >
-              <AvatarPhoto size="small" selected src={user.image} />
-            </SelectableAvatarPhoto>
-            <Typography>{lang.syncStep.body.avatars.current}</Typography>
-          </div>
-          {state.providerAvatarUrl && state.providerAvatarUrl !== user.image && (
-            <div className={styles.avatar}>
-              <SelectableAvatarPhoto
-                selected={state.selectedAvatar === 'provider'}
-                onClick={() => onAvatarChange('provider')}
-              >
-                <AvatarPhoto size="small" selectable src={state.providerAvatarUrl} />
-              </SelectableAvatarPhoto>
-              <Typography>
-                {`${router.query.provider.charAt(0).toUpperCase()}${router.query.provider.slice(
-                  1
-                )} ${lang.syncStep.body.avatars.avatar}`}
-              </Typography>
-            </div>
-          )}
-        </div>
+        <SelectData user={user} provider={state.user} change={onDataChange} />
         <Backdrop open={state.loading} />
       </div>
     </StepItem>
@@ -280,7 +276,7 @@ const SyncForm = (props) => {
 };
 SyncForm.propTypes = {
   setProvidersData: PropTypes.func.isRequired,
-  setProvidersAvatar: PropTypes.func.isRequired,
+  resetUrl: PropTypes.bool.isRequired,
 };
 
 export default React.memo(SyncForm);

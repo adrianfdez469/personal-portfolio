@@ -160,14 +160,14 @@ const typeDefs = gql`
     name: String
     title: String
     about: String
-    birthdate: String
+    birthday: String
     experience: Int
     gender: gender
     email: String
     phone: String
     provider: userProviders
     githubUrl: String
-    facebookUrl: String
+    gitlabUrl: String
     linkedinUrl: String
     twitterUrl: String
   }

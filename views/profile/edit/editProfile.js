@@ -137,22 +137,22 @@ const reducer = (state, action) => {
       return {
         ...state,
         data: {
-          avatarUrl: state.data.avatarUrl,
+          avatarUrl: action.value.avatarUrl || state.data.avatarUrl,
           personalData: {
-            name: action.value.name,
-            title: action.value.title,
-            description: action.value.about,
-            birthday: action.value.birthdate,
-            gender: action.value.gender,
-            experience: action.value.experience,
+            name: action.value.name || state.data.personalData.name,
+            title: action.value.title || state.data.personalData.title,
+            description: action.value.about || state.data.personalData.description,
+            birthday: action.value.birthday || state.data.personalData.birthday,
+            gender: action.value.gender || state.data.personalData.gender,
+            experience: action.value.experience || state.data.personalData.experience,
           },
           contactData: {
-            email: action.value.email,
-            phone: action.value.phone,
-            gitlab: action.value.gitlabUrl,
-            linkedin: action.value.linkedinUrl,
-            twitter: action.value.twitterUrl,
-            github: action.value.githubUrl,
+            email: action.value.email || state.data.contactData.email,
+            phone: action.value.phone || state.data.contactData.phone,
+            gitlab: action.value.gitlabUrl || state.data.contactData.gitlab,
+            linkedin: action.value.linkedinUrl || state.data.contactData.linkedin,
+            twitter: action.value.twitterUrl || state.data.contactData.twitter,
+            github: action.value.githubUrl || state.data.contactData.github,
           },
         },
       };
@@ -167,7 +167,6 @@ const EditProjectView = (props) => {
   const { lang } = useLang();
   const { user } = useProfile();
   const changeProfile = useChangeProfile();
-  console.log(user);
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     data: {
@@ -194,7 +193,6 @@ const EditProjectView = (props) => {
   });
 
   const handleSave = () => {
-    console.log(state);
     dispatch({ type: actions.START_SAVING });
 
     getSession()
@@ -239,16 +237,15 @@ const EditProjectView = (props) => {
         throw new Error('ERROR_TO_FETCH');
       })
       .then((resp) => {
-        console.log(resp);
         if (resp.data.updateUser.success) {
           dispatch({ type: actions.END_SAVING });
-          changeProfile(resp.data.updateUser.user); // .....
+          changeProfile(resp.data.updateUser.user);
+
           return;
         }
         throw new Error('ERROR_TO_FETCH');
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         dispatch({ type: actions.ERROR_SAVING });
       });
   };
@@ -262,13 +259,18 @@ const EditProjectView = (props) => {
   const setProvidersData = (data) => {
     dispatch({ type: actions.SET_PROVIDER_DATA, value: data });
   };
-  const setProvidersAvatar = (avatarUrl) => {
-    dispatch({ type: actions.EDIT_AVATAR_DATA, value: avatarUrl });
-  };
 
   const Steps = [
     {
-      cmp: <SyncForm setProvidersData={setProvidersData} setProvidersAvatar={setProvidersAvatar} />,
+      cmp: (
+        <SyncForm
+          setProvidersData={setProvidersData}
+          // setProvidersAvatar={setProvidersAvatar}
+          personalData={state.data.personalData}
+          contactData={state.data.contactData}
+          resetUrl={state.saving}
+        />
+      ),
       label: lang.step.syncyLabel,
     },
     {

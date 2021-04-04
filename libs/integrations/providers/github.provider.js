@@ -220,7 +220,7 @@ export const getUserDataByToken = async (accessToken) => {
       title: '',
       about: data.bio,
       experience: exp,
-      birthdate: null,
+      birthday: null,
       gender: null,
       email: data.email,
       phone: null,
