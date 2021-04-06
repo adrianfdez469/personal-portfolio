@@ -96,7 +96,7 @@ export const getThemeByThemeKey = async (themeKey) => {
 };
 
 export const getThemeByUserId = async (userId) => {
-  const { user } = await getProfileDataByKey(queryUserDataById(id, false));
+  const { user } = await getProfileDataByKey(queryUserDataById(userId, false));
   if (user && user.theme) {
     return getThemeByThemeKey(user.theme);
   }
