@@ -122,6 +122,16 @@ const resolvers = {
             )
           );
         }
+
+        const slug = await prisma.user.findUnique({
+          where: {
+            id: +userId,
+          },
+          select: {
+            slug: true,
+          },
+        });
+
         const savedProject = await prisma.project.upsert({
           where: {
             id: +projectId || -1,
@@ -174,7 +184,7 @@ const resolvers = {
           code: 201,
           success: true,
           message: 'PROJECT_CREATED',
-          project: savedProject,
+          project: { ...savedProject, slug },
         };
       } catch (err) {
         return {
@@ -240,6 +250,7 @@ const resolvers = {
           },
         },
       }),
+    // collaborators: (project) => prisma.
   },
   DevProviderRepo: {
     ownerId: (repo) => {

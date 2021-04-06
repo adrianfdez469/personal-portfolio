@@ -10,6 +10,7 @@ import PersonalDataForm from './steps/personalData';
 import ContactDataForm from './steps/contactData';
 import { useLang } from '../../../store/contexts/langContext';
 import { useChangeProfile, useProfile } from '../../../store/contexts/profileContext';
+import useUserPage from '../../../hooks/useUserPage';
 
 const saveUserProfileQuery = `
   mutation updateUser($userId: ID!, $user: UserParams!) {
@@ -167,6 +168,7 @@ const EditProjectView = (props) => {
   const { lang } = useLang();
   const { user } = useProfile();
   const changeProfile = useChangeProfile();
+  const { fetchUri } = useUserPage();
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     data: {
@@ -240,7 +242,7 @@ const EditProjectView = (props) => {
         if (resp.data.updateUser.success) {
           dispatch({ type: actions.END_SAVING });
           changeProfile(resp.data.updateUser.user);
-
+          fetchUri(resp.data.updateUser.user.slug);
           return;
         }
         throw new Error('ERROR_TO_FETCH');

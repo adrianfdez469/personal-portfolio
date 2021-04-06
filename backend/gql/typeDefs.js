@@ -37,6 +37,8 @@ const typeDefs = gql`
     otherInfo: String
     images: [Image!]
     logoUrl: String
+    collaborators: [Collaborator!]
+    slug: String
   }
   type User {
     id: ID!
@@ -100,7 +102,7 @@ const typeDefs = gql`
     projectDevLink: String
     logoUrl: String
     otherInfo: String
-    # collaborators: [Collaborator!]
+    collaborators: [Collaborator!]
     images: [String!]
   }
 
@@ -175,7 +177,7 @@ const typeDefs = gql`
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
-    saveProject(projectId: ID, project: ProjectParams!): Project!
+    saveProject(projectId: ID, project: ProjectParams!): SaveProjectMutationResponse!
 
   }
 

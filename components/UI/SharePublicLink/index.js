@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { getSession } from 'next-auth/client';
 import Backdrop from '../backdrop';
+import useUserPage from '../../../hooks/useUserPage';
 import { useProfile, useChangeProfile } from '../../../store/contexts/profileContext';
 import { useLang } from '../../../store/contexts/langContext';
 
@@ -75,17 +76,12 @@ const SharePublicLink = (props) => {
   const { lang } = useLang();
   const { user } = useProfile();
   const changeProfile = useChangeProfile();
+  const { fetchUri, getUri } = useUserPage();
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     slug: user.slug,
   });
-
-  const urlRef = useRef();
   const styles = useStyles();
-
-  useEffect(() => {
-    urlRef.current = `${window.location.protocol}//${window.location.host}`;
-  }, []);
 
   const handleChange = (event) => {
     const text = event.target.value.toLowerCase();
@@ -94,7 +90,7 @@ const SharePublicLink = (props) => {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`${urlRef.current}/${state.slug}`);
+    navigator.clipboard.writeText(getUri(state.slug));
   };
 
   const handleSave = async () => {
@@ -127,9 +123,10 @@ const SharePublicLink = (props) => {
             if (data.data.updateUser.success) {
               dispatch({ type: actions.SAVED });
               changeProfile({ slug: data.data.updateUser.user.slug });
+              fetchUri(state.slug);
               return;
             }
-            throw new Error(data.updateUser.message);
+            throw new Error(data.data.updateUser.message);
           })
           .catch(() => {
             dispatch({ type: actions.ERROR_SAVING, originalSlug: user.slug });
@@ -171,9 +168,9 @@ const SharePublicLink = (props) => {
               });
 
               changeProfile({ publicProfile: data.data.updateUser.user.publicProfile });
-              fetch(`${urlRef.current}/${state.slug}`);
+              fetchUri(state.slug);
             }
-            throw new Error(data.updateUser.message);
+            throw new Error(data.data.updateUser.message);
           })
           .catch((err) => {
             console.log(err);
@@ -189,7 +186,7 @@ const SharePublicLink = (props) => {
         <DialogContent>
           <div className={styles.flexRow}>
             <Typography color="textSecondary" style={{ display: 'flex', flexFlow: 'wrap' }}>
-              {`${urlRef.current}/`}
+              {`${getUri()}/`}
               <Typography color="primary">{`${state.slug}`}</Typography>
             </Typography>
             <Button
