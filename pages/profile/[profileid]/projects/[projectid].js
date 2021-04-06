@@ -39,8 +39,8 @@ export const getServerSideProps = async (context) => {
   const projectData = {
     basicInfoData: {
       name: project.name,
-      initialDate: new Date(project.initialDate).getTime(),
-      endDate: new Date(project.finalDate).getTime(),
+      initialDate: project.initialDate ? new Date(project.initialDate).getTime() : null,
+      endDate: project.finalDate ? new Date(project.finalDate).getTime() : null,
       description: project.description,
       otherText: project.otherInfo,
       proyectLink: {

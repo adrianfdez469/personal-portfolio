@@ -26,7 +26,7 @@ export async function getStaticPaths() {
 
 export const getStaticProps = async (context) => {
   try {
-    const profileData = await getProfileDataBySlug(context.params.slug);
+    const profileData = await getProfileDataBySlug(context.params.slug, true);
 
     if (!profileData) {
       return {
