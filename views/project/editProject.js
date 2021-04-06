@@ -6,6 +6,7 @@ import StepForm from '../../components/UI/StepForm';
 import { useLang } from '../../store/contexts/langContext';
 import SyncForm from './steps/synchronization';
 import SkillCategories from '../../constants/skillsCategorysConst';
+import useUserPage from '../../hooks/useUserPage';
 
 const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
 const GalleryForm = dynamic(() => import('./steps/gallery'));
@@ -19,7 +20,13 @@ const saveQueryData = `
         projectId: $projectId, 
         project: $project
     ) {
-      id
+      code
+      success
+      message
+      project {
+        id
+        slug
+      }
     }
   }
 `;
@@ -139,6 +146,7 @@ const EditProjectView = (props) => {
   const { handleClose, projectId, data } = props;
   // Hooks
   const { lang } = useLang();
+  const { fetchUri } = useUserPage();
   const [state, dispatch] = useReducer(
     reducer,
     data ? { ...initialState, data: data } : initialState
@@ -146,7 +154,6 @@ const EditProjectView = (props) => {
 
   const setRepoSyncData = useCallback(
     (data) => {
-      console.log(data);
       if (!data) {
         dispatch({ type: actions.SET_REPOSITORY_DATA, data: initialState.data });
         return;
@@ -243,7 +250,7 @@ const EditProjectView = (props) => {
 
   const handleSave = () => {
     dispatch({ type: actions.START_SAVING });
-    console.log(state.data);
+    console.log(state);
     const proglangs = state.data.skillsData.languages.map((lang) => ({
       id: lang.id || null,
       name: lang.text,
@@ -278,6 +285,7 @@ const EditProjectView = (props) => {
             projectLink: basicData.proyectLink.url,
             projectDevLink: basicData.devLink.url,
             images,
+            collaborators: state.data.collaborators,
             logoUrl,
           },
         },
@@ -290,12 +298,15 @@ const EditProjectView = (props) => {
         throw new Error('Error saving data');
       })
       .then((resp) => {
-        console.log('Salvado correctamente');
-        console.log(resp);
-        dispatch({ type: actions.END_SAVING });
+        if (resp.data.saveProject.success) {
+          dispatch({ type: actions.END_SAVING });
+          fetchUri(resp.data.saveProject.slug);
+          fetchUri(`${resp.data.saveProject.project.slug}/${resp.data.saveProject.project.id}`);
+          return;
+        }
+        throw new Error(resp.data.saveProject.message);
       })
       .catch((err) => {
-        console.error(err);
         dispatch({ type: actions.ERROR_SAVING });
       });
   };

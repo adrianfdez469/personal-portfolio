@@ -1,5 +1,5 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { Provider } from 'next-auth/client';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -34,15 +34,6 @@ const MyApp = (props) => {
       </ThemeProvider>
     </>
   );
-};
-
-MyApp.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.shape({
-    statusCode: PropTypes.number,
-    session: PropTypes.string,
-    theme: PropTypes.shape(PropTypes.any),
-  }).isRequired,
 };
 
 export default MyApp;

@@ -49,11 +49,20 @@ model User {
   slug          String?   @unique
   title         String?
   description   String?
-  theme         String?   @default("orangeDark")
+  theme         String    @default("orangeDark")
+  gitlabLink    String?   @map("gitlab_link")
+  githubLink    String?   @map("github_link")
+  linkedinLink  String?   @map("linkedin_link")
+  twitterLink   String?   @map("twitter_link")
+  phone         String?
+  experience    Int?
+  birthday      DateTime?
+  gender        Gender?
+  publicProfile Boolean   @default(false) @map(name: "public_profile")
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  Project       Project[]
 
-  Project Project[]
   @@map(name: "users")
 }
 
@@ -113,6 +122,7 @@ model Project {
   user           User            @relation(fields: [userId], references: [id])
   skills         ProjectSkills[]
   images         Image[]
+  collaborators  Collaborator[]
 
   @@map(name: "projects")
 }
@@ -127,6 +137,21 @@ model ProjectSkills {
   @@map(name: "project_skills")
 }
 
+model Collaborator {
+  id        Int     @id @default(autoincrement())
+  login     String
+  avatarUrl String?
+  email     String?
+  bio       String?
+  name      String?
+  url       String?
+  isOwner   Boolean @map("is_owner")
+  projectId Int     @map("projectid")
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@map(name: "collaborators")
+}
+
 enum SkillCatergory {
   PROG_LANG
   PROG_TECH
@@ -137,4 +162,9 @@ enum Provider {
   github
   gitlab
   linkedIn
+}
+
+enum Gender {
+  male
+  female
 }

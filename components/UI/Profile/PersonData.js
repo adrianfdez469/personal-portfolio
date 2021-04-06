@@ -26,6 +26,39 @@ import EditablePhoto from '../Avatar/EditableAvatarPhoto';
 import { useProfile } from '../../../store/contexts/profileContext';
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
+import SharePublicLink from '../SharePublicLink';
+
+const SecondaryButtons = (props) => {
+  const { editableActions, size } = props;
+  return editableActions.map((action) => {
+    if (action.link) {
+      return (
+        <Link key={action.name} href={action.link} passHref>
+          <Tooltip title={action.name}>
+            <IconButton onClick={action.onClick} size={size}>
+              {action.icon}
+            </IconButton>
+          </Tooltip>
+        </Link>
+      );
+    }
+    return (
+      <Tooltip title={action.name} key={action.name}>
+        <IconButton onClick={action.onClick} size={size}>
+          {action.icon}
+        </IconButton>
+      </Tooltip>
+    );
+  });
+};
+
+SecondaryButtons.propTypes = {
+  editableActions: PropTypes.arrayOf(PropTypes.any).isRequired,
+  size: PropTypes.oneOf(['small', 'medium']),
+};
+SecondaryButtons.default = {
+  size: 'medium',
+};
 
 const PersonData = (props) => {
   const { edit } = props;
@@ -36,6 +69,16 @@ const PersonData = (props) => {
   const styles = usePersonDataStyles();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const [shareLinkIsOpen, setShareLinkOpen] = React.useState(false);
+
+  const handleClickOpenShareLink = () => {
+    setShareLinkOpen(true);
+  };
+
+  const handleCloseShareLink = () => {
+    setShareLinkOpen(false);
+  };
+
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -43,26 +86,29 @@ const PersonData = (props) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const editableActions = [
-    {
-      icon: <EditOutlined className={styles.editableButtonsIcons} />,
-      name: lang.buttons.editButton,
-      onClick: () => {},
-      link: `${router.asPath}/edit`,
-    },
-    {
-      icon: <PostAddOutlined className={styles.editableButtonsIcons} />,
-      name: lang.buttons.addProjectButton,
-      onClick: () => {},
-      link: `${router.asPath}/projects/new`,
-    },
-    {
-      icon: <ShareOutlined className={styles.editableButtonsIcons} />,
-      name: lang.buttons.sharedPortfolioButton,
-      onClick: () => {},
-      link: `${router.asPath}/edit`,
-    },
-  ];
+  const editableActions = edit
+    ? [
+        {
+          icon: <EditOutlined className={styles.editableButtonsIcons} />,
+          name: lang.buttons.editButton,
+          onClick: () => {},
+          link: `${router.asPath}/edit`,
+        },
+        {
+          icon: <PostAddOutlined className={styles.editableButtonsIcons} />,
+          name: lang.buttons.addProjectButton,
+          onClick: () => {},
+          link: `${router.asPath}/projects/new`,
+        },
+        {
+          icon: <ShareOutlined className={styles.editableButtonsIcons} />,
+          name: lang.buttons.sharedPortfolioButton,
+          onClick: () => {
+            handleClickOpenShareLink(true);
+          },
+        },
+      ]
+    : [];
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -76,53 +122,57 @@ const PersonData = (props) => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <LanguageButton styles={{ paddingTop: 0, paddingBottom: 0 }} />
+        <LanguageButton
+          styles={{ paddingTop: 0, paddingBottom: 0 }}
+          title={lang.buttons.languageButton}
+        />
         {lang.buttons.languageButton}
       </MenuItem>
       <MenuItem>
-        <ThemeButton styles={{ paddingTop: 0, paddingBottom: 0 }} />
+        <ThemeButton
+          styles={{ paddingTop: 0, paddingBottom: 0 }}
+          title={lang.buttons.themeButton}
+        />
         {lang.buttons.themeButton}
       </MenuItem>
       {edit && (
-        <>
-          <MenuItem>
-            <FeedbackButton styles={{ paddingTop: 0, paddingBottom: 0 }} />
-            {lang.buttons.feedbackButton}
-          </MenuItem>
-          <MenuItem>
-            <LogoutButton styles={{ paddingTop: 0, paddingBottom: 0 }} />
-            {lang.buttons.logoutButton}
-          </MenuItem>
-        </>
+        <MenuItem>
+          <FeedbackButton
+            styles={{ paddingTop: 0, paddingBottom: 0 }}
+            title={lang.buttons.feedbackButton}
+          />
+          {lang.buttons.feedbackButton}
+        </MenuItem>
+      )}
+      {edit && (
+        <MenuItem>
+          <LogoutButton
+            styles={{ paddingTop: 0, paddingBottom: 0 }}
+            title={lang.buttons.logoutButton}
+          />
+          {lang.buttons.logoutButton}
+        </MenuItem>
       )}
     </Menu>
   );
-
+  const AvatarEl = edit ? (
+    <EditablePhoto size="adjustable" onClick={() => {}}>
+      <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
+    </EditablePhoto>
+  ) : (
+    <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
+  );
   return (
     <>
       <AppBar style={{ position: 'inherit', backgroundColor: 'transparent' }}>
         <div className={styles.north}>
           <div className={styles.avatar}>
-            <EditablePhoto size="adjustable" onClick={() => {}}>
-              <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
-            </EditablePhoto>
+            {AvatarEl}
             <div className={styles.editButtonsDesktop}>
-              {edit &&
-                editableActions.map((action) => (
-                  <Link key={action.name} href={action.link} passHref>
-                    <Tooltip title={action.name}>
-                      <IconButton onClick={action.onClick}>{action.icon}</IconButton>
-                    </Tooltip>
-                  </Link>
-                ))}
+              <SecondaryButtons size="medium" editableActions={editableActions} />
             </div>
           </div>
-          <div
-            className={styles.titleBox}
-            style={{
-              flexDirection: user.title && user.title !== '' ? 'column' : 'column-reverse',
-            }}
-          >
+          <div className={styles.titleBox}>
             <Typography variant="h3" component="h1" className={styles.headerPrimary}>
               {user.name}
             </Typography>
@@ -131,16 +181,7 @@ const PersonData = (props) => {
               {user.title}
             </Typography>
             <div className={styles.editButtonsMobile}>
-              {edit &&
-                editableActions.map((action) => (
-                  <Link key={action.name} href={action.link} passHref>
-                    <Tooltip title={action.name}>
-                      <IconButton onClick={action.onClick} size="small">
-                        {action.icon}
-                      </IconButton>
-                    </Tooltip>
-                  </Link>
-                ))}
+              <SecondaryButtons size="small" editableActions={editableActions} />
             </div>
           </div>
 
@@ -180,6 +221,7 @@ const PersonData = (props) => {
         </div>
       </AppBar>
       {renderMobileMenu}
+      <SharePublicLink open={shareLinkIsOpen} handleClose={handleCloseShareLink} />
     </>
   );
 };

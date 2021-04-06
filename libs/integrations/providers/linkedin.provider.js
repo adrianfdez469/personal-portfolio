@@ -1,1 +1,2 @@
-export const getUserData = async (context) => {};
+// eslint-disable-next-line import/prefer-default-export
+export const getUserDataByContext = async () => {};

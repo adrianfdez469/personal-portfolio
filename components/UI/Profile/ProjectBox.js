@@ -31,7 +31,7 @@ const ProjectBox = () => {
               avatar={
                 <Avatar
                   aria-label="recipe"
-                  className={!element.logoUrl && styles.avatar}
+                  className={!element.logoUrl ? styles.avatar : ''}
                   src={element.logoUrl}
                 >
                   {element.name[0].toUpperCase()}

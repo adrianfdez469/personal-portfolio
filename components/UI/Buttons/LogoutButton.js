@@ -23,7 +23,7 @@ const LogoutButton = (props) => {
   return (
     <Tooltip title={title}>
       <IconButton onClick={onCLickHandle} style={styles}>
-        <ExitToAppOutlined className={withColor && classes.root} />
+        <ExitToAppOutlined className={withColor ? classes.root : ''} />
       </IconButton>
     </Tooltip>
   );
@@ -31,11 +31,13 @@ const LogoutButton = (props) => {
 
 LogoutButton.propTypes = {
   withColor: PropTypes.bool,
-  styles: PropTypes.shape(PropTypes.any).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.any,
   title: PropTypes.string.isRequired,
 };
 LogoutButton.defaultProps = {
   withColor: false,
+  styles: null,
 };
 
 export default LogoutButton;

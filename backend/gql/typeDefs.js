@@ -37,7 +37,10 @@ const typeDefs = gql`
     otherInfo: String
     images: [Image!]
     logoUrl: String
+    collaborators: [Collaborator!]
+    slug: String
   }
+
   type User {
     id: ID!
     name: String
@@ -48,6 +51,15 @@ const typeDefs = gql`
     description: String
     theme: String
     projects: [Project]
+    publicProfile: Boolean
+    twitterLink: String
+    linkedinLink: String
+    githubLink: String
+    gitlabLink: String
+    experience: Int
+    phone: String
+    gender: gender
+    birthday: Date
   }
 
   interface MutationResponse {
@@ -79,6 +91,26 @@ const typeDefs = gql`
     name: String
     category: SkillTypes
   }
+
+  type Collaborator {
+    login: String!
+    avatarUrl: String
+    email: String
+    bio: String
+    name: String
+    url: String
+    isOwner: Boolean
+  }
+
+  input CollaboratorParams {
+    login: String
+    avatarUrl: String
+    email: String
+    bio: String
+    name: String
+    url: String
+    isOwner: Boolean
+  }
   
   input ProjectParams {
     # userId: ID
@@ -91,7 +123,7 @@ const typeDefs = gql`
     projectDevLink: String
     logoUrl: String
     otherInfo: String
-    # collaborators: [Collaborator!]
+    collaborators: [CollaboratorParams!] 
     images: [String!]
   }
 
@@ -104,17 +136,17 @@ const typeDefs = gql`
     title: String
     description: String
     theme: String
+    publicProfile: Boolean
+    twitterLink: String
+    linkedinLink: String
+    githubLink: String
+    gitlabLink: String
+    experience: Int
+    phone: String
+    gender: gender
+    birthday: String
   }
-
-  type Collaborator {
-    login: String!
-    avatarUrl: String
-    email: String
-    bio: String
-    name: String
-    url: String
-    isOwner: Boolean
-  }
+  
   type DevProviderRepo {
     id: ID!
     name: String!
@@ -142,14 +174,14 @@ const typeDefs = gql`
     name: String
     title: String
     about: String
-    birthdate: String
+    birthday: String
     experience: Int
     gender: gender
     email: String
     phone: String
     provider: userProviders
     githubUrl: String
-    facebookUrl: String
+    gitlabUrl: String
     linkedinUrl: String
     twitterUrl: String
   }
@@ -157,7 +189,7 @@ const typeDefs = gql`
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
-    saveProject(projectId: ID, project: ProjectParams!): Project!
+    saveProject(projectId: ID, project: ProjectParams!): SaveProjectMutationResponse!
 
   }
 
@@ -209,6 +241,7 @@ const typeDefs = gql`
   type Query {
     #users(id: IntComparer, slug: StringComparer, email: StringComparer): [User!]
     user(id: ID!): User!
+    userBySlug(slug: String!): User
     projects(id: IntComparer, name: StringComparer): [Project!]
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
     link(url: String): Link!

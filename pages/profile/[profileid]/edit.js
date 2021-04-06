@@ -1,10 +1,15 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { getSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
-import { ProfileContext } from '../../../store/contexts/profileContext';
+import ProfileProvider from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
-import { preRenderLanguage, preRenderUserTheme } from '../../../backend/preRenderingData';
+import {
+  getLanguageByLocale,
+  getProfileDataById,
+  getThemeByThemeKey,
+  // eslint-disable-next-line import/named
+} from '../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../i18n/locales/pageProfileForm/profile.es.json';
 import EN from '../../../i18n/locales/pageProfileForm/profile.en.json';
@@ -15,40 +20,17 @@ const languageLocales = {
   es: ES,
 };
 
-const queryUserData = (id) => `
-  {
-    user(id: ${id}) {
-      id
-      name
-      image
-      title
-      description
-      slug
-    }
-  }
-`;
-
 const createPropsObject = async (context) => {
   try {
     const session = await getSession(context);
-    const language = await preRenderLanguage(context, languageLocales);
-    const theme = await preRenderUserTheme(context);
 
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: queryUserData(session.userId),
-      }),
-    });
-    if (!response.ok) {
-      throw new Error('Error');
-    }
+    const language = await getLanguageByLocale(context.locale, languageLocales);
+    const profileData = await getProfileDataById(+session.userId);
+    const theme = await getThemeByThemeKey(profileData.user.theme);
 
-    const resp = await response.json();
-    return { language, theme, profile: resp.data };
+    const resp = { language, theme, profile: profileData };
+
+    return resp;
   } catch (err) {
     console.error(err);
   }
@@ -68,20 +50,15 @@ const Edit = (props) => {
   const router = useRouter();
   return (
     <LangContext.Provider value={language}>
-      <ProfileContext.Provider value={profile}>
+      <ProfileProvider value={profile}>
         <EditProfile
           handleClose={() => {
             router.replace(`/profile/${router.query.profileid}`);
           }}
         />
-      </ProfileContext.Provider>
+      </ProfileProvider>
     </LangContext.Provider>
   );
-};
-
-Edit.propTypes = {
-  language: PropTypes.shape(PropTypes.any).isRequired,
-  profile: PropTypes.shape(PropTypes.any).isRequired,
 };
 
 export default Edit;

@@ -91,10 +91,7 @@ export const respMiddleware = async (req, res, code, state, originalPath) => {
     res.end();
   }
 };
-
-export const getUserData = async (context) => {
-  const accessToken = await getGitlabToken(context);
-
+export const getUserDataByToken = async (accessToken) => {
   const response = await fetch('https://gitlab.com/api/v4/user', {
     method: 'GET',
     headers: {
@@ -120,7 +117,7 @@ export const getUserData = async (context) => {
       title: data.job_title,
       about: data.bio,
       experience: exp,
-      birthdate: null,
+      birthday: null,
       gender: null,
       email: data.public_email || data.email,
       phone: null,
@@ -136,6 +133,11 @@ export const getUserData = async (context) => {
     throw new Error('UNAUTHORIZED');
   }
   throw new Error('INTERNAL_ERROR');
+};
+
+export const getUserDataByContext = async (context) => {
+  const accessToken = await getGitlabToken(context);
+  return getUserDataByToken(accessToken);
 };
 
 export const getRepos = async (context) => {
@@ -198,6 +200,7 @@ export const getRepoData = async (context, projectId) => {
   if (response.ok) {
     const repo = await response.json();
 
+    // eslint-disable-next-line no-underscore-dangle
     const members = await fetch(`${repo._links.members}`, {
       method: 'GET',
       headers: {

@@ -70,7 +70,7 @@ const ThemeButton = (props) => {
     <>
       <Tooltip title={title}>
         <IconButton onClick={handleClick} style={styles}>
-          <Brightness4Outlined className={withColor && classes.root} />
+          <Brightness4Outlined className={withColor ? classes.root : ''} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -92,11 +92,13 @@ const ThemeButton = (props) => {
 
 ThemeButton.propTypes = {
   withColor: PropTypes.bool,
-  styles: PropTypes.shape(PropTypes.any).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.any,
   title: PropTypes.string.isRequired,
 };
 ThemeButton.defaultProps = {
   withColor: false,
+  styles: null,
 };
 
 export default ThemeButton;

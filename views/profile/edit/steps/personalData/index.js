@@ -23,10 +23,6 @@ const PersonalDataForm = ({ data, edit }) => {
   // constants
   const { lang, locale } = useLang();
 
-  /* const handleChange = (field, value) => {
-    console.log('Changing data');
-  }; */
-
   return (
     <StepItem label={lang.personalDataStep.header.label}>
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={dateLocales[locale]}>

@@ -22,6 +22,13 @@ const resolvers = {
           id: +args.id,
         },
       }),
+    userBySlug: (parent, args) =>
+      prisma.user.findFirst({
+        where: {
+          slug: args.slug,
+          publicProfile: true,
+        },
+      }),
     projects: (parent, args) =>
       prisma.project.findMany({
         where: { ...args },
@@ -41,7 +48,7 @@ const resolvers = {
     },
     providerUserData: async (parent, args, context) => {
       const provider = ProxyProvider(args.provider);
-      return provider.getUserData(context);
+      return provider.getUserDataByContext(context);
     },
   },
   Mutation: {
@@ -71,7 +78,7 @@ const resolvers = {
       try {
         const { projectId, project } = args;
         const { userId } = await getSession(context);
-        const { projectLink, projectDevLink, skills, images, logoUrl } = project;
+        const { projectLink, projectDevLink, skills, images, logoUrl, collaborators } = project;
 
         let skillIds = null;
         let iniDate = null;
@@ -115,6 +122,7 @@ const resolvers = {
             )
           );
         }
+
         const savedProject = await prisma.project.upsert({
           where: {
             id: +projectId || -1,
@@ -138,6 +146,9 @@ const resolvers = {
                 imageUrl: img,
               })),
             },
+            collaborators: {
+              create: collaborators,
+            },
             logoUrl,
           },
           update: {
@@ -160,17 +171,31 @@ const resolvers = {
                 imageUrl: img,
               })),
             },
+            collaborators: {
+              deleteMany: {},
+              create: collaborators,
+            },
             logoUrl,
           },
         });
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id: +userId,
+          },
+          select: {
+            slug: true,
+          },
+        });
+
         return {
           code: 201,
           success: true,
           message: 'PROJECT_CREATED',
-          project: savedProject,
+          project: { ...savedProject, ...user },
         };
       } catch (err) {
-        console.error(err);
+        console.log(err);
         return {
           code: 500,
           success: false,
@@ -228,6 +253,14 @@ const resolvers = {
       }),
     images: (project) =>
       prisma.image.findMany({
+        where: {
+          projectId: {
+            equals: project.id,
+          },
+        },
+      }),
+    collaborators: (project) =>
+      prisma.collaborator.findMany({
         where: {
           projectId: {
             equals: project.id,

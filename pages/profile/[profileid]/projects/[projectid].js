@@ -1,8 +1,7 @@
 /* eslint-disable import/named */
 // libs
 import React from 'react';
-import PropTypes from 'prop-types';
-import { preRenderLanguage, preRenderUserTheme } from '../../../../backend/preRenderingData';
+import { getLanguageByLocale, getThemeByContext } from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
 import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
@@ -28,6 +27,7 @@ export const getServerSideProps = async (context) => {
         },
       },
       images: true,
+      collaborators: true,
     },
     where: {
       id: +projectid,
@@ -40,8 +40,8 @@ export const getServerSideProps = async (context) => {
   const projectData = {
     basicInfoData: {
       name: project.name,
-      initialDate: new Date(project.initialDate).getTime(),
-      endDate: new Date(project.finalDate).getTime(),
+      initialDate: project.initialDate ? new Date(project.initialDate).getTime() : null,
+      endDate: project.finalDate ? new Date(project.finalDate).getTime() : null,
       description: project.description,
       otherText: project.otherInfo,
       proyectLink: {
@@ -73,7 +73,7 @@ export const getServerSideProps = async (context) => {
           category: obj.skill.category,
         })),
     },
-    collaborators: [],
+    collaborators: project.collaborators,
     images: project.images.map((image) => ({
       id: image.id,
       url: image.imageUrl,
@@ -82,8 +82,8 @@ export const getServerSideProps = async (context) => {
   };
 
   const obj = {
-    language: await preRenderLanguage(context, languageLocales),
-    theme: await preRenderUserTheme(context),
+    language: await getLanguageByLocale(context.locale, languageLocales),
+    theme: await getThemeByContext(context),
     projectData,
     projectId: +projectid,
   };
@@ -93,6 +93,7 @@ export const getServerSideProps = async (context) => {
 };
 
 const NewProject = (props) => {
+  // eslint-disable-next-line react/prop-types
   const { language, projectData, projectId } = props;
 
   if (!language) {
@@ -104,12 +105,6 @@ const NewProject = (props) => {
       <EditProject open data={projectData} projectId={projectId} handleClose={() => {}} />
     </LangContext.Provider>
   );
-};
-
-NewProject.propTypes = {
-  language: PropTypes.objectOf(PropTypes.any).isRequired,
-  projectData: PropTypes.objectOf(PropTypes.any).isRequired,
-  projectId: PropTypes.number.isRequired,
 };
 
 export default NewProject;

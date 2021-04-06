@@ -4,8 +4,17 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import { makeStyles, IconButton, Tooltip, Menu, MenuItem } from '@material-ui/core';
-import { Language } from '@material-ui/icons';
+import LanguageIcon from '@material-ui/icons/Language';
 import { useLang } from '../../../store/contexts/langContext';
+
+// eslint-disable-next-line react/prop-types
+const CustMenuComp = React.forwardRef(({ onClick, href, locale, children }, ref) => (
+  <MenuItem ref={ref} onClick={onClick}>
+    <Link href={href} locale={locale}>
+      {children}
+    </Link>
+  </MenuItem>
+));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +40,7 @@ const LanguageButton = (props) => {
     <>
       <Tooltip title={title}>
         <IconButton onClick={handleClick} style={styles}>
-          <Language className={withColor && classes.root} />
+          <LanguageIcon className={withColor ? classes.root : ''} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -41,14 +50,20 @@ const LanguageButton = (props) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {lang &&
-          router.locales
-            .filter((locale) => locale !== router.locale)
-            .map((locale) => (
-              <Link href={router.asPath} locale={locale}>
-                <MenuItem onClick={() => handleClose()}>{lang[locale]}</MenuItem>
-              </Link>
-            ))}
+        {lang
+          ? router.locales
+              .filter((locale) => locale !== router.locale)
+              .map((locale) => (
+                <CustMenuComp
+                  key={locale}
+                  onClick={() => handleClose()}
+                  href={router.asPath}
+                  locale={locale}
+                >
+                  {lang[locale]}
+                </CustMenuComp>
+              ))
+          : []}
       </Menu>
     </>
   );
@@ -56,10 +71,12 @@ const LanguageButton = (props) => {
 
 LanguageButton.propTypes = {
   withColor: PropTypes.bool,
-  styles: PropTypes.shape(PropTypes.any).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.any,
   title: PropTypes.string.isRequired,
 };
 LanguageButton.defaultProps = {
   withColor: false,
+  styles: null,
 };
 export default LanguageButton;
