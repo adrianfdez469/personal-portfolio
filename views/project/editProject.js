@@ -20,10 +20,10 @@ const saveQueryData = `
         projectId: $projectId, 
         project: $project
     ) {
-      code: String!
-      success: Boolean!
-      message: String!
-      project: {
+      code
+      success
+      message
+      project {
         id
         slug
       }
@@ -250,6 +250,7 @@ const EditProjectView = (props) => {
 
   const handleSave = () => {
     dispatch({ type: actions.START_SAVING });
+    console.log(state);
     const proglangs = state.data.skillsData.languages.map((lang) => ({
       id: lang.id || null,
       name: lang.text,
@@ -284,6 +285,7 @@ const EditProjectView = (props) => {
             projectLink: basicData.proyectLink.url,
             projectDevLink: basicData.devLink.url,
             images,
+            collaborators: state.data.collaborators,
             logoUrl,
           },
         },
@@ -299,7 +301,7 @@ const EditProjectView = (props) => {
         if (resp.data.saveProject.success) {
           dispatch({ type: actions.END_SAVING });
           fetchUri(resp.data.saveProject.slug);
-          fetchUri(`${resp.data.saveProject.slug}/${resp.data.saveProject.id}`);
+          fetchUri(`${resp.data.saveProject.project.slug}/${resp.data.saveProject.project.id}`);
           return;
         }
         throw new Error(resp.data.saveProject.message);

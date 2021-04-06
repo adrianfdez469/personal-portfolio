@@ -78,7 +78,7 @@ const resolvers = {
       try {
         const { projectId, project } = args;
         const { userId } = await getSession(context);
-        const { projectLink, projectDevLink, skills, images, logoUrl } = project;
+        const { projectLink, projectDevLink, skills, images, logoUrl, collaborators } = project;
 
         let skillIds = null;
         let iniDate = null;
@@ -123,15 +123,6 @@ const resolvers = {
           );
         }
 
-        const slug = await prisma.user.findUnique({
-          where: {
-            id: +userId,
-          },
-          select: {
-            slug: true,
-          },
-        });
-
         const savedProject = await prisma.project.upsert({
           where: {
             id: +projectId || -1,
@@ -155,6 +146,9 @@ const resolvers = {
                 imageUrl: img,
               })),
             },
+            collaborators: {
+              create: collaborators,
+            },
             logoUrl,
           },
           update: {
@@ -177,16 +171,31 @@ const resolvers = {
                 imageUrl: img,
               })),
             },
+            collaborators: {
+              deleteMany: {},
+              create: collaborators,
+            },
             logoUrl,
           },
         });
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id: +userId,
+          },
+          select: {
+            slug: true,
+          },
+        });
+
         return {
           code: 201,
           success: true,
           message: 'PROJECT_CREATED',
-          project: { ...savedProject, slug },
+          project: { ...savedProject, ...user },
         };
       } catch (err) {
+        console.log(err);
         return {
           code: 500,
           success: false,
@@ -250,7 +259,14 @@ const resolvers = {
           },
         },
       }),
-    // collaborators: (project) => prisma.
+    collaborators: (project) =>
+      prisma.collaborator.findMany({
+        where: {
+          projectId: {
+            equals: project.id,
+          },
+        },
+      }),
   },
   DevProviderRepo: {
     ownerId: (repo) => {

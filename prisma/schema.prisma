@@ -122,6 +122,7 @@ model Project {
   user           User            @relation(fields: [userId], references: [id])
   skills         ProjectSkills[]
   images         Image[]
+  collaborators  Collaborator[]
 
   @@map(name: "projects")
 }
@@ -134,6 +135,21 @@ model ProjectSkills {
 
   @@id([projectId, skillId])
   @@map(name: "project_skills")
+}
+
+model Collaborator {
+  id        Int     @id @default(autoincrement())
+  login     String
+  avatarUrl String?
+  email     String?
+  bio       String?
+  name      String?
+  url       String?
+  isOwner   Boolean @map("is_owner")
+  projectId Int     @map("projectid")
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@map(name: "collaborators")
 }
 
 enum SkillCatergory {

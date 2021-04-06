@@ -35,6 +35,8 @@ const CollaboratorsForm = (props) => {
       {
         name: inputNameRef.current.value,
         email: inputEmailRef.current.value,
+        isOwner: false,
+        login: inputNameRef.current.value.replaceAll(' ', '_').toLowerCase(),
       },
     ]);
   };

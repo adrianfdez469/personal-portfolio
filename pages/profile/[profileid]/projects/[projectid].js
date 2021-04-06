@@ -27,6 +27,7 @@ export const getServerSideProps = async (context) => {
         },
       },
       images: true,
+      collaborators: true,
     },
     where: {
       id: +projectid,
@@ -72,7 +73,7 @@ export const getServerSideProps = async (context) => {
           category: obj.skill.category,
         })),
     },
-    collaborators: [],
+    collaborators: project.collaborators,
     images: project.images.map((image) => ({
       id: image.id,
       url: image.imageUrl,

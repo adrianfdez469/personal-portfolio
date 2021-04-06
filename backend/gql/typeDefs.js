@@ -40,6 +40,7 @@ const typeDefs = gql`
     collaborators: [Collaborator!]
     slug: String
   }
+
   type User {
     id: ID!
     name: String
@@ -90,6 +91,26 @@ const typeDefs = gql`
     name: String
     category: SkillTypes
   }
+
+  type Collaborator {
+    login: String!
+    avatarUrl: String
+    email: String
+    bio: String
+    name: String
+    url: String
+    isOwner: Boolean
+  }
+
+  input CollaboratorParams {
+    login: String
+    avatarUrl: String
+    email: String
+    bio: String
+    name: String
+    url: String
+    isOwner: Boolean
+  }
   
   input ProjectParams {
     # userId: ID
@@ -102,7 +123,7 @@ const typeDefs = gql`
     projectDevLink: String
     logoUrl: String
     otherInfo: String
-    collaborators: [Collaborator!]
+    collaborators: [CollaboratorParams!] 
     images: [String!]
   }
 
@@ -125,16 +146,7 @@ const typeDefs = gql`
     gender: gender
     birthday: String
   }
-
-  type Collaborator {
-    login: String!
-    avatarUrl: String
-    email: String
-    bio: String
-    name: String
-    url: String
-    isOwner: Boolean
-  }
+  
   type DevProviderRepo {
     id: ID!
     name: String!
