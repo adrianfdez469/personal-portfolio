@@ -109,7 +109,7 @@ const typeDefs = gql`
     bio: String
     name: String
     url: String
-    isOwner: Boolean
+    isOwner: Boolean!
   }
   
   input ProjectParams {

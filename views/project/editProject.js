@@ -265,6 +265,15 @@ const EditProjectView = (props) => {
     const images = state.data.images.map((img) => img.url);
     const basicData = state.data.basicInfoData;
     const logoUrl = basicData.proyectLink.imageUrl || basicData.devLink.imageUrl || null;
+    const collaborators = state.data.collaborators.map((coll) => ({
+      ...(coll.login && { login: coll.login }),
+      ...(coll.avatarUrl && { avatarUrl: coll.avatarUrl }),
+      ...(coll.email && { email: coll.email }),
+      ...(coll.bio && { bio: coll.bio }),
+      ...(coll.name && { name: coll.name }),
+      ...(coll.url && { url: coll.url }),
+      isOwner: coll.isOwner ? true : false,
+    }));
 
     fetch('/api/graphql', {
       method: 'POST',
@@ -285,7 +294,7 @@ const EditProjectView = (props) => {
             projectLink: basicData.proyectLink.url,
             projectDevLink: basicData.devLink.url,
             images,
-            collaborators: state.data.collaborators,
+            collaborators: collaborators,
             logoUrl,
           },
         },
