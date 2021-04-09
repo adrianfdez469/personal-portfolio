@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FormControlLabel,
   FormControl,
@@ -13,8 +13,15 @@ import { useLang } from '../../../../../store/contexts/langContext';
 // eslint-disable-next-line import/no-named-as-default
 import AvatarPhoto from '../../../../../components/UI/Avatar/AvatarPhoto';
 import SelectableAvatarPhoto from '../../../../../components/UI/Avatar/SelectableAvatarPhoto';
+import useStyles from './styles';
 
 const SelectCmp = ({ userData, providerData, fieldText, field, change }) => {
+  useEffect(() => {
+    if (empty(userData) && !empty(providerData)) {
+      change(field, providerData);
+    }
+  }, [providerData]);
+
   if (!empty(userData) && !empty(providerData) && userData !== providerData) {
     return (
       <FormControl component="fieldset">
@@ -40,15 +47,12 @@ const SelectCmp = ({ userData, providerData, fieldText, field, change }) => {
       </FormControl>
     );
   }
-  if (empty(userData) && !empty(providerData)) {
-    change(field, providerData);
-  }
+
   return null;
 };
 
 const SelectAvatar = ({ userAvatar, providerAvatar, fieldText, change }) => {
-  // const styles = useStyles();
-
+  const styles = useStyles();
   const [selected, setSelected] = useState('current');
 
   const changeSelected = (sel) => {
@@ -65,7 +69,7 @@ const SelectAvatar = ({ userAvatar, providerAvatar, fieldText, change }) => {
       <FormControl component="fieldset">
         <FormLabel component="legend">{fieldText}</FormLabel>
         <RadioGroup row aria-label="position" name="avatar" defaultValue={userAvatar}>
-          <div style={{ margin: 8 }}>
+          <div className={styles.avatar}>
             <SelectableAvatarPhoto
               selected={selected === 'current'}
               onClick={() => changeSelected('current')}
@@ -73,7 +77,7 @@ const SelectAvatar = ({ userAvatar, providerAvatar, fieldText, change }) => {
               <AvatarPhoto size="small" src={userAvatar} />
             </SelectableAvatarPhoto>
           </div>
-          <div style={{ margin: 8 }}>
+          <div className={styles.avatar}>
             <SelectableAvatarPhoto
               selected={selected === 'provider'}
               onClick={() => changeSelected('provider')}
