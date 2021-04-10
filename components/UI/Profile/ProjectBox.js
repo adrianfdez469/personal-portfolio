@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   Card,
   CardHeader,
@@ -8,11 +7,10 @@ import {
   Typography,
   CardActions,
   IconButton,
-  Avatar,
   Grid,
 } from '@material-ui/core';
 import { ThumbUpAltOutlined, ShareOutlined, EditOutlined } from '@material-ui/icons';
-
+import OptimizedAvatar from '../Avatar/OptimizedAvatar';
 import SkillCategoriesConst from '../../../constants/skillsCategorysConst';
 import { useProjectBoxStyles } from './styles';
 
@@ -29,13 +27,15 @@ const ProjectBox = () => {
           <Card className={styles.card}>
             <CardHeader
               avatar={
-                <Avatar
+                <OptimizedAvatar
                   aria-label="recipe"
                   className={!element.logoUrl ? styles.avatar : ''}
                   src={element.logoUrl}
+                  width={40}
+                  height={40}
                 >
                   {element.name[0].toUpperCase()}
-                </Avatar>
+                </OptimizedAvatar>
               }
               action={
                 <IconButton aria-label="settings">

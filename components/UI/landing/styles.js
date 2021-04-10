@@ -41,11 +41,14 @@ export default makeStyles((theme) => ({
     height: '100%',
     width: '100%',
     overflow: 'hidden',
+    position: 'relative',
   },
   featuresImgContainerVert: {
+    width: '100%',
+    minHeight: theme.spacing(20),
     maxHeight: '60%',
-    maxWidth: '60%',
     overflow: 'hidden',
+    position: 'relative',
   },
   featuresImg: {
     display: 'flex',

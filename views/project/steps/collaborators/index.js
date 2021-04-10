@@ -18,6 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { useLang } from '../../../../store/contexts/langContext';
 // Components
 import StepItem from '../../../../components/UI/StepForm/StepItem';
+import OptimizedAvatar from '../../../../components/UI/Avatar/OptimizedAvatar';
 // Styles
 import useCollaboratorsStyles from './styles';
 
@@ -68,8 +69,9 @@ const CollaboratorsForm = (props) => {
       {collaborators.map((profile, idx) => (
         <Accordion key={idx.toString()} expanded={idx === expanded} onChange={handleChange(idx)}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Avatar alt={profile.name} src={profile.avatarUrl} className={styles.smallAvatar} />
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+            <OptimizedAvatar alt={profile.name} src={profile.avatarUrl} quality={20} />
+
+            <div style={{ marginLeft: 16, display: 'flex', flexDirection: 'column', flex: 1 }}>
               <Typography color="inherit">{profile.name}</Typography>
               <Typography variant="caption" color="textSecondary">
                 {`${

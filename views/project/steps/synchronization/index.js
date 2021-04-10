@@ -9,7 +9,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Avatar,
   useMediaQuery,
   Button,
   FormLabel,
@@ -23,6 +22,7 @@ import { useRouter } from 'next/router';
 import StepItem from '../../../../components/UI/StepForm/StepItem';
 import SyncButton from '../../../../components/UI/Buttons/SyncButton';
 import Backdrop from '../../../../components/UI/backdrop';
+import OptimizedAvatar from '../../../../components/UI/Avatar/OptimizedAvatar';
 // hooks
 import { useLang } from '../../../../store/contexts/langContext';
 // Styles
@@ -354,15 +354,15 @@ const SyncForm = (props) => {
                           <MenuItem value={repository} key={repository.id}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                               {greaterMdSize && (
-                                <Avatar
+                                <OptimizedAvatar
                                   alt={repository.ownerLogin}
                                   src={repository.ownerAvatarUrl}
                                   variant="circular"
-                                  className={styles.smallAvatar}
+                                  // className={styles.smallAvatar}
                                 />
                               )}
 
-                              <div>
+                              <div style={{ marginLeft: 8 }}>
                                 <Typography variant="body1">
                                   {greaterMdSize ? repository.nameWithOwner : repository.name}
                                   {repository.isPrivate && (

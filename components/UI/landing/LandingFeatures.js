@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Grid, Typography, Paper, Container, Hidden, Box, Divider } from '@material-ui/core';
 import useStyles from './styles';
 
@@ -34,7 +35,13 @@ const LandingFeatures = () => {
               </Grid>
               <Grid item sm={4}>
                 <Paper className={classes.featuresImgContainer}>
-                  <img className={classes.featuresImg} alt="complex" src="/images/skills1.jpg" />
+                  <Image
+                    layout="fill"
+                    src="/images/skills1.jpg"
+                    alt="image"
+                    quality={50}
+                    objectFit="cover"
+                  />
                 </Paper>
               </Grid>
             </Grid>
@@ -44,7 +51,13 @@ const LandingFeatures = () => {
             <Grid container align="center" justify="center" direction="row" spacing={5}>
               <Grid item sm={4}>
                 <Paper className={classes.featuresImgContainer}>
-                  <img className={classes.featuresImg} alt="complex" src="/images/work.jpg" />
+                  <Image
+                    layout="fill"
+                    src="/images/work.jpg"
+                    alt="image"
+                    quality={50}
+                    objectFit="cover"
+                  />
                 </Paper>
               </Grid>
               <Grid item sm={8}>
@@ -85,7 +98,13 @@ const LandingFeatures = () => {
               </Grid>
               <Grid item sm={4}>
                 <Paper className={classes.featuresImgContainer}>
-                  <img className={classes.featuresImg} alt="complex" src="/images/1.jpg" />
+                  <Image
+                    layout="fill"
+                    src="/images/1.jpg"
+                    alt="image"
+                    quality={50}
+                    objectFit="cover"
+                  />
                 </Paper>
               </Grid>
             </Grid>
@@ -96,7 +115,13 @@ const LandingFeatures = () => {
             <Grid container align="center" justify="center" direction="column" spacing={5}>
               <Grid item>
                 <Paper className={classes.featuresImgContainerVert}>
-                  <img className={classes.featuresImg} alt="complex" src="/images/skills1.jpg" />
+                  <Image
+                    layout="fill"
+                    src="/images/skills1.jpg"
+                    alt="image"
+                    quality={30}
+                    objectFit="cover"
+                  />
                 </Paper>
               </Grid>
               <Grid item>
@@ -121,7 +146,13 @@ const LandingFeatures = () => {
             <Grid container align="center" justify="center" direction="column" spacing={5}>
               <Grid item>
                 <Paper className={classes.featuresImgContainerVert}>
-                  <img className={classes.featuresImg} alt="complex" src="/images/work.jpg" />
+                  <Image
+                    layout="fill"
+                    src="/images/work.jpg"
+                    alt="image"
+                    quality={30}
+                    objectFit="cover"
+                  />
                 </Paper>
               </Grid>
               <Grid item>
@@ -146,7 +177,13 @@ const LandingFeatures = () => {
             <Grid container align="center" justify="center" direction="column" spacing={5}>
               <Grid item>
                 <Paper className={classes.featuresImgContainerVert}>
-                  <img className={classes.featuresImg} alt="complex" src="/images/1.jpg" />
+                  <Image
+                    layout="fill"
+                    src="/images/1.jpg"
+                    alt="image"
+                    quality={30}
+                    objectFit="cover"
+                  />
                 </Paper>
               </Grid>
               <Grid item>
