@@ -4,4 +4,8 @@ module.exports = {
     defaultLocale: 'en',
     localeDetection: false,
   },
+  future: {
+    webpack5: true,
+    strictPostcssConfiguration: true,
+  },
 };
