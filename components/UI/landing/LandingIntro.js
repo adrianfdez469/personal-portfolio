@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Box, Container, Grid, Hidden, IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Brightness7, Language } from '@material-ui/icons';
-import Link from 'next/link';
+import { Box, Container, Grid, Hidden, IconButton } from '@material-ui/core';
+import { Brightness7 } from '@material-ui/icons';
 import useStyles from './styles';
 import IntroHeader from './introHeader/IntroHeader';
 import useMessage from '../../../hooks/useMessage';
+import LanguageButton from '../Buttons/LanguageButton';
+import { useLang } from '../../../store/contexts/langContext';
 
 const LandingIntro = () => {
   const classes = useStyles();
+  const { lang } = useLang();
   const [showMessage] = useMessage();
 
   const show = () => {
@@ -17,42 +19,12 @@ const LandingIntro = () => {
       'default'
     );
   };
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <>
       <Container className={classes.root}>
         <Box align="end">
-          <IconButton
-            className={classes.globalButtons}
-            aria-controls="language-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-          >
-            <Language />
-          </IconButton>
-          <Menu
-            id="language-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <Link href="/" locale="en">
-              <MenuItem onClick={handleClose}>English</MenuItem>
-            </Link>
-            <Link href="/" locale="es">
-              <MenuItem onClick={handleClose}>Español</MenuItem>
-            </Link>
-          </Menu>
+          <LanguageButton title={lang.buttons.languageButton} />
           <IconButton className={classes.globalButtons} onClick={show}>
             <Brightness7 />
           </IconButton>
@@ -79,7 +51,7 @@ const LandingIntro = () => {
                 <IntroHeader mainHeadingVariant="h4" secondaryHeadingVariant="body1" />
               </Hidden>
               <Typography align="center" variant="body2" className={classes.first}>
-                Powered By SAR Designs ®
+                {`${lang.poweredBy} ®`}
               </Typography>
             </Box>
           </Grid>

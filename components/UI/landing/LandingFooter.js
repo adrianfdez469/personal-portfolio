@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Avatar,
   Box,
@@ -9,11 +10,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Email, Facebook, GitHub, LinkedIn, Room } from '@material-ui/icons';
-import React from 'react';
+import { useLang } from '../../../store/contexts/langContext';
+
 import useStyles from './styles';
 
 const LandingFooter = () => {
   const classes = useStyles();
+  const { lang } = useLang();
   return (
     <Paper className={classes.footerStyle}>
       <Container>
@@ -26,7 +29,7 @@ const LandingFooter = () => {
           PERSONAL PORTFOLIO™
         </Typography>
         <Typography variant="h5" align="center">
-          FOLLOW US HERE
+          {lang.footer.followUs}
         </Typography>
         <Box align="center">
           <Grid container direction="row" justify="center" alignItems="center">
@@ -59,7 +62,7 @@ const LandingFooter = () => {
                 </Box>
               </Grid>
               <Grid item>
-                <Typography variant="subtitle1">Havana, Cuba</Typography>
+                <Typography variant="subtitle1">{lang.footer.location}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -73,7 +76,7 @@ const LandingFooter = () => {
                 </Box>
               </Grid>
               <Grid item>
-                <Typography variant="subtitle1">personalportfolio@gmail.com</Typography>
+                <Typography variant="subtitle1">portfolio374@gmail.com</Typography>
               </Grid>
             </Grid>
           </Grid>

@@ -1,0 +1,38 @@
+{
+  "en": "English",
+  "es": "Español",
+  "themes": {
+    "orange": "Orange",
+    "orangeDark": "Dark Orange",
+    "default": "Blue",
+    "dark": "Dark Blue",
+    "pink": "Pink",
+    "purple": "Purple"
+  },
+  "buttons": {
+    "themeButton": "Change Theme",
+    "languageButton": "Change idiom"
+  },
+  "subtitle": "The place where you can expose your work to the world",
+  "poweredBy": "Powered By SAR Designs",
+  "startBtn": "Get Started",
+  "info": {
+    "title1": "SET YOUR SKILLS",
+    "text1": "You can register all the knowleage and abilities you has adquired across the years to make you a first line professional.",
+    "title2": "SHOW YOUR WORK",
+    "text2": "Register all the work that you have done, upload some pictures of it or set a link to where people can see it.",
+    "title3": "SHARE",
+    "text3": "Show yourself to the world. Share your Personal Potrfolio™ link to let everyone to know you."
+  },
+  "aboutUs": {
+    "title": "JUST ABOUT US",
+    "resume": "Resume",
+    "adrianBio": "Hi, I m a enthusiast React and Next developer with 10+ years of experience in the world of the web development. I love music, footbal and I have a lot of fun creating new Material - UI components.",
+    "joseBio": "Hi, I m a enthusiast React and Next developer with 10+ years of experience in the world of the web development. I love music, footbal and I have a lot of fun creating new Material - UI components.",
+    "jorgeBio": "Hi, I m a enthusiast React and Next developer with 10+ years of experience in the world of the web development. I love music, footbal and I have a lot of fun creating new Material - UI components."
+  },
+  "footer": {
+    "followUs": "FOLLOW US HERE",
+    "location": "Havana, Cuba"
+  }
+}

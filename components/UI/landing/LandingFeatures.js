@@ -1,10 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
 import { Grid, Typography, Paper, Container, Hidden, Box, Divider } from '@material-ui/core';
+import { useLang } from '../../../store/contexts/langContext';
 import useStyles from './styles';
 
 const LandingFeatures = () => {
   const classes = useStyles();
+  const { lang } = useLang();
+
   return (
     <Paper className={classes.featuresBack}>
       <Container maxWidth="xl">
@@ -20,7 +23,7 @@ const LandingFeatures = () => {
               <Grid item sm={8}>
                 <Box align="center">
                   <Typography gutterBottom variant="h4" align="center" color="primary">
-                    SET YOUR SKILLS
+                    {lang.info.title1}
                   </Typography>
                   <Divider
                     variant="middle"
@@ -28,8 +31,7 @@ const LandingFeatures = () => {
                     className={classes.featureCardDivider}
                   />
                   <Typography variant="h6" align="justify" className={classes.featureCardText}>
-                    You can register all the knowleage and abilities you has adquired across the
-                    years to make you a first line professional.
+                    {lang.info.text1}
                   </Typography>
                 </Box>
               </Grid>
@@ -63,7 +65,7 @@ const LandingFeatures = () => {
               <Grid item sm={8}>
                 <Box align="center">
                   <Typography gutterBottom variant="h4" align="center" color="primary">
-                    SHOW YOUR WORK
+                    {lang.info.title2}
                   </Typography>
                   <Divider
                     variant="middle"
@@ -71,8 +73,7 @@ const LandingFeatures = () => {
                     className={classes.featureCardDivider}
                   />
                   <Typography variant="h6" align="justify" className={classes.featureCardText}>
-                    Register all the work that you have done, upload some pictures of it or set a
-                    link to where people can see it.
+                    {lang.info.text2}
                   </Typography>
                 </Box>
               </Grid>
@@ -83,7 +84,7 @@ const LandingFeatures = () => {
               <Grid item sm={8}>
                 <Box align="center">
                   <Typography gutterBottom variant="h4" align="center" color="primary">
-                    SHARE
+                    {lang.info.title3}
                   </Typography>
                   <Divider
                     variant="middle"
@@ -91,8 +92,7 @@ const LandingFeatures = () => {
                     className={classes.featureCardDivider}
                   />
                   <Typography variant="h6" align="justify" className={classes.featureCardText}>
-                    Show yourself to the world. Share your Personal Potrfolio™ link to let everyone
-                    to know you.
+                    {lang.info.text3}
                   </Typography>
                 </Box>
               </Grid>

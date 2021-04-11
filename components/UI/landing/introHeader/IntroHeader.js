@@ -3,9 +3,11 @@ import Link from 'next/link';
 import React from 'react';
 import PropTypes from 'prop-types';
 import useStyles from './styles';
+import { useLang } from '../../../../store/contexts/langContext';
 
 const IntroHeader = ({ mainHeadingVariant, secondaryHeadingVariant }) => {
   const classes = useStyles();
+  const { lang } = useLang();
   return (
     <>
       <Grid container direction="column" justify="center" alignItems="center">
@@ -16,7 +18,7 @@ const IntroHeader = ({ mainHeadingVariant, secondaryHeadingVariant }) => {
         </Grid>
         <Grid item>
           <Typography align="center" variant={secondaryHeadingVariant} className={classes.first}>
-            The place where you can expose your work to the world
+            {lang.subtitle}
           </Typography>
         </Grid>
         <Grid item>
@@ -28,7 +30,7 @@ const IntroHeader = ({ mainHeadingVariant, secondaryHeadingVariant }) => {
               component="a"
               className={classes.first}
             >
-              Get started
+              {lang.startBtn}
             </Button>
           </Link>
         </Grid>

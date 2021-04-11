@@ -27,6 +27,7 @@ import { useProfile } from '../../../store/contexts/profileContext';
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
 import SharePublicLink from '../SharePublicLink';
+import SkillsCategorys from '../../../constants/skillsCategorysConst';
 
 const SecondaryButtons = (props) => {
   const { editableActions, size } = props;
@@ -215,8 +216,15 @@ const PersonData = (props) => {
           {user.description && user.description !== '' && (
             <Divider orientation="horizontal" className={styles.divider} />
           )}
-          <Typography align="center" className={styles.text}>
-            JAVA | HTML | CSS
+          <Typography align="center" color="primary" className={styles.text}>
+            {Array.from(
+              new Set(
+                user.projects
+                  .reduce((acum, p) => [...acum, ...p.skills], [])
+                  .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
+                  .map((skill) => skill.name)
+              )
+            ).join(' | ')}
           </Typography>
         </div>
       </AppBar>
