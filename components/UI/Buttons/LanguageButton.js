@@ -9,11 +9,11 @@ import { useLang } from '../../../store/contexts/langContext';
 
 // eslint-disable-next-line react/prop-types
 const CustMenuComp = React.forwardRef(({ onClick, href, locale, children }, ref) => (
-  <MenuItem ref={ref} onClick={onClick}>
-    <Link href={href} locale={locale}>
+  <Link href={href} locale={locale}>
+    <MenuItem ref={ref} onClick={onClick}>
       {children}
-    </Link>
-  </MenuItem>
+    </MenuItem>
+  </Link>
 ));
 
 const useStyles = makeStyles((theme) => ({
