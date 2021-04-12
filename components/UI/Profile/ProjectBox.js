@@ -1,22 +1,27 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   Typography,
   CardActions,
   IconButton,
+  CardActionArea,
   Grid,
 } from '@material-ui/core';
-import { ThumbUpAltOutlined, ShareOutlined, EditOutlined } from '@material-ui/icons';
+import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
+import ShareOutlined from '@material-ui/icons/ShareOutlined';
+
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import OptimizedAvatar from '../Avatar/OptimizedAvatar';
 import SkillCategoriesConst from '../../../constants/skillsCategorysConst';
 import { useProjectBoxStyles } from './styles';
 
 import { useProfile } from '../../../store/contexts/profileContext';
 
-const ProjectBox = () => {
+const ProjectBox = (props) => {
+  const { edit } = props;
   const styles = useProjectBoxStyles();
   const { user } = useProfile();
   return (
@@ -24,52 +29,40 @@ const ProjectBox = () => {
       {user.projects.map((element) => (
         <Grid item key={element.id}>
           <Card className={styles.card}>
-            <CardHeader
-              avatar={
-                <OptimizedAvatar
-                  aria-label="recipe"
-                  className={!element.logoUrl ? styles.avatar : ''}
-                  src={element.logoUrl}
-                  width={40}
-                  height={40}
-                  alt={element.name}
+            <CardActionArea style={{ height: 'fit-content' }}>
+              <CardHeader
+                avatar={
+                  <OptimizedAvatar
+                    aria-label="recipe"
+                    className={!element.logoUrl ? styles.avatar : ''}
+                    src={element.logoUrl}
+                    width={40}
+                    height={40}
+                    alt={element.name}
+                  >
+                    {element.name[0].toUpperCase()}
+                  </OptimizedAvatar>
+                }
+                title={element.name}
+                subheader={`${element.skills
+                  .filter((skill) => skill.category === SkillCategoriesConst.PROG_LANG)
+                  .map((skill) => skill.name)
+                  .join(' - ')}`}
+              />
+              <CardContent>
+                <Typography
+                  className={styles.description}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
                 >
-                  {element.name[0].toUpperCase()}
-                </OptimizedAvatar>
-              }
-              action={
-                <IconButton aria-label="settings">
-                  <EditOutlined />
-                </IconButton>
-              }
-              title={element.name}
-              subheader={`${element.skills
-                .filter((skill) => skill.category === SkillCategoriesConst.PROG_LANG)
-                .map((skill) => skill.name)
-                .join(' - ')}`}
-            />
-            <CardMedia
-              className={styles.media}
-              image={
-                element.images && element.images.length > 0
-                  ? element.images[0].imageUrl
-                  : '/images/no-image-red-2.png'
-              }
-              title={element.name}
-            />
-            <CardContent>
-              <Typography
-                className={styles.description}
-                variant="body2"
-                color="textSecondary"
-                component="p"
-              >
-                {element.description}
-              </Typography>
-            </CardContent>
+                  {element.description}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
             <CardActions disableSpacing>
               <IconButton aria-label="">
-                <ThumbUpAltOutlined />
+                <PhotoLibraryIcon />
               </IconButton>
               <IconButton aria-label="">
                 <ShareOutlined />
@@ -82,4 +75,7 @@ const ProjectBox = () => {
   );
 };
 
+ProjectBox.propTypes = {
+  edit: PropTypes.bool.isRequired,
+};
 export default ProjectBox;

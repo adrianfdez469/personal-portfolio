@@ -123,8 +123,8 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
   },
   card: {
     width: theme.spacing(38),
-    // height: '100%',
-    height: theme.spacing(50),
+    height: '100%',
+    // height: theme.spacing(45),
     display: 'inline-grid',
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
@@ -132,12 +132,6 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
   avatar: {
     color: theme.palette.getContrastText(theme.palette.secondary.main),
     backgroundColor: theme.palette.secondary.main,
-  },
-  media: {
-    paddingTop: '40%',
-    width: '90%',
-    margin: 'auto',
-    objectFit: 'cover',
   },
   description: {
     textAlign: 'justify',
