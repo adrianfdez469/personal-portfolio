@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-indent */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -5,22 +6,26 @@ import Image from 'next/image';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  avatar: {
+const useStyles = makeStyles((theme) => ({
+  image: {
     borderRadius: '50%',
   },
-});
+  avatar: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.primary,
+  },
+}));
 
 const ImageLoader = ({ src }) => src;
 
 const OptimizedAvatar = (props) => {
   const { src, width, height, quality, className, children, ...otherProps } = props;
   const styles = useStyles();
-  return (
-    <Avatar
-      component={() => (
+
+  const cmp = src
+    ? () => (
         <Image
-          className={styles.avatar}
+          className={styles.image}
           loader={ImageLoader}
           src={src}
           width={width}
@@ -29,10 +34,11 @@ const OptimizedAvatar = (props) => {
           alt="avatar"
           layout="fixed"
         />
-      )}
-      variant="circular"
-      {...otherProps}
-    >
+      )
+    : 'div';
+
+  return (
+    <Avatar component={cmp} variant="circular" className={styles.avatar} {...otherProps}>
       {children}
     </Avatar>
   );

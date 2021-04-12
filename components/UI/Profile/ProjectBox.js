@@ -19,7 +19,6 @@ import { useProfile } from '../../../store/contexts/profileContext';
 const ProjectBox = () => {
   const styles = useProjectBoxStyles();
   const { user } = useProfile();
-
   return (
     <Grid container spacing={2} justify="center" className={styles.grid}>
       {user.projects.map((element) => (
@@ -33,6 +32,7 @@ const ProjectBox = () => {
                   src={element.logoUrl}
                   width={40}
                   height={40}
+                  alt={element.name}
                 >
                   {element.name[0].toUpperCase()}
                 </OptimizedAvatar>
