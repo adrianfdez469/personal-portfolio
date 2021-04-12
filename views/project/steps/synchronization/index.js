@@ -184,6 +184,7 @@ const SyncForm = (props) => {
 
   const handleNavigateToGetAccess = useCallback(
     (provider, scope = '') => {
+      dispatch({ type: actions.START_LOADING_PROVIDER_REPOS });
       const arrPath = router.asPath.split('?');
       const path = arrPath[0];
       router.push(
