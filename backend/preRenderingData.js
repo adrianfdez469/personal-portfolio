@@ -124,3 +124,5 @@ export const getProfileDataBySlug = async (slug, includeProjects = false) => {
     user: { ...profileData.data.userBySlug },
   };
 };
+
+export const getProjectDataByProjectSlug = (projectSlug) => {};
