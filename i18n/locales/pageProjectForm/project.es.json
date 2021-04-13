@@ -4,6 +4,12 @@
   "next": "Siguiente",
   "back": "Atras",
   "save": "Guardar",
+  "errors": {
+    "duplicateProject": "Tienes un proyecto el nombre similar."
+  },
+  "msg": {
+    "projectSaved": "El proyecto fue salvado correctamente."
+  },
   "step": {
     "syncyLabel": "Sincronización",
     "infoLabel": "Información",

@@ -123,6 +123,7 @@ model Project {
   skills         ProjectSkills[]
   images         Image[]
   collaborators  Collaborator[]
+  projectSlug    String          @map("project_slug")
 
   @@map(name: "projects")
 }

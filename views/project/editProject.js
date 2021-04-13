@@ -7,6 +7,7 @@ import { useLang } from '../../store/contexts/langContext';
 import SyncForm from './steps/synchronization';
 import SkillCategories from '../../constants/skillsCategorysConst';
 import useUserPage from '../../hooks/useUserPage';
+import useMessage from '../../hooks/useMessage';
 
 const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
 const GalleryForm = dynamic(() => import('./steps/gallery'));
@@ -26,6 +27,7 @@ const saveQueryData = `
       project {
         id
         slug
+        projectSlug
       }
     }
   }
@@ -151,6 +153,7 @@ const EditProjectView = (props) => {
     reducer,
     data ? { ...initialState, data: data } : initialState
   );
+  const [showMessage] = useMessage();
 
   const setRepoSyncData = useCallback(
     (data) => {
@@ -308,10 +311,16 @@ const EditProjectView = (props) => {
       })
       .then((resp) => {
         if (resp.data.saveProject.success) {
+          showMessage(lang.msg.projectSaved, 'success');
           dispatch({ type: actions.END_SAVING });
           fetchUri(resp.data.saveProject.slug);
-          fetchUri(`${resp.data.saveProject.project.slug}/${resp.data.saveProject.project.id}`);
+          fetchUri(
+            `${resp.data.saveProject.project.slug}/${resp.data.saveProject.project.projectSlug}`
+          );
           return;
+        }
+        if (resp.data.saveProject.code === '409') {
+          showMessage(lang.errors.duplicateProject, 'error');
         }
         throw new Error(resp.data.saveProject.message);
       })

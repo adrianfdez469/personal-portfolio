@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import {
   Card,
   CardHeader,
@@ -10,7 +11,6 @@ import {
   CardActionArea,
   Grid,
 } from '@material-ui/core';
-import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
 import ShareOutlined from '@material-ui/icons/ShareOutlined';
 
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
@@ -24,12 +24,22 @@ const ProjectBox = (props) => {
   const { edit } = props;
   const styles = useProjectBoxStyles();
   const { user } = useProfile();
+  const router = useRouter();
+
+  const goProject = (project) => {
+    if (edit) {
+      router.push(`/profile/${user.id}/projects/${project.id}`);
+      return;
+    }
+    router.push(`/${user.slug}/${project.projectSlug}`);
+  };
+
   return (
     <Grid container spacing={2} justify="center" className={styles.grid}>
       {user.projects.map((element) => (
         <Grid item key={element.id}>
           <Card className={styles.card}>
-            <CardActionArea style={{ height: 'fit-content' }}>
+            <CardActionArea style={{ height: 'fit-content' }} onClick={() => goProject(element)}>
               <CardHeader
                 avatar={
                   <OptimizedAvatar

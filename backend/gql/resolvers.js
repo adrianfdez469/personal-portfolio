@@ -3,6 +3,7 @@ import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
 import getPreviewData from '../../libs/metascraper';
 import ProxyProvider from '../../libs/integrations/provider.proxy';
+import { getSlug } from '../../libs/generators';
 
 const resolvers = {
   MutationResponse: {
@@ -32,6 +33,12 @@ const resolvers = {
     projects: (parent, args) =>
       prisma.project.findMany({
         where: { ...args },
+      }),
+    projectBySlug: (parent, args) =>
+      prisma.project.findFirst({
+        where: {
+          projectSlug: args.projectSlug,
+        },
       }),
     skills: (parent, args) =>
       prisma.skill.findMany({
@@ -80,7 +87,7 @@ const resolvers = {
         const { userId } = await getSession(context);
         const { projectLink, projectDevLink, skills, images, logoUrl, collaborators } = project;
 
-        let skillIds = null;
+        let skillIds = [];
         let iniDate = null;
         let endDate = null;
 
@@ -123,6 +130,35 @@ const resolvers = {
           );
         }
 
+        const projectSlug = getSlug(project.name);
+
+        let existProject;
+        if (projectId) {
+          existProject = await prisma.project.findFirst({
+            where: {
+              projectSlug,
+              AND: {
+                id: {
+                  not: projectId,
+                },
+              },
+            },
+          });
+        } else {
+          existProject = await prisma.project.findFirst({
+            where: {
+              projectSlug,
+            },
+          });
+        }
+
+        if (existProject) {
+          const error = new Error();
+          error.type = 'DUPLICATE';
+          error.code = 409;
+          throw error;
+        }
+
         const savedProject = await prisma.project.upsert({
           where: {
             id: +projectId || -1,
@@ -150,6 +186,7 @@ const resolvers = {
               create: collaborators,
             },
             logoUrl,
+            projectSlug: getSlug(project.name),
           },
           update: {
             name: project.name,
@@ -176,15 +213,7 @@ const resolvers = {
               create: collaborators,
             },
             logoUrl,
-          },
-        });
-
-        const user = await prisma.user.findUnique({
-          where: {
-            id: +userId,
-          },
-          select: {
-            slug: true,
+            ...(project.name && { projectSlug: getSlug(project.name) }),
           },
         });
 
@@ -192,14 +221,13 @@ const resolvers = {
           code: 201,
           success: true,
           message: 'PROJECT_CREATED',
-          project: { ...savedProject, ...user },
+          project: savedProject,
         };
       } catch (err) {
-        console.log(err);
         return {
-          code: 500,
+          code: err.code || 500,
           success: false,
-          message: 'ERROR',
+          message: err.type || 'ERROR',
           project: null,
         };
       }
@@ -267,6 +295,17 @@ const resolvers = {
           },
         },
       }),
+    slug: async (project) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: project.userId,
+        },
+        select: {
+          slug: true,
+        },
+      });
+      return user.slug;
+    },
   },
   DevProviderRepo: {
     ownerId: (repo) => {

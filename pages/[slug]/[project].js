@@ -25,7 +25,6 @@ export async function getStaticPaths() {
 export const getStaticProps = async (context) => {
   try {
     const projectData = await getProjectDataByProjectSlug(context.params.project);
-
     if (!projectData) {
       return {
         props: {
@@ -54,8 +53,8 @@ export const getStaticProps = async (context) => {
 };
 
 const ProjectSlug = (props) => {
-  const { language, profile, error } = props;
-  if (!language && !profile && !error) {
+  const { language, project, error } = props;
+  if (!language && !project && !error) {
     return <h1>Loading</h1>;
   }
   if (error) {

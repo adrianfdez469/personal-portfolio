@@ -39,6 +39,7 @@ const typeDefs = gql`
     logoUrl: String
     collaborators: [Collaborator!]
     slug: String
+    projectSlug: String
   }
 
   type User {
@@ -243,12 +244,14 @@ const typeDefs = gql`
     user(id: ID!): User!
     userBySlug(slug: String!): User
     projects(id: IntComparer, name: StringComparer): [Project!]
+    projectBySlug(projectSlug: String!): Project
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
     link(url: String): Link!
 
     providerRepos(provider: devProviders!): ProvidersResposResponse!
     providerRepoData(provider: devProviders!, id: ID!): DevProviderRepo!
     providerUserData(provider: userProviders!): ProviderUser!
+
   }
 `;
 
