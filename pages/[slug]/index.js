@@ -5,6 +5,7 @@ import {
   getProfileDataBySlug,
   getLanguageByLocale,
   getThemeByThemeKey,
+  getProfileSkills,
   // eslint-disable-next-line import/named
 } from '../../backend/preRenderingData';
 import { Profile } from '../../views';
@@ -38,7 +39,9 @@ export const getStaticProps = async (context) => {
     }
     const language = await getLanguageByLocale(context.locale, languageLocales);
     const theme = await getThemeByThemeKey(profileData.user.theme);
-    const props = { language, theme, profile: profileData };
+    const profileSkills = await getProfileSkills(profileData.user.id);
+
+    const props = { language, theme, profile: { ...profileData, skills: profileSkills } };
 
     return {
       props,

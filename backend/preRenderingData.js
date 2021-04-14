@@ -176,9 +176,65 @@ export const getProjectDataByProjectSlug = async (projectSlug) => {
     }),
   });
   if (!response.ok) {
-    console.log(response);
     throw new Error('Error');
   }
   const resp = await response.json();
   return resp.data.projectBySlug;
+};
+
+export const getProfileSkills = async (profileId) => {
+  const query = `
+    query getUserSkills($id: ID!) {
+      user(id: $id){
+        projects {
+          skills{
+            id
+            name
+            category
+          }
+        }
+      }
+    }
+  `;
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        id: profileId,
+      },
+    }),
+  });
+  if (!response.ok) {
+    throw new Error('Error');
+  }
+  const resp = await response.json();
+  const skills = resp.data.user.projects.reduce((acum, project) => {
+    project.skills.forEach((sk) => {
+      if (acum[sk.name]) {
+        acum[sk.name]['cant'] = acum[sk.name]['cant'] + 1;
+      } else {
+        acum = {
+          ...acum,
+          [sk.name]: {
+            cant: 1,
+            category: sk.category,
+          },
+        };
+      }
+    });
+    return acum;
+  }, {});
+
+  return Object.keys(skills)
+    .map((skill) => {
+      return {
+        skill,
+        ...skills[skill],
+      };
+    })
+    .sort((a, b) => b.cant - a.cant);
 };

@@ -11,6 +11,8 @@ import {
   Menu,
   MenuItem,
   Tooltip,
+  Chip,
+  Avatar,
 } from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import EditOutlined from '@material-ui/icons/EditOutlined';
@@ -63,7 +65,7 @@ SecondaryButtons.default = {
 
 const PersonData = (props) => {
   const { edit } = props;
-  const { user } = useProfile();
+  const { user, skills } = useProfile();
   const { lang } = useLang();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const router = useRouter();
@@ -217,14 +219,35 @@ const PersonData = (props) => {
             <Divider orientation="horizontal" className={styles.divider} />
           )}
           <Typography align="center" color="primary" className={styles.text}>
-            {Array.from(
+            {/* Array.from(
               new Set(
                 user.projects
                   .reduce((acum, p) => [...acum, ...p.skills], [])
                   .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
                   .map((skill) => skill.name)
               )
-            ).join(' | ')}
+            ) // .join(' | ')
+              .map((skill) => (
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  color="primary"
+                  label={skill}
+                  avatar={<Avatar>5</Avatar>}
+                />
+              )) */}
+            {skills
+              .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
+              .map((skill) => (
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  color="primary"
+                  label={skill.skill}
+                  // avatar={<Avatar>{skill.cant}</Avatar>}
+                  style={{ margin: 4 }}
+                />
+              ))}
           </Typography>
         </div>
       </AppBar>
