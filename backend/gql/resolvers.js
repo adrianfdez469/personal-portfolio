@@ -139,7 +139,7 @@ const resolvers = {
               projectSlug,
               AND: {
                 id: {
-                  not: projectId,
+                  not: +projectId,
                 },
               },
             },
@@ -224,6 +224,7 @@ const resolvers = {
           project: savedProject,
         };
       } catch (err) {
+        console.log(err);
         return {
           code: err.code || 500,
           success: false,
