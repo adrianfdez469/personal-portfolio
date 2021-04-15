@@ -15,7 +15,6 @@ const ProjectBox = (props) => {
   const styles = useProjectBoxStyles();
   const { user } = useProfile();
   const router = useRouter();
-
   const goProject = (project) => {
     if (edit) {
       router.push(`/profile/${user.id}/projects/${project.id}`);
@@ -35,7 +34,11 @@ const ProjectBox = (props) => {
             >
               <Image
                 loader={ImageLoader}
-                src={element.images[0] || `/images/no-image-red-2.png`}
+                src={
+                  element.images.length > 0
+                    ? element.images[0].imageUrl
+                    : `/images/no-image-red-2.png`
+                }
                 width={304}
                 height={140}
                 quality={50}
