@@ -1,6 +1,7 @@
 /* eslint-disable import/named */
 // libs
 import React from 'react';
+import { useRouter } from 'next/router';
 import { getLanguageByLocale, getThemeByContext } from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
@@ -95,6 +96,7 @@ export const getServerSideProps = async (context) => {
 const NewProject = (props) => {
   // eslint-disable-next-line react/prop-types
   const { language, projectData, projectId } = props;
+  const router = useRouter();
 
   if (!language) {
     return <></>;
@@ -102,7 +104,14 @@ const NewProject = (props) => {
 
   return (
     <LangContext.Provider value={language}>
-      <EditProject open data={projectData} projectId={projectId} handleClose={() => {}} />
+      <EditProject
+        open
+        data={projectData}
+        projectId={projectId}
+        handleClose={() => {
+          router.replace(`/profile/${router.query.profileid}`);
+        }}
+      />
     </LangContext.Provider>
   );
 };

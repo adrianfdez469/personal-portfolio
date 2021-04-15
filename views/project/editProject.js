@@ -7,6 +7,7 @@ import { useLang } from '../../store/contexts/langContext';
 import SyncForm from './steps/synchronization';
 import SkillCategories from '../../constants/skillsCategorysConst';
 import useUserPage from '../../hooks/useUserPage';
+import useMessage from '../../hooks/useMessage';
 
 const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
 const GalleryForm = dynamic(() => import('./steps/gallery'));
@@ -26,6 +27,7 @@ const saveQueryData = `
       project {
         id
         slug
+        projectSlug
       }
     }
   }
@@ -151,6 +153,7 @@ const EditProjectView = (props) => {
     reducer,
     data ? { ...initialState, data: data } : initialState
   );
+  const [showMessage] = useMessage();
 
   const setRepoSyncData = useCallback(
     (data) => {
@@ -265,6 +268,15 @@ const EditProjectView = (props) => {
     const images = state.data.images.map((img) => img.url);
     const basicData = state.data.basicInfoData;
     const logoUrl = basicData.proyectLink.imageUrl || basicData.devLink.imageUrl || null;
+    const collaborators = state.data.collaborators.map((coll) => ({
+      ...(coll.login && { login: coll.login }),
+      ...(coll.avatarUrl && { avatarUrl: coll.avatarUrl }),
+      ...(coll.email && { email: coll.email }),
+      ...(coll.bio && { bio: coll.bio }),
+      ...(coll.name && { name: coll.name }),
+      ...(coll.url && { url: coll.url }),
+      isOwner: coll.isOwner ? true : false,
+    }));
 
     fetch('/api/graphql', {
       method: 'POST',
@@ -285,7 +297,7 @@ const EditProjectView = (props) => {
             projectLink: basicData.proyectLink.url,
             projectDevLink: basicData.devLink.url,
             images,
-            collaborators: state.data.collaborators,
+            collaborators: collaborators,
             logoUrl,
           },
         },
@@ -299,15 +311,22 @@ const EditProjectView = (props) => {
       })
       .then((resp) => {
         if (resp.data.saveProject.success) {
+          showMessage(lang.msg.projectSaved, 'success');
           dispatch({ type: actions.END_SAVING });
           fetchUri(resp.data.saveProject.slug);
-          fetchUri(`${resp.data.saveProject.project.slug}/${resp.data.saveProject.project.id}`);
+          fetchUri(
+            `${resp.data.saveProject.project.slug}/${resp.data.saveProject.project.projectSlug}`
+          );
           return;
+        }
+        if (resp.data.saveProject.code === '409') {
+          showMessage(lang.errors.duplicateProject, 'error');
         }
         throw new Error(resp.data.saveProject.message);
       })
       .catch((err) => {
         dispatch({ type: actions.ERROR_SAVING });
+        showMessage(lang.errors.saveGeneralError, 'error');
       });
   };
 

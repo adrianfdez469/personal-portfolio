@@ -5,14 +5,15 @@ import {
   getProfileDataBySlug,
   getLanguageByLocale,
   getThemeByThemeKey,
+  getProfileSkills,
   // eslint-disable-next-line import/named
-} from '../backend/preRenderingData';
-import { Profile } from '../views';
-import ProfileProvider from '../store/contexts/profileContext';
-import { LangContext } from '../store/contexts/langContext';
-import ES from '../i18n/locales/editProfilePage/profile.es.json';
-import EN from '../i18n/locales/editProfilePage/profile.en.json';
-import { revalidationErrorTime, revalidationTime } from '../constants/pageRevalidationTime';
+} from '../../backend/preRenderingData';
+import { Profile } from '../../views';
+import ProfileProvider from '../../store/contexts/profileContext';
+import { LangContext } from '../../store/contexts/langContext';
+import ES from '../../i18n/locales/editProfilePage/profile.es.json';
+import EN from '../../i18n/locales/editProfilePage/profile.en.json';
+import { revalidationErrorTime, revalidationTime } from '../../constants/pageRevalidationTime';
 
 const languageLocales = {
   en: EN,
@@ -38,7 +39,9 @@ export const getStaticProps = async (context) => {
     }
     const language = await getLanguageByLocale(context.locale, languageLocales);
     const theme = await getThemeByThemeKey(profileData.user.theme);
-    const props = { language, theme, profile: profileData };
+    const profileSkills = await getProfileSkills(profileData.user.id);
+
+    const props = { language, theme, profile: { ...profileData, skills: profileSkills } };
 
     return {
       props,
@@ -67,7 +70,7 @@ const Slug = (props) => {
   return (
     <LangContext.Provider value={language}>
       <ProfileProvider value={profile}>
-        <Profile />
+        <Profile edit={false} />
       </ProfileProvider>
     </LangContext.Provider>
   );

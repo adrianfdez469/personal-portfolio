@@ -1,4 +1,5 @@
 import React, { useContext, createContext, useReducer } from 'react';
+import FilterProjectProvider from './filterProjectContext';
 
 const ProfileContext = createContext();
 
@@ -31,7 +32,7 @@ const ProfileProvider = (props) => {
 
   return (
     <ProfileContext.Provider value={[state, changeProviderData]}>
-      {children}
+      <FilterProjectProvider value={{}}>{children}</FilterProjectProvider>
     </ProfileContext.Provider>
   );
 };

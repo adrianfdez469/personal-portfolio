@@ -1,13 +1,12 @@
-import { Container, Divider, Grid, Grow, IconButton, Paper, Typography } from '@material-ui/core';
-import {
-  ArrowForwardIosRounded,
-  ArrowBackIosRounded,
-  GitHub,
-  LinkedIn,
-  Facebook,
-} from '@material-ui/icons';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import Image from 'next/image';
+import { Container, Divider, Grid, Grow, IconButton, Paper, Typography } from '@material-ui/core';
+import ArrowForwardIosRounded from '@material-ui/icons/ArrowForwardIosRounded';
+import ArrowBackIosRounded from '@material-ui/icons/ArrowBackIosRounded';
+import GitHub from '@material-ui/icons/GitHub';
+import LinkedIn from '@material-ui/icons/LinkedIn';
+import Facebook from '@material-ui/icons/Facebook';
 import useStyles from './styles';
 
 const MaterialCard = ({ frontImage, frontBarText, backHeading, backText }) => {
@@ -29,7 +28,7 @@ const MaterialCard = ({ frontImage, frontBarText, backHeading, backText }) => {
     <Paper className={classes.cardSize}>
       <Grow in={!showDetail}>
         <div id="front" className={classes.cardFront}>
-          <img className={classes.cardFrontImage} alt="avatar" src={frontImage} />
+          <Image layout="fill" src={frontImage} alt="avatar" quality={50} objectFit="cover" />
         </div>
       </Grow>
       <Paper id="bar" className={className}>

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, makeStyles, useMediaQuery } from '@material-ui/core';
+import { makeStyles, useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
+import OptimizedAvatar from './OptimizedAvatar';
 
 const useStyle = makeStyles((theme) => ({
   border: {
@@ -24,19 +25,6 @@ const useStyle = makeStyles((theme) => ({
     width: theme.spacing(9.5),
     height: theme.spacing(9.5),
   },
-
-  avatarLong: {
-    width: theme.spacing(19.25),
-    height: theme.spacing(19.25),
-  },
-  avatarMedium: {
-    width: theme.spacing(13),
-    height: theme.spacing(13),
-  },
-  avatarSmall: {
-    width: theme.spacing(9),
-    height: theme.spacing(9),
-  },
 }));
 
 const AvatarPhoto = (props) => {
@@ -57,24 +45,39 @@ const AvatarPhoto = (props) => {
   }
 
   let borderStyle;
-  let avatarStyle;
+  let avatarSize;
+
   switch (realSize) {
     case 'small':
       borderStyle = styles.borderSmall;
-      avatarStyle = styles.avatarSmall;
+      avatarSize = {
+        width: 72,
+        height: 72,
+      };
       break;
     case 'long':
       borderStyle = styles.borderLong;
-      avatarStyle = styles.avatarLong;
+      avatarSize = {
+        width: 154,
+        height: 154,
+      };
       break;
     default:
       borderStyle = styles.borderMedium;
-      avatarStyle = styles.avatarMedium;
+      avatarSize = {
+        width: 104,
+        height: 104,
+      };
   }
 
   return (
     <div className={clsx(styles.border, borderStyle)}>
-      <Avatar className={avatarStyle} src={src} variant="circular" />
+      <OptimizedAvatar
+        variant="circular"
+        src={src}
+        width={avatarSize.width}
+        height={avatarSize.height}
+      />
     </div>
   );
 };

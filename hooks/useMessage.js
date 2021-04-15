@@ -4,9 +4,9 @@ import CustomSnackbar from '../components/UI/CustomSnackbar/CustomSnackbar';
 
 const useMessage = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const showMessage = (message, type) => {
+  const showMessage = (message, type, time) => {
     enqueueSnackbar(message, {
-      autoHideDuration: null,
+      autoHideDuration: time || 3000,
       variant: type,
       content: (key) => <CustomSnackbar message={message} type={type} id={key} />,
     });

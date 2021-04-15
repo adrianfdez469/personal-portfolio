@@ -11,6 +11,9 @@ import {
   Menu,
   MenuItem,
   Tooltip,
+  Chip,
+  Avatar,
+  useTheme,
 } from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import EditOutlined from '@material-ui/icons/EditOutlined';
@@ -24,9 +27,14 @@ import LogoutButton from '../Buttons/LogoutButton';
 import AvatarPhoto from '../Avatar/AvatarPhoto';
 import EditablePhoto from '../Avatar/EditableAvatarPhoto';
 import { useProfile } from '../../../store/contexts/profileContext';
+import {
+  useChangeFilterProject,
+  useFilterProject,
+} from '../../../store/contexts/filterProjectContext';
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
 import SharePublicLink from '../SharePublicLink';
+import SkillsCategorys from '../../../constants/skillsCategorysConst';
 
 const SecondaryButtons = (props) => {
   const { editableActions, size } = props;
@@ -60,9 +68,48 @@ SecondaryButtons.default = {
   size: 'medium',
 };
 
+const CustomChip = (props) => {
+  const { skill, selected, onClick } = props;
+  const theme = useTheme();
+
+  let style = {
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+  };
+  if (!selected) {
+    style = {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.text.primary,
+    };
+  }
+
+  return (
+    <Chip
+      key={skill.skill}
+      variant={selected ? 'default' : 'outlined'}
+      size="small"
+      color="primary"
+      label={skill.skill}
+      avatar={<Avatar style={style}>{skill.cant > 99 ? '99+' : skill.cant}</Avatar>}
+      style={{ margin: 4 }}
+      clickable
+      onClick={onClick}
+    />
+  );
+};
+
+CustomChip.propTypes = {
+  skill: PropTypes.shape({ skill: PropTypes.string.isRequired, cant: PropTypes.number.isRequired })
+    .isRequired,
+  selected: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+
 const PersonData = (props) => {
   const { edit } = props;
-  const { user } = useProfile();
+  const { user, skills } = useProfile();
+  const changeFilterProject = useChangeFilterProject();
+  const filterProject = useFilterProject();
   const { lang } = useLang();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const router = useRouter();
@@ -84,6 +131,18 @@ const PersonData = (props) => {
   };
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleClickSkill = (skillObj) => {
+    if (
+      filterProject &&
+      filterProject.skill &&
+      filterProject.skill.find((skillFilter) => skillFilter === skillObj.skill)
+    ) {
+      changeFilterProject.removeFilter('skill', skillObj.skill);
+    } else {
+      changeFilterProject.addFilter('skill', skillObj.skill);
+    }
   };
 
   const editableActions = edit
@@ -215,8 +274,20 @@ const PersonData = (props) => {
           {user.description && user.description !== '' && (
             <Divider orientation="horizontal" className={styles.divider} />
           )}
-          <Typography align="center" className={styles.text}>
-            JAVA | HTML | CSS
+          <Typography align="center" color="primary" className={styles.text}>
+            {skills
+              .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
+              .map((skill) => (
+                <CustomChip
+                  skill={skill}
+                  selected={
+                    filterProject &&
+                    filterProject.skill &&
+                    filterProject.skill.find((skillFilter) => skillFilter === skill.skill)
+                  }
+                  onClick={() => handleClickSkill(skill)}
+                />
+              ))}
           </Typography>
         </div>
       </AppBar>

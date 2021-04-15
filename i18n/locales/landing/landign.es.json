@@ -1,0 +1,38 @@
+{
+  "en": "English",
+  "es": "Español",
+  "themes": {
+    "orange": "Anaranjado",
+    "orangeDark": "Anaranjado Oscuro",
+    "default": "Azul",
+    "dark": "Azul Oscuro",
+    "pink": "Rosado",
+    "purple": "Morado"
+  },
+  "buttons": {
+    "themeButton": "Cambiar tema",
+    "languageButton": "Cambiar idioma"
+  },
+  "subtitle": "El lugar donde puedes exponer tu trabajo al mundo",
+  "poweredBy": "Auspiciado por SAR Designs",
+  "startBtn": "Comenzar",
+  "info": {
+    "title1": "ESTABLEZCA SUS HABILIDADES",
+    "text1": "Podrás registrar todos los conocimientos y habilidades que has adquirido a lo largo de los años para convertirte en un profesional de primera línea.",
+    "title2": "MUESTRA TU TRABAJO",
+    "text2": "Registre todo el trabajo que ha realizado, cargue algunas fotos del mismo o establezca un enlace donde la gente pueda verlo.",
+    "title3": "COMPARTE",
+    "text3": "Muéstrate al mundo. Comparta su enlace Personal Potrfolio™ para que todos lo conozcan."
+  },
+  "aboutUs": {
+    "title": "SOLO SOBRE NOSOTROS",
+    "resume": "Resumen",
+    "adrianBio": "Hola, soy un entusiasta de React y desarrollador web. Con 10+ años de experiencia en el mundo del desarrollo web con las ultimas tecnologias del sector. Amo la música, el fútbol y me divierto mucho creando nuevos componentes Material - UI.",
+    "joseBio": "Hola, soy un entusiasta de React y desarrollador web. Con 10+ años de experiencia en el mundo del desarrollo web con las ultimas tecnologias del sector. Amo la música, el fútbol y me divierto mucho creando nuevos componentes Material - UI.",
+    "jorgeBio": "Hola, soy un entusiasta de React y desarrollador web. Con 10+ años de experiencia en el mundo del desarrollo web con las ultimas tecnologias del sector. Amo la música, el fútbol y me divierto mucho creando nuevos componentes Material - UI."
+  },
+  "footer": {
+    "followUs": "SÍGUENOS AQUÍ",
+    "location": "Habana, Cuba"
+  }
+}

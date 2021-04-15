@@ -51,6 +51,7 @@ ${
       imageUrl
     }
     logoUrl
+    projectSlug
   }`
     : ''
 }
@@ -72,7 +73,7 @@ const queryUserDataBySlug = (slug, includeProjects = false) => `
   }
 `;
 
-const getProfileDataByKey = async (query) => {
+const makeRequest = async (query) => {
   const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
     method: 'POST',
     headers: {
@@ -83,6 +84,7 @@ const getProfileDataByKey = async (query) => {
     }),
   });
   if (!response.ok) {
+    console.log(response);
     throw new Error('Error');
   }
   const resp = await response.json();
@@ -96,7 +98,7 @@ export const getThemeByThemeKey = async (themeKey) => {
 };
 
 export const getThemeByUserId = async (userId) => {
-  const { user } = await getProfileDataByKey(queryUserDataById(userId, false));
+  const { user } = await makeRequest(queryUserDataById(userId, false));
   if (user && user.theme) {
     return getThemeByThemeKey(user.theme);
   }
@@ -112,15 +114,127 @@ export const getThemeByContext = async (context) => {
 };
 
 export const getProfileDataById = async (id, includeProjects = false) => {
-  const profileData = await getProfileDataByKey(queryUserDataById(id, includeProjects));
+  const profileData = await makeRequest(queryUserDataById(id, includeProjects));
   return profileData.data;
 };
 export const getProfileDataBySlug = async (slug, includeProjects = false) => {
-  const profileData = await getProfileDataByKey(queryUserDataBySlug(slug, includeProjects));
+  const profileData = await makeRequest(queryUserDataBySlug(slug, includeProjects));
   if (!profileData || !profileData.data || !profileData.data.userBySlug) {
     return null;
   }
   return {
     user: { ...profileData.data.userBySlug },
   };
+};
+
+export const getProjectDataByProjectSlug = async (projectSlug) => {
+  const query = `
+    query getData ($projectSlug: String!){
+      projectBySlug(projectSlug: $projectSlug){
+        id
+        name
+        description
+        initialDate
+        finalDate
+        skills {
+          id
+          name
+          category
+        }
+        projectLink
+        projectDevLink
+        otherInfo
+        images {
+          id
+          imageUrl
+        }
+        logoUrl
+        collaborators {
+          login
+          avatarUrl
+          email
+          bio
+          name
+          url
+          isOwner
+        }
+        slug
+        projectSlug
+      }
+    }
+  `;
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        projectSlug,
+      },
+    }),
+  });
+  if (!response.ok) {
+    throw new Error('Error');
+  }
+  const resp = await response.json();
+  return resp.data.projectBySlug;
+};
+
+export const getProfileSkills = async (profileId) => {
+  const query = `
+    query getUserSkills($id: ID!) {
+      user(id: $id){
+        projects {
+          skills{
+            id
+            name
+            category
+          }
+        }
+      }
+    }
+  `;
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        id: profileId,
+      },
+    }),
+  });
+  if (!response.ok) {
+    throw new Error('Error');
+  }
+  const resp = await response.json();
+  const skills = resp.data.user.projects.reduce((acum, project) => {
+    project.skills.forEach((sk) => {
+      if (acum[sk.name]) {
+        acum[sk.name]['cant'] = acum[sk.name]['cant'] + 1;
+      } else {
+        acum = {
+          ...acum,
+          [sk.name]: {
+            cant: 1,
+            category: sk.category,
+          },
+        };
+      }
+    });
+    return acum;
+  }, {});
+
+  return Object.keys(skills)
+    .map((skill) => {
+      return {
+        skill,
+        ...skills[skill],
+      };
+    })
+    .sort((a, b) => b.cant - a.cant);
 };

@@ -14,9 +14,11 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { useLang } from '../../../../store/contexts/langContext';
 // Components
 import StepItem from '../../../../components/UI/StepForm/StepItem';
+import OptimizedAvatar from '../../../../components/UI/Avatar/OptimizedAvatar';
 // Styles
 import useCollaboratorsStyles from './styles';
 
@@ -30,16 +32,34 @@ const CollaboratorsForm = (props) => {
   const { lang } = useLang();
 
   const handlerAddProfile = () => {
-    changeData([
-      ...collaborators,
-      {
-        name: inputNameRef.current.value,
-        email: inputEmailRef.current.value,
-        isOwner: false,
-        login: inputNameRef.current.value.replaceAll(' ', '_').toLowerCase(),
-      },
-    ]);
+    if (inputNameRef.current.value !== null && inputNameRef.current.value !== '') {
+      changeData([
+        ...collaborators,
+        {
+          name: inputNameRef.current.value,
+          email: inputEmailRef.current.value,
+          isOwner: false,
+          login: inputNameRef.current.value.replaceAll(' ', '_').toLowerCase(),
+        },
+      ]);
+    }
   };
+
+  const handleRemoveProfile = (profile) => {
+    const newCollaborators = collaborators.filter(
+      (coll) =>
+        !(
+          coll.login === profile.login &&
+          coll.avatarUrl === profile.avatarUrl &&
+          coll.email === profile.email &&
+          coll.bio === profile.bio &&
+          coll.name === profile.name &&
+          coll.url === profile.url
+        )
+    );
+    changeData(newCollaborators);
+  };
+
   const handleChange = (expandedIdx) => (event, isExpanded) => {
     setExpanded(isExpanded ? expandedIdx : false);
   };
@@ -49,8 +69,9 @@ const CollaboratorsForm = (props) => {
       {collaborators.map((profile, idx) => (
         <Accordion key={idx.toString()} expanded={idx === expanded} onChange={handleChange(idx)}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Avatar alt={profile.name} src={profile.avatarUrl} className={styles.smallAvatar} />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <OptimizedAvatar alt={profile.name} src={profile.avatarUrl} quality={20} />
+
+            <div style={{ marginLeft: 16, display: 'flex', flexDirection: 'column', flex: 1 }}>
               <Typography color="inherit">{profile.name}</Typography>
               <Typography variant="caption" color="textSecondary">
                 {`${
@@ -60,6 +81,9 @@ const CollaboratorsForm = (props) => {
                 }`}
               </Typography>
             </div>
+            <IconButton onClick={() => handleRemoveProfile(profile, idx)}>
+              <DeleteIcon />
+            </IconButton>
           </AccordionSummary>
           <AccordionDetails className={styles.accordionDetails}>
             <Typography color="textPrimary">{profile.bio}</Typography>
@@ -75,33 +99,33 @@ const CollaboratorsForm = (props) => {
         <AccordionSummary expandIcon={<AddIcon />}>
           {collaborators.length !== expanded && <Avatar className={styles.smallAvatar} />}
           {collaborators.length === expanded && (
-            <Grid
-              container
-              spacing={2}
-              style={{ display: collaborators.length !== expanded && 'none' }}
-            >
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label={lang.collaboratorsStep.form.nameLabel}
-                  onClick={(event) => event.stopPropagation()}
-                  fullWidth
-                  inputRef={inputNameRef}
-                />
+            <>
+              <Grid
+                container
+                spacing={2}
+                style={{ display: collaborators.length !== expanded && 'none' }}
+              >
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label={lang.collaboratorsStep.form.nameLabel}
+                    onClick={(event) => event.stopPropagation()}
+                    fullWidth
+                    inputRef={inputNameRef}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={5}>
+                  <TextField
+                    label={lang.collaboratorsStep.form.emailLabel}
+                    onClick={(event) => event.stopPropagation()}
+                    fullWidth
+                    inputRef={inputEmailRef}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={5}>
-                <TextField
-                  label={lang.collaboratorsStep.form.emailLabel}
-                  onClick={(event) => event.stopPropagation()}
-                  fullWidth
-                  inputRef={inputEmailRef}
-                />
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton onClick={handlerAddProfile}>
-                  <SaveIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
+              <IconButton onClick={handlerAddProfile} style={{ alignSelf: 'center' }}>
+                <SaveIcon />
+              </IconButton>
+            </>
           )}
         </AccordionSummary>
         <AccordionDetails className={styles.accordionDetails} />

@@ -19,7 +19,7 @@ const Profile = (props) => {
       <CssBaseline />
       <Container maxWidth="xl" className={styles.root}>
         <PersonData edit={edit} />
-        <ProjectBox />
+        <ProjectBox edit={edit} />
       </Container>
     </>
   );

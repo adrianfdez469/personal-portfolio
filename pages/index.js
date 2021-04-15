@@ -1,7 +1,9 @@
 import React from 'react';
 import Landing from '../views/landing/Landing';
-import ES from '../i18n/locales/pageProfileForm/profile.es.json';
-import EN from '../i18n/locales/pageProfileForm/profile.en.json';
+
+import ES from '../i18n/locales/landing/landign.es.json';
+import EN from '../i18n/locales/landing/landing.en.json';
+
 import { LangContext } from '../store/contexts/langContext';
 import { getLanguageByLocale, getThemeByContext } from '../backend/preRenderingData';
 

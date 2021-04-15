@@ -3,6 +3,7 @@
 import React, { useReducer, useRef, useEffect, useCallback } from 'react';
 import { TextField, CircularProgress, Typography, useMediaQuery } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import Image from 'next/image';
 // Internal libs
 import { isStringValidUrl } from '../../../libs/helpers';
 // styles
@@ -74,6 +75,8 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
+const ImageLoader = ({ src }) => src;
 
 const LinkPreview = (props) => {
   // constants
@@ -171,10 +174,13 @@ const LinkPreview = (props) => {
             className={styles.image}
             style={{ overflow: !preview.imageUrl ? 'hidden' : 'visible' }}
           >
-            <img
+            <Image
+              layout="intrinsic"
+              loader={ImageLoader}
               src={preview.imageUrl || '/images/no-image-red-2.png'}
               alt={preview.title}
               width={50}
+              height={50}
             />
           </div>
         )}

@@ -2,28 +2,18 @@ import { Box, Container, Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import MaterialCard from '../cards/MaterialCard';
 import useStyles from './styles';
+import { useLang } from '../../../store/contexts/langContext';
 
 const LandingAbout = () => {
   const classes = useStyles();
-  const text = `Hi, I m a enthusiast React an next developer 
-  with just 1 year of experience in the world of the web 
-  development with this technologies. I love music, footbal 
-  and I have a lot of fun creating new Material-UI components. 
-  Hi, I'm a enthusiast React an next developer with just 1 
-  year of experience in the world of the web development with 
-  this technologies. I love music, footbal and I have a lot of 
-  fun creating new Material-UI components. Hi, I'm a enthusiast 
-  React an next developer with just 1 year of experience in the 
-  world of the web development with this technologies. I love 
-  music, footbal and I have a lot of fun creating new 
-  Material-UI components.`;
+  const { lang } = useLang();
 
   return (
     <div className={classes.aboutStyle}>
       <Container>
         <Box align="center">
           <Typography variant="h4" className={classes.headerText} color="primary">
-            JUST ABOUT US
+            {lang.aboutUs.title}
           </Typography>
         </Box>
         <Grid
@@ -36,20 +26,20 @@ const LandingAbout = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="/images/11.jpg"
-                frontBarText="Jhon Wick"
-                backHeading="Resume"
-                backText={text}
+                frontImage="/images/12.jpeg"
+                frontBarText="Adrián Fernández Martínez"
+                backHeading={lang.aboutUs.resume}
+                backText={lang.aboutUs.adrianBio}
               />
             </Box>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="/images/12.jpeg"
-                frontBarText="Captain Marvel"
-                backHeading="Resume"
-                backText={text}
+                frontImage="/images/11.jpg"
+                frontBarText="Jose Adrian Iglesias"
+                backHeading={lang.aboutUs.resume}
+                backText={lang.aboutUs.joseBio}
               />
             </Box>
           </Grid>
@@ -57,9 +47,9 @@ const LandingAbout = () => {
             <Box align="center">
               <MaterialCard
                 frontImage="/images/13.jpeg"
-                frontBarText="Hawk Eye"
-                backHeading="Resume"
-                backText={text}
+                frontBarText="Jorge Arce Martínez"
+                backHeading={lang.aboutUs.resume}
+                backText={lang.aboutUs.jorgeBio}
               />
             </Box>
           </Grid>

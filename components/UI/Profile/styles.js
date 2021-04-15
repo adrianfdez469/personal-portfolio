@@ -114,6 +114,10 @@ export const usePersonDataStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  chipCant: {
+    color: theme.palette.getContrastText(theme.palette.primary.main),
+    backgroundColor: '#fff', // theme.palette.success.main,
+  },
 }));
 
 export const useProjectBoxStyles = makeStyles((theme) => ({
@@ -123,8 +127,7 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
   },
   card: {
     width: theme.spacing(38),
-    // height: '100%',
-    height: theme.spacing(50),
+    height: '100%',
     display: 'inline-grid',
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
@@ -133,20 +136,19 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
     color: theme.palette.getContrastText(theme.palette.secondary.main),
     backgroundColor: theme.palette.secondary.main,
   },
-  media: {
-    paddingTop: '40%',
-    width: '90%',
-    margin: 'auto',
-    objectFit: 'cover',
-  },
   description: {
     textAlign: 'justify',
     overflow: 'hidden',
     display: '-webkit-box',
     '-webkit-line-clamp': 5,
     '-webkit-box-orient': 'vertical',
+    margin: theme.spacing(1, 0),
   },
   mediaNew: {
     paddingTop: '80%',
+  },
+  skills: {
+    display: 'block',
+    textAlign: 'justify',
   },
 }));
