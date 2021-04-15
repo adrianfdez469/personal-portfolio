@@ -13,6 +13,7 @@ import {
   Tooltip,
   Chip,
   Avatar,
+  useTheme,
 } from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import EditOutlined from '@material-ui/icons/EditOutlined';
@@ -71,6 +72,7 @@ const PersonData = (props) => {
   const router = useRouter();
   const styles = usePersonDataStyles();
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const theme = useTheme();
 
   const [shareLinkIsOpen, setShareLinkOpen] = React.useState(false);
 
@@ -219,32 +221,24 @@ const PersonData = (props) => {
             <Divider orientation="horizontal" className={styles.divider} />
           )}
           <Typography align="center" color="primary" className={styles.text}>
-            {/* Array.from(
-              new Set(
-                user.projects
-                  .reduce((acum, p) => [...acum, ...p.skills], [])
-                  .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
-                  .map((skill) => skill.name)
-              )
-            ) // .join(' | ')
-              .map((skill) => (
-                <Chip
-                  variant="outlined"
-                  size="small"
-                  color="primary"
-                  label={skill}
-                  avatar={<Avatar>5</Avatar>}
-                />
-              )) */}
             {skills
               .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
               .map((skill) => (
                 <Chip
-                  variant="outlined"
+                  variant="default"
                   size="small"
                   color="primary"
                   label={skill.skill}
-                  // avatar={<Avatar>{skill.cant}</Avatar>}
+                  avatar={
+                    <Avatar
+                      style={{
+                        backgroundColor: theme.palette.background.paper,
+                        color: theme.palette.text.primary,
+                      }}
+                    >
+                      {skill.cant > 99 ? '99+' : skill.cant}
+                    </Avatar>
+                  }
                   style={{ margin: 4 }}
                 />
               ))}

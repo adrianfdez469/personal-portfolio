@@ -326,6 +326,7 @@ const EditProjectView = (props) => {
       })
       .catch((err) => {
         dispatch({ type: actions.ERROR_SAVING });
+        showMessage(lang.errors.saveGeneralError, 'error');
       });
   };
 

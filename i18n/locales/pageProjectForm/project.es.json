@@ -5,7 +5,8 @@
   "back": "Atras",
   "save": "Guardar",
   "errors": {
-    "duplicateProject": "Tienes un proyecto el nombre similar."
+    "duplicateProject": "Tienes un proyecto el nombre similar.",
+    "saveGeneralError": "Ha ocurrido un error."
   },
   "msg": {
     "projectSaved": "El proyecto fue salvado correctamente."
