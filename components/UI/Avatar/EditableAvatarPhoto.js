@@ -9,6 +9,7 @@ const useSmallPhotoCameraButtonStyle = makeStyles((theme) => ({
     boxShadow: `0 0 8px ${theme.palette.text.secondary}`,
     '&:hover': {
       backgroundColor: theme.palette.background.paper,
+      boxShadow: `0 0 8px ${theme.palette.text.primary}`,
     },
   },
 }));

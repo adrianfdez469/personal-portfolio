@@ -1,6 +1,7 @@
 /* eslint-disable import/no-named-as-default */
 import React from 'react';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
@@ -33,8 +34,10 @@ import {
 } from '../../../store/contexts/filterProjectContext';
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
-import SharePublicLink from '../SharePublicLink';
 import SkillsCategorys from '../../../constants/skillsCategorysConst';
+
+// import SharePublicLink from '../SharePublicLink';
+const SharePublicLink = dynamic(() => import('../SharePublicLink'));
 
 const SecondaryButtons = (props) => {
   const { editableActions, size } = props;
@@ -221,6 +224,7 @@ const PersonData = (props) => {
   ) : (
     <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
   );
+
   return (
     <>
       <AppBar style={{ position: 'inherit', backgroundColor: 'transparent' }}>
@@ -229,8 +233,16 @@ const PersonData = (props) => {
             {AvatarEl}
             <div className={styles.editButtonsDesktop}>
               <SecondaryButtons size="medium" editableActions={editableActions} />
+              {!edit && (
+                <div className={styles.tag}>
+                  <Typography variant="button" color="textPrimary">
+                    {lang.openToWork}
+                  </Typography>
+                </div>
+              )}
             </div>
           </div>
+
           <div className={styles.titleBox}>
             <Typography variant="h3" component="h1" className={styles.headerPrimary}>
               {user.name}
@@ -241,6 +253,13 @@ const PersonData = (props) => {
             </Typography>
             <div className={styles.editButtonsMobile}>
               <SecondaryButtons size="small" editableActions={editableActions} />
+              {!edit && (
+                <div className={styles.tag}>
+                  <Typography variant="button" color="textPrimary">
+                    {lang.openToWork}
+                  </Typography>
+                </div>
+              )}
             </div>
           </div>
 
@@ -292,7 +311,7 @@ const PersonData = (props) => {
         </div>
       </AppBar>
       {renderMobileMenu}
-      <SharePublicLink open={shareLinkIsOpen} handleClose={handleCloseShareLink} />
+      {edit && <SharePublicLink open={shareLinkIsOpen} handleClose={handleCloseShareLink} />}
     </>
   );
 };

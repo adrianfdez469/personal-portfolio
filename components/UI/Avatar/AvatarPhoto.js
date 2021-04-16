@@ -7,11 +7,25 @@ import OptimizedAvatar from './OptimizedAvatar';
 const useStyle = makeStyles((theme) => ({
   border: {
     borderRadius: '50%',
-    backgroundColor: theme.palette.background.default,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: `0 0 8px ${theme.palette.text.primary}`,
+
+    // Borde blanco, sombra negra
+    // backgroundColor: theme.palette.text.primary,
+    // boxShadow: `0 0 8px ${theme.palette.background.default}`,
+
+    // Borde negro, sombra blanca
+    // backgroundColor: theme.palette.background.default,
+    // boxShadow: `0 0 8px ${theme.palette.text.primary}`,
+
+    // Borde negro con sombra negra
+    backgroundColor: theme.palette.background.default,
+    boxShadow: `0 0 8px ${theme.palette.background.default}`,
+
+    // Borde blanco con sombra blanca
+    // backgroundColor: theme.palette.text.primary,
+    // boxShadow: `0 0 8px ${theme.palette.text.primary}`,
   },
   borderLong: {
     width: theme.spacing(20),

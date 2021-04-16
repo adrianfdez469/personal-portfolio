@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
 
 export const usePersonDataStyles = makeStyles((theme) => ({
   grow: {
@@ -118,12 +119,28 @@ export const usePersonDataStyles = makeStyles((theme) => ({
     color: theme.palette.getContrastText(theme.palette.primary.main),
     backgroundColor: '#fff', // theme.palette.success.main,
   },
+  tag: {
+    borderRadius: theme.spacing(0.5),
+    boxShadow: `0 0 5px ${green[400]}`,
+    backgroundColor: green[500],
+    padding: theme.spacing(0, 1),
+    margin: theme.spacing(1),
+    textAlign: 'center',
+  },
 }));
 
 export const useProjectBoxStyles = makeStyles((theme) => ({
   grid: {
-    margin: theme.spacing(1),
     width: 'auto',
+    margin: theme.spacing(1, -1),
+    [theme.breakpoints.down('md')]: {
+      margin: theme.spacing(1, 2),
+    },
+    justifyContent: 'space-between',
+    [theme.breakpoints.down(704)]: {
+      margin: theme.spacing(1, 0),
+      justifyContent: 'center',
+    },
   },
   card: {
     width: theme.spacing(38),
@@ -131,6 +148,13 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
     display: 'inline-grid',
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    margin: theme.spacing(0, 1),
+    [theme.breakpoints.down('md')]: {
+      margin: theme.spacing(0, 2),
+    },
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+    },
   },
   avatar: {
     color: theme.palette.getContrastText(theme.palette.secondary.main),

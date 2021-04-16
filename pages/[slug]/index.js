@@ -11,8 +11,8 @@ import {
 import { Profile } from '../../views';
 import ProfileProvider from '../../store/contexts/profileContext';
 import { LangContext } from '../../store/contexts/langContext';
-import ES from '../../i18n/locales/editProfilePage/profile.es.json';
-import EN from '../../i18n/locales/editProfilePage/profile.en.json';
+import ES from '../../i18n/locales/profilePage/profile.es.json';
+import EN from '../../i18n/locales/profilePage/profile.en.json';
 import { revalidationErrorTime, revalidationTime } from '../../constants/pageRevalidationTime';
 
 const languageLocales = {
