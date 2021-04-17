@@ -27,6 +27,20 @@ const EditableAvatarPhoto = ({ children, size, onClick }) => {
     }
   }
 
+  const getFontSize = (iconSize) => {
+    switch (iconSize) {
+      case 'xsmall':
+        return 16;
+      case 'small':
+        return 20;
+      case 'large':
+        return 30;
+      default:
+        return 24;
+    }
+  };
+  const fontSize = getFontSize(realSize);
+
   return (
     <Badge
       overlap="circle"
@@ -41,7 +55,7 @@ const EditableAvatarPhoto = ({ children, size, onClick }) => {
           className={styles.iconButton}
           onClick={onClick}
         >
-          <PhotoCameraOutlinedIcon fontSize={realSize} />
+          <PhotoCameraOutlinedIcon style={{ fontSize }} />
         </IconButton>
       }
     >
@@ -51,7 +65,7 @@ const EditableAvatarPhoto = ({ children, size, onClick }) => {
 };
 EditableAvatarPhoto.propTypes = {
   children: PropTypes.element.isRequired,
-  size: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(['xsmall', 'small', 'default', 'large']).isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

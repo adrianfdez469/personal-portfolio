@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import ReactProfileImage from '../../../../components/UI/UploadImage';
+import ReactProfileImage from '../../../../../components/UI/UploadImage';
 // Hooks
-import { useLang } from '../../../../store/contexts/langContext';
+import { useLang } from '../../../../../store/contexts/langContext';
 // Components
-import CustomBackdrop from '../../../../components/UI/backdrop';
-import StepItem from '../../../../components/UI/StepForm/StepItem';
+import CustomBackdrop from '../../../../../components/UI/backdrop';
+import StepItem from '../../../../../components/UI/StepForm/StepItem';
 // Styles
 import useGalleryStyles from './styles';
 
 // constants
-import { maxImagesCount, maxImgSize } from '../../../../constants/projectImagesConst';
+import { maxImagesCount, maxImgSize } from '../../../../../constants/projectImagesConst';
 
 const GalleryForm = (props) => {
   const { images, changeData } = props;

@@ -3,16 +3,16 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Chip } from '@material-ui/core';
 // Internal libs
-import InputTextSelect from '../../../../components/UI/ReactSelect';
-import { existsObjWithPropValue } from '../../../../libs/helpers';
+import InputTextSelect from '../../../../../components/UI/ReactSelect';
+import { existsObjWithPropValue } from '../../../../../libs/helpers';
 // components
-import StepItem from '../../../../components/UI/StepForm/StepItem';
+import StepItem from '../../../../../components/UI/StepForm/StepItem';
 // Hooks
-import { useLang } from '../../../../store/contexts/langContext';
+import { useLang } from '../../../../../store/contexts/langContext';
 // Styles
 import useSkillsStyles from './styles';
 // Constants
-import skillsCategories from '../../../../constants/skillsCategorysConst';
+import skillsCategories from '../../../../../constants/skillsCategorysConst';
 
 const getSkillsQuery = () => `
     query {

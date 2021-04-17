@@ -8,10 +8,10 @@ import DateFnsUtils from '@date-io/date-fns';
 import esLocale from 'date-fns/locale/es';
 import enLocale from 'date-fns/locale/en-US';
 // Components
-import LinkPreview from '../../../../components/UI/LinkPreview';
-import StepItem from '../../../../components/UI/StepForm/StepItem';
+import LinkPreview from '../../../../../components/UI/LinkPreview';
+import StepItem from '../../../../../components/UI/StepForm/StepItem';
 // hooks
-import { useLang } from '../../../../store/contexts/langContext';
+import { useLang } from '../../../../../store/contexts/langContext';
 
 const dateLocales = {
   en: enLocale,

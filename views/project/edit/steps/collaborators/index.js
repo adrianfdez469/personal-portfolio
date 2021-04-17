@@ -15,10 +15,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useLang } from '../../../../store/contexts/langContext';
+import { useLang } from '../../../../../store/contexts/langContext';
 // Components
-import StepItem from '../../../../components/UI/StepForm/StepItem';
-import OptimizedAvatar from '../../../../components/UI/Avatar/OptimizedAvatar';
+import StepItem from '../../../../../components/UI/StepForm/StepItem';
+import OptimizedAvatar from '../../../../../components/UI/Avatar/OptimizedAvatar';
 // Styles
 import useCollaboratorsStyles from './styles';
 

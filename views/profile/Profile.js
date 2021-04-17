@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CssBaseline, Container, makeStyles } from '@material-ui/core';
+// eslint-disable-next-line import/named
 import { PersonData, ProjectBox } from '../../components/UI';
 
 const useStyles = makeStyles((theme) => ({
