@@ -9,13 +9,27 @@ import {
   Box,
   Typography,
   Divider,
+  Link,
+  CardHeader,
 } from '@material-ui/core';
+import TodayIcon from '@material-ui/icons/Today';
+import EventIcon from '@material-ui/icons/Event';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+
 import { format, formatDistanceToNow, formatDistance } from 'date-fns';
-import { es, enUS } from 'date-fns/locale';
+import esLocale from 'date-fns/locale/es';
+import enLocale from 'date-fns/locale/en-US';
 import { useProjectContext } from '../../../store/contexts/projectContext';
+import OptimizedAvatar from '../Avatar/AvatarPhoto';
 import LinkPreview from '../LinkPreview';
 import { useBodyStyles } from './styles';
 import ImageViewer from '../ImageViewer';
+import { useLang } from '../../../store/contexts/langContext';
+
+const dateLocales = {
+  en: enLocale,
+  es: esLocale,
+};
 
 const ImageLoader = ({ src }) => src;
 
@@ -33,9 +47,16 @@ const CardImages = (props) => {
 
   if (!images || images.length === 0) return null;
   return (
-    <>
-      <Card className={styles.card}>
-        <Grid item container spacing={2} className={styles.grid}>
+    <Grid item xs={12} className={styles.grid}>
+      <Card>
+        <Grid
+          md={images.length > 1 ? 12 : 6}
+          sm={12}
+          item
+          container
+          spacing={2}
+          className={styles.grid}
+        >
           {images.map((image, idx) => (
             <Grid
               key={image.id}
@@ -74,12 +95,13 @@ const CardImages = (props) => {
         images={images.map((img) => img.imageUrl)}
         open={selectedImg > -1}
       />
-    </>
+    </Grid>
   );
 };
 
 const CardProjectLink = (props) => {
   const { link, devLink } = props;
+  const { lang } = useLang();
   const styles = useBodyStyles();
 
   const handleClick = (url) => {
@@ -89,18 +111,30 @@ const CardProjectLink = (props) => {
   if (!link && !devLink) return null;
   return (
     <Grid item md={6} xs={12} className={styles.grid}>
-      <Card>
+      <Card style={{ height: '100%' }}>
         {link && (
           <CardContent>
             <CardActionArea onClick={() => handleClick(link)}>
-              <LinkPreview url={link} showTextField={false} readOnly />
+              <LinkPreview
+                scale={1.2}
+                url={link}
+                showTextField={false}
+                readOnly
+                label={lang.projectLink}
+              />
             </CardActionArea>
           </CardContent>
         )}
         {devLink && (
           <CardContent>
             <CardActionArea onClick={() => handleClick(devLink)}>
-              <LinkPreview url={devLink} showTextField={false} readOnly />
+              <LinkPreview
+                scale={1.2}
+                url={devLink}
+                showTextField={false}
+                readOnly
+                label={lang.projectDevLink}
+              />
             </CardActionArea>
           </CardContent>
         )}
@@ -111,65 +145,64 @@ const CardProjectLink = (props) => {
 
 const CardData = (props) => {
   const { initialDate, finalDate, otherInfo } = props;
+  const { lang, locale } = useLang();
   const styles = useBodyStyles();
 
   if (!initialDate && !finalDate && !otherInfo) return null;
 
   return (
     <Grid item md={6} xs={12} className={styles.grid}>
-      <Card>
-        <CardContent>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-            }}
-          >
+      <Card style={{ height: '100%' }}>
+        <CardContent
+          style={{
+            height: '100%',
+            display: 'flez',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div>
             {initialDate && (
-              <Box padding={2}>
-                <Typography variant="h4" style={{ fontSize: 16 }}>
-                  Initial Date
-                </Typography>
-                <Typography variant="h5" style={{ fontSize: 14 }}>
-                  {format(initialDate, 'MM/dd/yyyy')}
-                </Typography>
-                <Typography variant="h5" style={{ fontSize: 14 }}>
-                  {formatDistanceToNow(initialDate, { addSuffix: true, locale: es })}
+              <Box padding={1}>
+                <Typography variant="body1" className={styles.dateRow}>
+                  <TodayIcon className={styles.dateIcon} />
+                  {`${lang.iniDate} ${formatDistanceToNow(initialDate, {
+                    addSuffix: true,
+                    locale: dateLocales[locale],
+                  })}: ${format(initialDate, lang.formatDate)} `}
                 </Typography>
               </Box>
             )}
             {initialDate && finalDate && (
-              <Box padding={2}>
-                <Typography variant="h4" style={{ fontSize: 16 }}>
-                  Intervalo
-                </Typography>
-                <Typography variant="h5" style={{ fontSize: 14 }}>
-                  {formatDistance(finalDate, initialDate, { addSuffix: true, locale: es })}
+              <Box padding={1}>
+                <Typography variant="body1" className={styles.dateRow}>
+                  <DateRangeIcon className={styles.dateIcon} />
+                  {`${formatDistance(finalDate, initialDate, {
+                    locale: dateLocales[locale],
+                  })} ${lang.ofWork}`}
                 </Typography>
               </Box>
             )}
+
             {finalDate && (
-              <Box padding={2}>
-                <Typography variant="h4" style={{ fontSize: 16 }}>
-                  Final Date
-                </Typography>
-                <Typography variant="h5" style={{ fontSize: 14 }}>
-                  {format(finalDate, 'MM/dd/yyyy')}
-                </Typography>
-                <Typography variant="h5" style={{ fontSize: 14 }}>
-                  {formatDistanceToNow(finalDate, { addSuffix: true, locale: es })}
+              <Box padding={1}>
+                <Typography variant="body1" className={styles.dateRow}>
+                  <EventIcon className={styles.dateIcon} />
+                  {`${lang.finished} ${formatDistanceToNow(finalDate, {
+                    addSuffix: true,
+                    locale: dateLocales[locale],
+                  })}: ${format(finalDate, lang.formatDate)} `}
                 </Typography>
               </Box>
             )}
           </div>
           {(initialDate || finalDate) && otherInfo && <Divider />}
           {otherInfo && (
-            <Box padding={2}>
-              <Typography variant="h4" style={{ fontSize: 16 }}>
-                Other info
+            <Box padding={1}>
+              <Typography variant="h4" className={styles.dateRow}>
+                {`${lang.otherInfo}:`}
               </Typography>
-              <Typography variant="h5" style={{ fontSize: 14 }}>
+              <Typography variant="h5" className={styles.dateRow}>
                 {otherInfo}
               </Typography>
             </Box>
@@ -180,18 +213,83 @@ const CardData = (props) => {
   );
 };
 
+const CardCollaborators = (props) => {
+  const { collaborators } = props;
+  const { lang } = useLang();
+  const styles = useBodyStyles();
+
+  if (!collaborators || collaborators.length === 0) return null;
+  return (
+    <Grid item xs={12} className={styles.grid}>
+      <Card>
+        <CardContent
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <Grid container justify="space-evenly">
+            {collaborators
+              .sort((a, b) => {
+                if (a.isOwner) return -1;
+                if (b.isOwner) return 1;
+                return 0;
+              })
+              .map((collaborator) => (
+                <Grid item md={3} sm={6} xs={12} key={collaborator.login}>
+                  <Divider />
+                  <Typography
+                    variant="button"
+                    color={collaborator.isOwner ? 'textPrimary' : 'textSecondary'}
+                    component="p"
+                    align="center"
+                  >
+                    {collaborator.isOwner ? `(${lang.owner})` : `(${lang.collaborator})`}
+                  </Typography>
+                  <Divider />
+                  <CardHeader
+                    avatar={
+                      <OptimizedAvatar
+                        size="xsmall"
+                        src={collaborator.avatarUrl}
+                        alt={collaborator.name}
+                        quality={20}
+                      />
+                    }
+                    title={collaborator.name}
+                    subheader={collaborator.email}
+                  />
+
+                  <CardContent>
+                    <Link href={collaborator.url} target="_blank">
+                      <Typography>{collaborator.url}</Typography>
+                    </Link>
+                    <Typography color="textSecondary">{collaborator.bio}</Typography>
+                  </CardContent>
+                </Grid>
+              ))}
+          </Grid>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+};
+
 const ProjectBody = () => {
   const project = useProjectContext();
-  console.log(project);
+  const styles = useBodyStyles();
   return (
-    <Grid container spacing={2} justify="space-between" style={{ margin: '8px 0', width: '100%' }}>
+    <Grid container spacing={2} justify="space-between" className={styles.gridCardContainer}>
       <CardImages images={project.images} />
+
       <CardProjectLink link={project.projectLink} devLink={project.projectDevLink} />
       <CardData
         initialDate={project.initialDate}
         finalDate={project.finalDate}
         otherInfo={project.otherInfo}
       />
+      <CardCollaborators collaborators={project.collaborators} />
     </Grid>
   );
 };

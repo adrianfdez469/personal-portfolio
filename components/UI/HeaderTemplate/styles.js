@@ -14,7 +14,7 @@ const usePersonDataStyles = makeStyles((theme) => ({
     },
   },
   south: {
-    // minHeight: theme.spacing(15),
+    minHeight: theme.spacing(15),
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1, 2),
     color: theme.palette.getContrastText(theme.palette.background.paper),

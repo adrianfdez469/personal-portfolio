@@ -9,8 +9,8 @@ import {
 } from '../../backend/preRenderingData';
 import { LangContext } from '../../store/contexts/langContext';
 import { ProjectContext } from '../../store/contexts/projectContext';
-import ES from '../../i18n/locales/editProfilePage/profile.es.json';
-import EN from '../../i18n/locales/editProfilePage/profile.en.json';
+import ES from '../../i18n/locales/projectPage/project.es.json';
+import EN from '../../i18n/locales/projectPage/project.en.json';
 import { revalidationErrorTime, revalidationTime } from '../../constants/pageRevalidationTime';
 import Project from '../../views/project/Project';
 

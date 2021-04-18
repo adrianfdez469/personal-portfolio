@@ -24,17 +24,17 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     borderRadius: theme.spacing(0.5),
-    width: theme.spacing(6.25),
-    height: theme.spacing(6.25),
+    width: ({ logoScale }) => theme.spacing(6.25 * logoScale),
+    height: ({ logoScale }) => theme.spacing(6.25 * logoScale),
     marginRight: theme.spacing(1),
     [theme.breakpoints.up(800)]: {
       marginLeft: theme.spacing(1),
     },
   },
   typografy: {
-    fontSize: theme.spacing(1.2),
+    fontSize: ({ scale }) => theme.spacing(1.2 * scale),
     [theme.breakpoints.up[800]]: {
-      fontSize: theme.spacing(1.5),
+      fontSize: ({ scale }) => theme.spacing(1.5 * scale),
     },
   },
 }));

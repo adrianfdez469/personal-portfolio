@@ -1,5 +1,3 @@
-// TODO: En la vista movil, alinear las imagenes y los textos a la izquierda
-
 import React, { useReducer, useRef, useEffect, useCallback } from 'react';
 import { TextField, CircularProgress, Typography, useMediaQuery, Box } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -80,7 +78,7 @@ const ImageLoader = ({ src }) => src;
 
 const LinkPreview = (props) => {
   // constants
-  const { setLink, url, setPreview, readOnly, ...rest } = props;
+  const { setLink, url, setPreview, readOnly, label, logoScale, scale, ...rest } = props;
   const abortController = useRef();
 
   // hooks
@@ -89,7 +87,7 @@ const LinkPreview = (props) => {
   });
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
   const greaterXxsSize = useMediaQuery((theme) => theme.breakpoints.up('400'));
-  const styles = useStyles();
+  const styles = useStyles({ logoScale, scale });
 
   // functions
   const getData = useCallback(() => {
@@ -179,8 +177,8 @@ const LinkPreview = (props) => {
               loader={ImageLoader}
               src={preview.imageUrl || '/images/no-image-red-2.png'}
               alt={preview.title}
-              width={50}
-              height={50}
+              width={50 * scale}
+              height={50 * scale}
             />
           </div>
         )}
@@ -202,7 +200,7 @@ const LinkPreview = (props) => {
         <TextField
           value={link || ''}
           onChange={onChange}
-          label="Vínculo del proyecto"
+          label={label}
           variant="outlined"
           margin="dense"
           className={styles.linkField}
@@ -211,10 +209,10 @@ const LinkPreview = (props) => {
         />
       ) : (
         <Box padding={2}>
-          <Typography variant="h4" style={{ fontSize: 16 }}>
-            Vínculo del proyecto:
+          <Typography variant="h4" style={{ fontSize: 16 * scale }}>
+            {label}
           </Typography>
-          <Typography variant="h5" style={{ fontSize: 14 }}>
+          <Typography variant="h5" style={{ fontSize: 14 * scale }}>
             {link}
           </Typography>
         </Box>
@@ -229,11 +227,16 @@ LinkPreview.propTypes = {
   setPreview: PropTypes.func,
   url: PropTypes.string,
   readOnly: PropTypes.bool,
+  label: PropTypes.string.isRequired,
+  logoScale: PropTypes.number,
+  scale: PropTypes.number,
 };
 LinkPreview.defaultProps = {
   url: null,
   setPreview: () => {},
   readOnly: false,
+  logoScale: 1,
+  scale: 1,
 };
 
 export default React.memo(LinkPreview);

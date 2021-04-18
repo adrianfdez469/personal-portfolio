@@ -19,7 +19,6 @@ export const useBodyStyles = makeStyles((theme) => ({
     overflow: 'hidden',
   },
   grid: {
-    margin: theme.spacing(1, -1),
     justifyContent: 'space-around',
     [theme.breakpoints.down('md')]: {
       margin: 0,
@@ -27,6 +26,7 @@ export const useBodyStyles = makeStyles((theme) => ({
     [theme.breakpoints.down(704)]: {
       justifyContent: 'center',
     },
+    padding: theme.spacing(1),
   },
   card: {
     width: '100%',
@@ -39,6 +39,21 @@ export const useBodyStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 0),
     [theme.breakpoints.down('md')]: {
       margin: theme.spacing(1),
+    },
+  },
+  dateRow: {
+    fontSize: theme.spacing(2.5),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dateIcon: {
+    marginRight: theme.spacing(1),
+  },
+  gridCardContainer: {
+    marginTop: theme.spacing(0.5),
+    [theme.breakpoints.down('md')]: {
+      padding: theme.spacing(1),
     },
   },
 }));

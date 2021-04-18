@@ -24,12 +24,15 @@ const ProjectBox = (props) => {
   const { user } = useProfile();
   const filterProject = useFilterProject();
   const router = useRouter();
+  console.log(router);
   const goProject = (project) => {
     if (edit) {
       router.push(`/profile/${user.id}/projects/${project.id}`);
       return;
     }
-    router.push(`/${user.slug}/${project.projectSlug}`);
+    window.open(
+      `${window.location.protocol}//${window.location.host}/${user.slug}/${project.projectSlug}`
+    );
   };
 
   return (

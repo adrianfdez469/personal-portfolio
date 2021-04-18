@@ -10,22 +10,8 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
-    // Borde blanco, sombra negra
-    // backgroundColor: theme.palette.text.primary,
-    // boxShadow: `0 0 8px ${theme.palette.background.default}`,
-
-    // Borde negro, sombra blanca
-    // backgroundColor: theme.palette.background.default,
-    // boxShadow: `0 0 8px ${theme.palette.text.primary}`,
-
-    // Borde negro con sombra negra
-    backgroundColor: theme.palette.background.default,
+    background: `radial-gradient(circle, transparent 60%, ${theme.palette.background.default} 63%);`,
     boxShadow: `0 0 8px ${theme.palette.background.default}`,
-
-    // Borde blanco con sombra blanca
-    // backgroundColor: theme.palette.text.primary,
-    // boxShadow: `0 0 8px ${theme.palette.text.primary}`,
   },
   borderLong: {
     width: theme.spacing(20),
