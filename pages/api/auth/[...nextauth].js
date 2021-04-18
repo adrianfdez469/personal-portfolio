@@ -39,7 +39,7 @@ export default (req, res) =>
       signIn: '/auth/signin',
     },
     // Optional SQL or MongoDB database to persist users
-    database: `${process.env.POSTGRES_CONNECTION_URI}`,
+    database: `${process.env.DATABASE_URL}`,
     session: { jwt: true },
     jwt: {
       signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
