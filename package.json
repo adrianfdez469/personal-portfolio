@@ -55,5 +55,8 @@
     "eslint-plugin-react-hooks": "4.0.0",
     "prettier": "^2.2.1",
     "prisma": "^2.16.1"
+  },
+  "engines": {
+    "node": "14"
   }
 }
