@@ -7,11 +7,11 @@ import OptimizedAvatar from './OptimizedAvatar';
 const useStyle = makeStyles((theme) => ({
   border: {
     borderRadius: '50%',
-    backgroundColor: theme.palette.background.default,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: `0 0 8px ${theme.palette.text.primary}`,
+    background: `radial-gradient(circle, transparent 60%, ${theme.palette.background.default} 63%);`,
+    boxShadow: `0 0 8px ${theme.palette.background.default}`,
   },
   borderLong: {
     width: theme.spacing(20),
@@ -24,6 +24,10 @@ const useStyle = makeStyles((theme) => ({
   borderSmall: {
     width: theme.spacing(9.5),
     height: theme.spacing(9.5),
+  },
+  borderXSmall: {
+    width: theme.spacing(7.5),
+    height: theme.spacing(7.5),
   },
 }));
 
@@ -48,6 +52,13 @@ const AvatarPhoto = (props) => {
   let avatarSize;
 
   switch (realSize) {
+    case 'xsmall':
+      borderStyle = styles.borderXSmall;
+      avatarSize = {
+        width: 56,
+        height: 56,
+      };
+      break;
     case 'small':
       borderStyle = styles.borderSmall;
       avatarSize = {

@@ -1,0 +1,17 @@
+{
+  "en": "English",
+  "es": "Español",
+  "themes": {
+    "orange": "Anaranjado",
+    "orangeDark": "Anaranjado Oscuro",
+    "default": "Azul",
+    "dark": "Azul Oscuro",
+    "pink": "Rosado",
+    "purple": "Morado"
+  },
+  "buttons": {
+    "themeButton": "Cambiar Tema",
+    "languageButton": "Cambiar a idioma"
+  },
+  "openToWork": "Abierto a trabajo"
+}

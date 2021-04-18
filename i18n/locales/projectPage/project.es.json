@@ -1,0 +1,11 @@
+{
+  "formatDate": "dd/MM/yyyy",
+  "iniDate": "Comenzado",
+  "finished": "Terminado",
+  "ofWork": "de trabajo",
+  "projectLink": "Vínculo de proyecto",
+  "projectDevLink": "Vínculo de desarrollo",
+  "otherInfo": "Otra información",
+  "owner": "propietario",
+  "collaborator": "colaborador"
+}

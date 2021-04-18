@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { getSession } from 'next-auth/client';
 import { makeStyles, IconButton, Tooltip, Menu, MenuItem } from '@material-ui/core';
-import { Brightness4Outlined } from '@material-ui/icons';
+import InvertColorsIcon from '@material-ui/icons/InvertColors';
 import { useChangeTheme } from '../../../store/contexts/themeContext';
 import { useLang } from '../../../store/contexts/langContext';
 // eslint-disable-next-line import/named
@@ -70,7 +70,7 @@ const ThemeButton = (props) => {
     <>
       <Tooltip title={title}>
         <IconButton onClick={handleClick} style={styles}>
-          <Brightness4Outlined className={withColor ? classes.root : ''} />
+          <InvertColorsIcon className={withColor ? classes.root : ''} />
         </IconButton>
       </Tooltip>
       <Menu

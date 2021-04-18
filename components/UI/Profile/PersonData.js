@@ -1,31 +1,14 @@
 /* eslint-disable import/no-named-as-default */
 import React from 'react';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import {
-  AppBar,
-  Typography,
-  Divider,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tooltip,
-  Chip,
-  Avatar,
-  useTheme,
-} from '@material-ui/core';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import { Typography, Chip, Avatar, useTheme } from '@material-ui/core';
 import EditOutlined from '@material-ui/icons/EditOutlined';
 import PostAddOutlined from '@material-ui/icons/PostAddOutlined';
-import ShareOutlined from '@material-ui/icons/ShareOutlined';
-import LanguageButton from '../Buttons/LanguageButton';
-import ThemeButton from '../Buttons/ThemeButton';
-import FeedbackButton from '../Buttons/FeedbackButton';
-import LogoutButton from '../Buttons/LogoutButton';
+import PublicIcon from '@material-ui/icons/Public';
 // eslint-disable-next-line import/no-named-as-default-member
 import AvatarPhoto from '../Avatar/AvatarPhoto';
-import EditablePhoto from '../Avatar/EditableAvatarPhoto';
 import { useProfile } from '../../../store/contexts/profileContext';
 import {
   useChangeFilterProject,
@@ -33,40 +16,12 @@ import {
 } from '../../../store/contexts/filterProjectContext';
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
-import SharePublicLink from '../SharePublicLink';
 import SkillsCategorys from '../../../constants/skillsCategorysConst';
-
-const SecondaryButtons = (props) => {
-  const { editableActions, size } = props;
-  return editableActions.map((action) => {
-    if (action.link) {
-      return (
-        <Link key={action.name} href={action.link} passHref>
-          <Tooltip title={action.name}>
-            <IconButton onClick={action.onClick} size={size}>
-              {action.icon}
-            </IconButton>
-          </Tooltip>
-        </Link>
-      );
-    }
-    return (
-      <Tooltip title={action.name} key={action.name}>
-        <IconButton onClick={action.onClick} size={size}>
-          {action.icon}
-        </IconButton>
-      </Tooltip>
-    );
-  });
-};
-
-SecondaryButtons.propTypes = {
-  editableActions: PropTypes.arrayOf(PropTypes.any).isRequired,
-  size: PropTypes.oneOf(['small', 'medium']),
-};
-SecondaryButtons.default = {
-  size: 'medium',
-};
+import ProfileMenu from './ProfileMenu';
+import ProfileButtons from './Buttons/ProfileButtons';
+import HeaderTemplate from '../HeaderTemplate';
+// import SharePublicLink from '../SharePublicLink';
+const SharePublicLink = dynamic(() => import('../SharePublicLink'));
 
 const CustomChip = (props) => {
   const { skill, selected, onClick } = props;
@@ -111,10 +66,8 @@ const PersonData = (props) => {
   const changeFilterProject = useChangeFilterProject();
   const filterProject = useFilterProject();
   const { lang } = useLang();
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const router = useRouter();
   const styles = usePersonDataStyles();
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const [shareLinkIsOpen, setShareLinkOpen] = React.useState(false);
 
@@ -124,13 +77,6 @@ const PersonData = (props) => {
 
   const handleCloseShareLink = () => {
     setShareLinkOpen(false);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const handleClickSkill = (skillObj) => {
@@ -160,7 +106,7 @@ const PersonData = (props) => {
           link: `${router.asPath}/projects/new`,
         },
         {
-          icon: <ShareOutlined className={styles.editableButtonsIcons} />,
+          icon: <PublicIcon className={styles.editableButtonsIcons} />,
           name: lang.buttons.sharedPortfolioButton,
           onClick: () => {
             handleClickOpenShareLink(true);
@@ -169,111 +115,26 @@ const PersonData = (props) => {
       ]
     : [];
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <LanguageButton
-          styles={{ paddingTop: 0, paddingBottom: 0 }}
-          title={lang.buttons.languageButton}
-        />
-        {lang.buttons.languageButton}
-      </MenuItem>
-      <MenuItem>
-        <ThemeButton
-          styles={{ paddingTop: 0, paddingBottom: 0 }}
-          title={lang.buttons.themeButton}
-        />
-        {lang.buttons.themeButton}
-      </MenuItem>
-      {edit && (
-        <MenuItem>
-          <FeedbackButton
-            styles={{ paddingTop: 0, paddingBottom: 0 }}
-            title={lang.buttons.feedbackButton}
-          />
-          {lang.buttons.feedbackButton}
-        </MenuItem>
-      )}
-      {edit && (
-        <MenuItem>
-          <LogoutButton
-            styles={{ paddingTop: 0, paddingBottom: 0 }}
-            title={lang.buttons.logoutButton}
-          />
-          {lang.buttons.logoutButton}
-        </MenuItem>
-      )}
-    </Menu>
-  );
-  const AvatarEl = edit ? (
-    <EditablePhoto size="adjustable" onClick={() => {}}>
-      <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
-    </EditablePhoto>
-  ) : (
-    <AvatarPhoto src={user.image} size="adjustable" editable={edit} />
-  );
   return (
     <>
-      <AppBar style={{ position: 'inherit', backgroundColor: 'transparent' }}>
-        <div className={styles.north}>
-          <div className={styles.avatar}>
-            {AvatarEl}
-            <div className={styles.editButtonsDesktop}>
-              <SecondaryButtons size="medium" editableActions={editableActions} />
-            </div>
-          </div>
-          <div className={styles.titleBox}>
-            <Typography variant="h3" component="h1" className={styles.headerPrimary}>
-              {user.name}
-            </Typography>
-
-            <Typography variant="h6" component="h2" className={styles.headerSecondary}>
-              {user.title}
-            </Typography>
-            <div className={styles.editButtonsMobile}>
-              <SecondaryButtons size="small" editableActions={editableActions} />
-            </div>
-          </div>
-
-          <div className={styles.sectionDesktop}>
-            <LanguageButton withColor title={lang.buttons.languageButton} />
-            <ThemeButton withColor title={lang.buttons.themeButton} />
-            {edit && (
-              <>
-                <FeedbackButton withColor title={lang.buttons.feedbackButton} />
-                <LogoutButton withColor title={lang.buttons.logoutButton} />
-              </>
+      <HeaderTemplate
+        AvatarCmp={<AvatarPhoto src={user.image} size="adjustable" editable={edit} />}
+        SecondaryAvatarSection={
+          <>
+            <ProfileButtons size="medium" editableActions={editableActions} />
+            {!edit && (
+              <div className={styles.tag}>
+                <Typography variant="button" color="textPrimary">
+                  {lang.openToWork}
+                </Typography>
+              </div>
             )}
-          </div>
-
-          <div className={styles.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-        </div>
-        <div className={styles.south}>
-          <Typography align="center" className={styles.text}>
-            {user.description}
-          </Typography>
-          {user.description && user.description !== '' && (
-            <Divider orientation="horizontal" className={styles.divider} />
-          )}
+          </>
+        }
+        headerTitle={user.name}
+        headerSubTitle={user.title}
+        description={user.description}
+        DesciptionLowAreaCmp={
           <Typography align="center" color="primary" className={styles.text}>
             {skills
               .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
@@ -289,10 +150,10 @@ const PersonData = (props) => {
                 />
               ))}
           </Typography>
-        </div>
-      </AppBar>
-      {renderMobileMenu}
-      <SharePublicLink open={shareLinkIsOpen} handleClose={handleCloseShareLink} />
+        }
+        Menu={edit && <ProfileMenu />}
+      />
+      {edit && <SharePublicLink open={shareLinkIsOpen} handleClose={handleCloseShareLink} />}
     </>
   );
 };

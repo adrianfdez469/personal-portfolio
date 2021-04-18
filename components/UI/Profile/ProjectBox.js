@@ -24,16 +24,19 @@ const ProjectBox = (props) => {
   const { user } = useProfile();
   const filterProject = useFilterProject();
   const router = useRouter();
+  console.log(router);
   const goProject = (project) => {
     if (edit) {
       router.push(`/profile/${user.id}/projects/${project.id}`);
       return;
     }
-    router.push(`/${user.slug}/${project.projectSlug}`);
+    window.open(
+      `${window.location.protocol}//${window.location.host}/${user.slug}/${project.projectSlug}`
+    );
   };
 
   return (
-    <Grid container spacing={2} justify="center" className={styles.grid}>
+    <Grid container spacing={2} className={styles.grid}>
       {user.projects
         .filter((project) =>
           project.skills.some((skill) => {
@@ -53,26 +56,32 @@ const ProjectBox = (props) => {
           return 0;
         })
         .map((element) => (
-          <Grid item key={element.id}>
+          <Grid item key={element.id} style={{ padding: '8px 0' }}>
             <Card className={styles.card}>
               <CardActionArea
                 style={{ display: 'flex-root', flexDirection: 'column' }}
                 onClick={() => goProject(element)}
               >
-                <Image
-                  loader={ImageLoader}
-                  src={
-                    element.images.length > 0
-                      ? element.images[0].imageUrl
-                      : `/images/no-image-red-2.png`
-                  }
-                  width={304}
-                  height={140}
-                  quality={50}
-                  alt="image"
-                  layout="intrinsic"
-                  objectFit="cover"
-                />
+                <div
+                  style={{
+                    width: '100%',
+                    height: 140,
+                    position: 'relative',
+                  }}
+                >
+                  <Image
+                    loader={ImageLoader}
+                    src={
+                      element.images.length > 0
+                        ? element.images[0].imageUrl
+                        : `/images/no-image-red-2.png`
+                    }
+                    quality={50}
+                    alt="image"
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </div>
                 <CardContent>
                   <Typography variant="h5">{element.name}</Typography>
                   <Typography className={styles.skills} variant="caption" color="primary">

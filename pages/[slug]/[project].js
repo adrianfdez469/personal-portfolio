@@ -8,9 +8,11 @@ import {
   // eslint-disable-next-line import/named
 } from '../../backend/preRenderingData';
 import { LangContext } from '../../store/contexts/langContext';
-import ES from '../../i18n/locales/editProfilePage/profile.es.json';
-import EN from '../../i18n/locales/editProfilePage/profile.en.json';
+import { ProjectContext } from '../../store/contexts/projectContext';
+import ES from '../../i18n/locales/projectPage/project.es.json';
+import EN from '../../i18n/locales/projectPage/project.en.json';
 import { revalidationErrorTime, revalidationTime } from '../../constants/pageRevalidationTime';
+import Project from '../../views/project/Project';
 
 const languageLocales = {
   en: EN,
@@ -63,9 +65,9 @@ const ProjectSlug = (props) => {
 
   return (
     <LangContext.Provider value={language}>
-      {/* <ProfileProvider value={profile}> */}
-      {/* <Profile edit={false} /> */}
-      {/* </ProfileProvider> */}
+      <ProjectContext.Provider value={project}>
+        <Project />
+      </ProjectContext.Provider>
     </LangContext.Provider>
   );
 };

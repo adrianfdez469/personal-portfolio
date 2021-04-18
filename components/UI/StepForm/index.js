@@ -2,7 +2,6 @@
 import React, { useReducer } from 'react';
 import dynamic from 'next/dynamic';
 import PropTypes from 'prop-types';
-// import dynamic from 'next/dynamic';
 import {
   Button,
   AppBar,

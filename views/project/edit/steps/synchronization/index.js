@@ -19,16 +19,16 @@ import LockOpenIcon from '@material-ui/icons/LockOpenOutlined';
 
 import { useRouter } from 'next/router';
 // components
-import StepItem from '../../../../components/UI/StepForm/StepItem';
-import SyncButton from '../../../../components/UI/Buttons/SyncButton';
-import Backdrop from '../../../../components/UI/backdrop';
-import OptimizedAvatar from '../../../../components/UI/Avatar/OptimizedAvatar';
+import StepItem from '../../../../../components/UI/StepForm/StepItem';
+import SyncButton from '../../../../../components/UI/Buttons/SyncButton';
+import Backdrop from '../../../../../components/UI/backdrop';
+import OptimizedAvatar from '../../../../../components/UI/Avatar/OptimizedAvatar';
 // hooks
-import { useLang } from '../../../../store/contexts/langContext';
+import { useLang } from '../../../../../store/contexts/langContext';
 // Styles
 import useSyncStyles from './styles';
 // Custom icons
-import GitLabIcon from '../../../../components/UI/icons/GitlabIcon';
+import GitLabIcon from '../../../../../components/UI/icons/GitlabIcon';
 // TODO: Sacar estas consultas de aqui y ponerlas en un lugar determinado para esto
 const getReposQuery = `
   query getRepos($provider: devProviders!) {

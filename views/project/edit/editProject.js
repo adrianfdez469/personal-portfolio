@@ -2,18 +2,18 @@
 import React, { useReducer, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import PropTypes from 'prop-types';
-import StepForm from '../../components/UI/StepForm';
-import { useLang } from '../../store/contexts/langContext';
+import StepForm from '../../../components/UI/StepForm';
+import { useLang } from '../../../store/contexts/langContext';
 import SyncForm from './steps/synchronization';
-import SkillCategories from '../../constants/skillsCategorysConst';
-import useUserPage from '../../hooks/useUserPage';
-import useMessage from '../../hooks/useMessage';
+import SkillCategories from '../../../constants/skillsCategorysConst';
+import useUserPage from '../../../hooks/useUserPage';
+import useMessage from '../../../hooks/useMessage';
 
 const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
 const GalleryForm = dynamic(() => import('./steps/gallery'));
 const SkillsForm = dynamic(() => import('./steps/skills'));
 const CollaboratorsForm = dynamic(() => import('./steps/collaborators'));
-const CustomBackdrop = dynamic(() => import('../../components/UI/backdrop'));
+const CustomBackdrop = dynamic(() => import('../../../components/UI/backdrop'));
 
 const saveQueryData = `
   mutation saveProject( $projectId: ID, $project: ProjectParams! ) {
