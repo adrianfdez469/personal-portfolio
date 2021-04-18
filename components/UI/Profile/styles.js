@@ -58,10 +58,10 @@ export const useProjectBoxStyles = makeStyles((theme) => ({
       margin: 0,
     },
   },
-  avatar: {
+  /* avatar: {
     color: theme.palette.getContrastText(theme.palette.secondary.main),
     backgroundColor: theme.palette.secondary.main,
-  },
+  }, */
   description: {
     textAlign: 'justify',
     overflow: 'hidden',

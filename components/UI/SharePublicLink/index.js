@@ -35,6 +35,7 @@ const initialState = {
   slug: '',
   slugValid: true,
   saving: false,
+  dirty: false,
 };
 const actions = {
   CHANGE_TEXT: 'CHANGE_TEXT',
@@ -49,6 +50,7 @@ const reducer = (state, action) => {
         ...state,
         slug: action.text,
         slugValid: action.valid,
+        dirty: true,
       };
     case actions.SAVE:
       return {
@@ -59,12 +61,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         saving: false,
+        dirty: false,
       };
     case actions.ERROR_SAVING:
       return {
         ...state,
         saving: false,
         slug: action.originalSlug,
+        dirty: false,
       };
     default:
       return state;
@@ -195,7 +199,7 @@ const SharePublicLink = (props) => {
               className={styles.butotonMargin}
               onClick={handleCopy}
               color="secondary"
-              disabled={state.slug !== user.slug}
+              disabled={state.dirty}
             >
               {lang.publicUrl.buttons.copy}
             </Button>
@@ -217,7 +221,7 @@ const SharePublicLink = (props) => {
               className={styles.butotonMargin}
               onClick={handleSave}
               color="secondary"
-              disabled={!(state.slug !== user.slug) || !state.slugValid}
+              disabled={!state.dirty || !state.slugValid}
             >
               {lang.publicUrl.buttons.save}
             </Button>
@@ -230,7 +234,7 @@ const SharePublicLink = (props) => {
             fullWidth
             onClick={handlePublic}
             color="secondary"
-            disabled={state.slug !== user.slug}
+            disabled={state.dirty}
           >
             {user.publicProfile ? lang.publicUrl.hideProfile : lang.publicUrl.publicProfile}
           </Button>
