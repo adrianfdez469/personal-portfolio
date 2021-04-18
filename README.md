@@ -18,9 +18,9 @@ There are two forms to run the database
 #### The Docker way:
 
 > Docker must be installed to do this:
-> Create an `.docker.env` file with the enviroment variables of the `.docker.env.example` file. These will be used for crating the database in a docker container. Be aware: the variables must match with on the POSTGRES_CONNECTION_URI of .env file.
+> Create an `.docker.env` file with the enviroment variables of the `.docker.env.example` file. These will be used for crating the database in a docker container. Be aware: the variables must match with on the DATABASE_URL of .env file.
 > After this, open a terminal and go to the root of the project and run `docker-compose up -d`
-> Run: `npx prisma migrate dev --preview-feature` for updating the migrations on the database (every time the prisma schema changes). This is mandatory after creating the database. This will use the POSTGRES_CONNECTION_URI eviroment variable of .env file.
+> Run: `npx prisma migrate dev --preview-feature` for updating the migrations on the database (every time the prisma schema changes). This is mandatory after creating the database. This will use the DATABASE_URL eviroment variable of .env file.
 > You will be able to connect to the database through port 5434
 
 #### The Postgres installation way
@@ -32,7 +32,7 @@ Install postgress on your machine and create a database. You can use this scrpip
   WITH ENCODING = 'UTF8';
 ```
 
-Run: `npx prisma migrate dev --preview-feature` for updating the migrations on the database (every time the prisma schema changes). This is mandatory after creating the database. This will use the POSTGRES_CONNECTION_URI eviroment variable of .env file.
+Run: `npx prisma migrate dev --preview-feature` for updating the migrations on the database (every time the prisma schema changes). This is mandatory after creating the database. This will use the DATABASE_URL eviroment variable of .env file.
 
 ### IDE specifications
 
