@@ -48,6 +48,8 @@ const usePersonDataStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       fontSize: theme.spacing(5),
     },
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
   headerSecondary: {
     color: theme.palette.background.paper,

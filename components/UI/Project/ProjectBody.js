@@ -6,165 +6,19 @@ import {
   CardContent,
   CardActionArea,
   Grid,
-  IconButton,
-  Dialog,
-  DialogActions,
+  Box,
+  Typography,
+  Divider,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-
+import { format, formatDistanceToNow, formatDistance } from 'date-fns';
+import { es, enUS } from 'date-fns/locale';
 import { useProjectContext } from '../../../store/contexts/projectContext';
 import LinkPreview from '../LinkPreview';
 import { useBodyStyles } from './styles';
+import ImageViewer from '../ImageViewer';
 
 const ImageLoader = ({ src }) => src;
 
-const CardProjectLink = ({ url }) => {
-  const styles = useBodyStyles();
-  if (!url || url === '') return null;
-  return (
-    <Card className={styles.card}>
-      <CardActionArea>
-        <CardContent>
-          <LinkPreview url={url} showTextField={false} />
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
-};
-
-const ImageViewer = (props) => {
-  const { open, handleClose, images, selectedIndex } = props;
-  const [selected, setSelected] = useState();
-  const [scale, setScale] = useState(1);
-
-  React.useEffect(() => {
-    if (open) {
-      setSelected(selectedIndex);
-      setScale(1);
-    } else setSelected(-1);
-  }, [open]);
-
-  const handleNext = () => {
-    if (images.length - 1 > selected) {
-      setSelected((state) => state + 1);
-    }
-  };
-  const handlePrev = () => {
-    if (selected > 0) {
-      setSelected((state) => state - 1);
-    }
-  };
-  const handleZoomIn = () => {
-    setScale((state) => state + 0.1);
-  };
-  const handleZoomOut = () => {
-    setScale((state) => state - 0.1);
-  };
-
-  if (selected < 0) return null;
-  return (
-    <Dialog
-      onClose={handleClose}
-      open={open}
-      fullWidth
-      maxWidth="lg"
-      PaperProps={{
-        style: {
-          backgroundColor: 'transparent',
-          boxShadow: 'none',
-          overflow: 'inherit',
-        },
-      }}
-    >
-      <div style={{ position: 'absolute', right: 16, zIndex: 999, overflow: 'hidden' }}>
-        <IconButton
-          onClick={handleClose}
-          style={{
-            backgroundColor: 'rgba(0,0,0,0.3)',
-            width: 'auto',
-            margin: '0 16px',
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </div>
-      <div
-        style={{
-          width: '100%',
-          minHeight: '75vh',
-          transform: `scale(${scale})`,
-          overflow: 'auto',
-        }}
-      >
-        <Image
-          loader={ImageLoader}
-          src={images[selected]}
-          quality={100}
-          alt="image"
-          layout="fill"
-          objectFit="contain"
-        />
-      </div>
-      <div
-        style={{
-          zIndex: 999,
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <div>
-          <IconButton
-            onClick={handlePrev}
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              width: 'auto',
-              margin: '0 16px',
-            }}
-          >
-            <ArrowBackIosIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={handleZoomOut}
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              width: 'auto',
-              margin: '0 16px',
-            }}
-          >
-            <ZoomOutIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={handleZoomIn}
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              width: 'auto',
-              margin: '0 16px',
-            }}
-          >
-            <ZoomInIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={handleNext}
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              width: 'auto',
-              margin: '0 16',
-            }}
-          >
-            <ArrowForwardIosIcon />
-          </IconButton>
-        </div>
-      </div>
-    </Dialog>
-  );
-};
 const CardImages = (props) => {
   const { images } = props;
   const styles = useBodyStyles();
@@ -224,12 +78,120 @@ const CardImages = (props) => {
   );
 };
 
+const CardProjectLink = (props) => {
+  const { link, devLink } = props;
+  const styles = useBodyStyles();
+
+  const handleClick = (url) => {
+    window.open(url, '_blank');
+  };
+
+  if (!link && !devLink) return null;
+  return (
+    <Grid item md={6} xs={12} className={styles.grid}>
+      <Card>
+        {link && (
+          <CardContent>
+            <CardActionArea onClick={() => handleClick(link)}>
+              <LinkPreview url={link} showTextField={false} readOnly />
+            </CardActionArea>
+          </CardContent>
+        )}
+        {devLink && (
+          <CardContent>
+            <CardActionArea onClick={() => handleClick(devLink)}>
+              <LinkPreview url={devLink} showTextField={false} readOnly />
+            </CardActionArea>
+          </CardContent>
+        )}
+      </Card>
+    </Grid>
+  );
+};
+
+const CardData = (props) => {
+  const { initialDate, finalDate, otherInfo } = props;
+  const styles = useBodyStyles();
+
+  if (!initialDate && !finalDate && !otherInfo) return null;
+
+  return (
+    <Grid item md={6} xs={12} className={styles.grid}>
+      <Card>
+        <CardContent>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+            }}
+          >
+            {initialDate && (
+              <Box padding={2}>
+                <Typography variant="h4" style={{ fontSize: 16 }}>
+                  Initial Date
+                </Typography>
+                <Typography variant="h5" style={{ fontSize: 14 }}>
+                  {format(initialDate, 'MM/dd/yyyy')}
+                </Typography>
+                <Typography variant="h5" style={{ fontSize: 14 }}>
+                  {formatDistanceToNow(initialDate, { addSuffix: true, locale: es })}
+                </Typography>
+              </Box>
+            )}
+            {initialDate && finalDate && (
+              <Box padding={2}>
+                <Typography variant="h4" style={{ fontSize: 16 }}>
+                  Intervalo
+                </Typography>
+                <Typography variant="h5" style={{ fontSize: 14 }}>
+                  {formatDistance(finalDate, initialDate, { addSuffix: true, locale: es })}
+                </Typography>
+              </Box>
+            )}
+            {finalDate && (
+              <Box padding={2}>
+                <Typography variant="h4" style={{ fontSize: 16 }}>
+                  Final Date
+                </Typography>
+                <Typography variant="h5" style={{ fontSize: 14 }}>
+                  {format(finalDate, 'MM/dd/yyyy')}
+                </Typography>
+                <Typography variant="h5" style={{ fontSize: 14 }}>
+                  {formatDistanceToNow(finalDate, { addSuffix: true, locale: es })}
+                </Typography>
+              </Box>
+            )}
+          </div>
+          {(initialDate || finalDate) && otherInfo && <Divider />}
+          {otherInfo && (
+            <Box padding={2}>
+              <Typography variant="h4" style={{ fontSize: 16 }}>
+                Other info
+              </Typography>
+              <Typography variant="h5" style={{ fontSize: 14 }}>
+                {otherInfo}
+              </Typography>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+};
+
 const ProjectBody = () => {
   const project = useProjectContext();
   console.log(project);
   return (
     <Grid container spacing={2} justify="space-between" style={{ margin: '8px 0', width: '100%' }}>
       <CardImages images={project.images} />
+      <CardProjectLink link={project.projectLink} devLink={project.projectDevLink} />
+      <CardData
+        initialDate={project.initialDate}
+        finalDate={project.finalDate}
+        otherInfo={project.otherInfo}
+      />
     </Grid>
   );
 };

@@ -1,7 +1,7 @@
 // TODO: En la vista movil, alinear las imagenes y los textos a la izquierda
 
 import React, { useReducer, useRef, useEffect, useCallback } from 'react';
-import { TextField, CircularProgress, Typography, useMediaQuery } from '@material-ui/core';
+import { TextField, CircularProgress, Typography, useMediaQuery, Box } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 // Internal libs
@@ -80,7 +80,7 @@ const ImageLoader = ({ src }) => src;
 
 const LinkPreview = (props) => {
   // constants
-  const { setLink, url, setPreview, ...rest } = props;
+  const { setLink, url, setPreview, readOnly, ...rest } = props;
   const abortController = useRef();
 
   // hooks
@@ -198,16 +198,27 @@ const LinkPreview = (props) => {
 
   return (
     <div className={styles.divContainer}>
-      <TextField
-        value={link || ''}
-        onChange={onChange}
-        label="Vínculo del proyecto"
-        variant="outlined"
-        margin="dense"
-        className={styles.linkField}
-        fullWidth={!greaterMdSize}
-        {...rest}
-      />
+      {!readOnly ? (
+        <TextField
+          value={link || ''}
+          onChange={onChange}
+          label="Vínculo del proyecto"
+          variant="outlined"
+          margin="dense"
+          className={styles.linkField}
+          fullWidth={!greaterMdSize}
+          {...rest}
+        />
+      ) : (
+        <Box padding={2}>
+          <Typography variant="h4" style={{ fontSize: 16 }}>
+            Vínculo del proyecto:
+          </Typography>
+          <Typography variant="h5" style={{ fontSize: 14 }}>
+            {link}
+          </Typography>
+        </Box>
+      )}
       {previewView}
     </div>
   );
@@ -217,10 +228,12 @@ LinkPreview.propTypes = {
   setLink: PropTypes.func.isRequired,
   setPreview: PropTypes.func,
   url: PropTypes.string,
+  readOnly: PropTypes.bool,
 };
 LinkPreview.defaultProps = {
   url: null,
   setPreview: () => {},
+  readOnly: false,
 };
 
 export default React.memo(LinkPreview);
