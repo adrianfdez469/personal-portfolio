@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 
-const serviceAccount = require('../../firebase.json');
+const serviceAccount =
+  process.env.NODE_ENV === 'development' ? require('../../firebase.json') : process.env.FIREBASE;
 
 if (!admin.apps.length) {
   admin.initializeApp({
