@@ -4,7 +4,7 @@ import prisma from '../../../prisma/prisma.instance';
 import { generateHash, checkHash } from '../../bcrypt';
 
 const requestGitlabEnhanceToken = async (code, originalPath) => {
-  const uri = `http://localhost:3000/api/customAuth/providerCallback?param=${JSON.stringify({
+  const uri = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?param=${JSON.stringify({
     provider: 'gitlab',
     originalPath: `${originalPath}`,
   })}`;
