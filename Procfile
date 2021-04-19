@@ -1,1 +1,1 @@
-release: npx prisma migrate deploy
+release: yarn prisma:deploy_migrate

@@ -9,6 +9,7 @@
     "start": "next start -p $PORT",
     "localStart": "next start",
     "prisma:migrate": "npx prisma migrate dev --preview-feature",
+    "prisma:deploy_migrate": "npx prisma migrate deploy --preview-feature",
     "prisma:generate": "npx prisma generate"
   },
   "dependencies": {
