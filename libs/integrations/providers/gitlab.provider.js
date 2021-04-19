@@ -89,6 +89,8 @@ export const respMiddleware = async (req, res, code, state, originalPath) => {
       Location: `${originalPath}`,
     });
     res.end();
+  } else {
+    throw Error(`WWrong checked hash BCRYPT_HASH_STRING`);
   }
 };
 export const getUserDataByToken = async (accessToken) => {
