@@ -1,1 +1,1 @@
-release: yarn prisma:deploy_migrate
+release: yarn vercel-build

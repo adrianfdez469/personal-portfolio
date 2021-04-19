@@ -10,7 +10,8 @@
     "localStart": "next start",
     "prisma:migrate": "npx prisma migrate dev --preview-feature",
     "prisma:deploy_migrate": "npx prisma migrate deploy --preview-feature",
-    "prisma:generate": "npx prisma generate"
+    "prisma:generate": "npx prisma generate",
+    "vercel-build": "npx prisma migrate deploy --preview-feature"
   },
   "dependencies": {
     "@date-io/date-fns": "v1",
