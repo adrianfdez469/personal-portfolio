@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/client';
 import DateFnsAdapter from '@date-io/date-fns';
-import prisma from '../../../prisma/prisma.instance';
+// import prisma from '../../../prisma/prisma.instance';
 import { generateHash, checkHash } from '../../bcrypt';
 
 const gqlRepos = (first = 50) => `
@@ -89,7 +89,7 @@ const gqlUserData = () => `
   }
 `;
 
-const findEnhanceToken = async (userId) => {
+const findEnhanceToken = async (userId, prisma) => {
   const userToken = await prisma.userTokens.findUnique({
     where: {
       userId_provider: {
@@ -108,7 +108,7 @@ const getGithubToken = async (context) => {
   if (!session) {
     throw new Error('NO_SESSION');
   }
-  const accessToken = await findEnhanceToken(session.userId);
+  const accessToken = await findEnhanceToken(session.userId, context.prisma);
   if (!accessToken) {
     if (session.tokenProvider !== 'github') {
       throw new Error('NO_PROVIDER_TOKEN');
@@ -151,7 +151,7 @@ export const getLoginPageUrl = (querys) => {
   return `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_ID}&redirect_uri=${redirectUrl}${scope}&state=${hash}`;
 };
 
-export const respMiddleware = async (req, res, code, state, originalPath) => {
+export const respMiddleware = async (req, res, code, state, originalPath, prisma) => {
   const checked = checkHash(process.env.BCRYPT_HASH_STRING, state);
   if (checked) {
     const session = await getSession({ req });
@@ -179,7 +179,7 @@ export const respMiddleware = async (req, res, code, state, originalPath) => {
   }
 };
 
-export const deleteEnhanceToken = async (userId) => {
+export const deleteEnhanceToken = async (userId, prisma) => {
   prisma.userTokens.delete({
     where: {
       userId_provider: {

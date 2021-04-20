@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/client';
 import DateFnsAdapter from '@date-io/date-fns';
-import prisma from '../../../prisma/prisma.instance';
+// import prisma from '../../../prisma/prisma.instance';
 import { generateHash, checkHash } from '../../bcrypt';
 
 const requestGitlabEnhanceToken = async (code, originalPath) => {
@@ -22,7 +22,7 @@ const requestGitlabEnhanceToken = async (code, originalPath) => {
   return accessToken.access_token;
 };
 
-const findEnhanceToken = async (userId) => {
+const findEnhanceToken = async (userId, prisma) => {
   const userToken = await prisma.userTokens.findUnique({
     where: {
       userId_provider: {
@@ -40,7 +40,7 @@ const getGitlabToken = async (context) => {
   if (!session) {
     throw new Error('NO_SESSION');
   }
-  const accessToken = await findEnhanceToken(session.userId);
+  const accessToken = await findEnhanceToken(session.userId, context.prisma);
   if (!accessToken) {
     if (session.tokenProvider !== 'gitlab') {
       throw new Error('NO_PROVIDER_TOKEN');
@@ -64,7 +64,7 @@ export const getLoginPageUrl = (querys) => {
   return `https://gitlab.com/oauth/authorize?client_id=${process.env.GITLAB_ID}&redirect_uri=${redirectUrl}&response_type=code&state=${hash}${scope}`;
 };
 
-export const respMiddleware = async (req, res, code, state, originalPath) => {
+export const respMiddleware = async (req, res, code, state, originalPath, prisma) => {
   const checked = checkHash(process.env.BCRYPT_HASH_STRING, state);
   if (checked) {
     const session = await getSession({ req });
@@ -253,4 +253,15 @@ export const getRepoData = async (context, projectId) => {
     throw new Error('UNAUTHORIZED');
   }
   throw new Error('INTERNAL_ERROR');
+};
+
+export const deleteEnhanceToken = async (userId, prisma) => {
+  prisma.userTokens.delete({
+    where: {
+      userId_provider: {
+        provider: 'github',
+        userId,
+      },
+    },
+  });
 };

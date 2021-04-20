@@ -103,7 +103,7 @@ export default (req, res) =>
           return;
         }
         if (!data.isNewUser) {
-          provider.deleteEnhanceToken(data.user.id);
+          provider.deleteEnhanceToken(data.user.id, prisma);
           return;
         }
         if (data.account.accessToken && data.account.accessToken !== '') {

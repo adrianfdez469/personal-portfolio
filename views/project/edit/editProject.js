@@ -253,7 +253,6 @@ const EditProjectView = (props) => {
 
   const handleSave = () => {
     dispatch({ type: actions.START_SAVING });
-    console.log(state);
     const proglangs = state.data.skillsData.languages.map((lang) => ({
       id: lang.id || null,
       name: lang.text,

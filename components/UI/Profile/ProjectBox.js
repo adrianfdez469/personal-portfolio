@@ -24,7 +24,6 @@ const ProjectBox = (props) => {
   const { user } = useProfile();
   const filterProject = useFilterProject();
   const router = useRouter();
-  console.log(router);
   const goProject = (project) => {
     if (edit) {
       router.push(`/profile/${user.id}/projects/${project.id}`);

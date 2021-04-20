@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/client';
-import prisma from '../../prisma/prisma.instance';
+// import prisma from '../../prisma/prisma.instance';
 import SkillCatergories from '../../constants/skillsCategorysConst';
 import getPreviewData from '../../libs/metascraper';
 import ProxyProvider from '../../libs/integrations/provider.proxy';
@@ -17,30 +17,30 @@ const resolvers = {
       prisma.user.findMany({
         where: { ...args },
       }), */
-    user: (parent, args) =>
+    user: (parent, args, { prisma }) =>
       prisma.user.findUnique({
         where: {
           id: +args.id,
         },
       }),
-    userBySlug: (parent, args) =>
+    userBySlug: (parent, args, { prisma }) =>
       prisma.user.findFirst({
         where: {
           slug: args.slug,
           publicProfile: true,
         },
       }),
-    projects: (parent, args) =>
+    projects: (parent, args, { prisma }) =>
       prisma.project.findMany({
         where: { ...args },
       }),
-    projectBySlug: (parent, args) =>
+    projectBySlug: (parent, args, { prisma }) =>
       prisma.project.findFirst({
         where: {
           projectSlug: args.projectSlug,
         },
       }),
-    skills: (parent, args) =>
+    skills: (parent, args, { prisma }) =>
       prisma.skill.findMany({
         where: { ...args },
       }),
@@ -59,7 +59,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    createSkill: (parent, args) => {
+    createSkill: (parent, args, { prisma }) => {
       const { name, category } = args;
       return prisma.skill
         .create({
@@ -106,7 +106,7 @@ const resolvers = {
                   if (skill.id) {
                     resolve(+skill.id);
                   } else {
-                    prisma.skill
+                    context.prisma.skill
                       .findFirst({
                         where: {
                           category: skill.category,
@@ -117,7 +117,7 @@ const resolvers = {
                         if (existimgSkill) {
                           resolve(+existimgSkill.id);
                         } else {
-                          prisma.skill
+                          context.prisma.skill
                             .create({
                               data: { name: skill.name, category: skill.category },
                             })
@@ -134,7 +134,7 @@ const resolvers = {
 
         let existProject;
         if (projectId) {
-          existProject = await prisma.project.findFirst({
+          existProject = await context.prisma.project.findFirst({
             where: {
               projectSlug,
               AND: {
@@ -145,7 +145,7 @@ const resolvers = {
             },
           });
         } else {
-          existProject = await prisma.project.findFirst({
+          existProject = await context.prisma.project.findFirst({
             where: {
               projectSlug,
             },
@@ -159,7 +159,7 @@ const resolvers = {
           throw error;
         }
 
-        const savedProject = await prisma.project.upsert({
+        const savedProject = await context.prisma.project.upsert({
           where: {
             id: +projectId || -1,
           },
@@ -233,7 +233,7 @@ const resolvers = {
         };
       }
     },
-    updateUser: (parent, args) => {
+    updateUser: (parent, args, { prisma }) => {
       const { userId, user } = args;
       const { id, emailVerified, createdAt, updatedAt, ...userData } = user;
 
@@ -259,7 +259,7 @@ const resolvers = {
     },
   },
   User: {
-    projects: (user) =>
+    projects: (user, args, { prisma }) =>
       prisma.project.findMany({
         where: {
           userId: user.id,
@@ -270,7 +270,7 @@ const resolvers = {
     initialDate: (project) =>
       project.initialDate ? new Date(project.initialDate).getTime() : null,
     finalDate: (project) => (project.finalDate ? new Date(project.finalDate).getTime() : null),
-    skills: (project) =>
+    skills: (project, args, { prisma }) =>
       prisma.skill.findMany({
         where: {
           projects: {
@@ -280,7 +280,7 @@ const resolvers = {
           },
         },
       }),
-    images: (project) =>
+    images: (project, args, { prisma }) =>
       prisma.image.findMany({
         where: {
           projectId: {
@@ -288,7 +288,7 @@ const resolvers = {
           },
         },
       }),
-    collaborators: (project) =>
+    collaborators: (project, args, { prisma }) =>
       prisma.collaborator.findMany({
         where: {
           projectId: {
@@ -296,7 +296,7 @@ const resolvers = {
           },
         },
       }),
-    slug: async (project) => {
+    slug: async (project, args, { prisma }) => {
       const user = await prisma.user.findUnique({
         where: {
           id: project.userId,

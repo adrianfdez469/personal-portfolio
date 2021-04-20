@@ -1,4 +1,5 @@
 import ProxyProvider from '../../../libs/integrations/provider.proxy';
+import prisma from '../../../prisma/prisma.instance';
 
 const handler = async (req, res) => {
   try {
@@ -12,7 +13,7 @@ const handler = async (req, res) => {
       res.end();
       return;
     }
-    await providerObj.respMiddleware(req, res, code, state, originalPath);
+    await providerObj.respMiddleware(req, res, code, state, originalPath, prisma);
   } catch (err) {
     console.log(err);
   }
