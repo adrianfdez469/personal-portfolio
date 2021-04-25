@@ -11,7 +11,7 @@ const SyncButton = (props) => {
       startIcon={<Icon fontSize="large" />}
       onClick={handleSelect}
       style={{
-        width: 136,
+        width: 'auto',
         margin: 16,
       }}
     >
