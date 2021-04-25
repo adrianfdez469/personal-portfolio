@@ -58,7 +58,7 @@ const ProjectBox = (props) => {
           <Grid item key={element.id} style={{ padding: '8px 0' }}>
             <Card className={styles.card}>
               <CardActionArea
-                style={{ display: 'flex-root', flexDirection: 'column' }}
+                style={{ display: 'flex-root', flexDirection: 'column', alignItems: 'normal' }}
                 onClick={() => goProject(element)}
               >
                 <div
