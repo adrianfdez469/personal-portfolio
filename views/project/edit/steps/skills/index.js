@@ -32,7 +32,6 @@ const SkillsForm = (props) => {
   const [allProgrammingLangs, setAllProgrammingLangs] = useState([]);
   const [allTechnologies, setAllTechnologies] = useState([]);
   const { lang } = useLang();
-  console.log(data.languages);
   // hadlers
   const handleDelLang = (pl) => {
     const languages = data.languages.filter((devlang) => devlang.text !== pl.text);
