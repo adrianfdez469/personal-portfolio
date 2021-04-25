@@ -29,12 +29,12 @@ const CustomChip = (props) => {
 
   let style = {
     backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
+    color: theme.palette.getContrastText(theme.palette.background.paper), //theme.palette.text.primary,
   };
   if (!selected) {
     style = {
       backgroundColor: theme.palette.primary.main,
-      color: theme.palette.text.primary,
+      color: theme.palette.getContrastText(theme.palette.primary.main), //theme.palette.text.primary,
     };
   }
 
