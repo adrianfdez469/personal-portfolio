@@ -54,7 +54,7 @@ const reducer = (state, action) => {
 };
 
 const EditProjectView = (props) => {
-  const { handleClose, lang, Steps, onSave } = props;
+  const { handleClose, lang, Steps, onSave, title } = props;
   // Hooks
   const style = useMainViewSyles();
   const greaterMdSize = useMediaQuery((theme) => theme.breakpoints.up('800'));
@@ -159,7 +159,7 @@ const EditProjectView = (props) => {
       <AppBar className={style.appBar}>
         <Toolbar>
           <Typography variant="button" className={style.title}>
-            {lang.title}
+            {title}
           </Typography>
           <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
             <CloseIcon />
@@ -196,6 +196,7 @@ EditProjectView.propTypes = {
       .isRequired
   ).isRequired,
   onSave: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default EditProjectView;

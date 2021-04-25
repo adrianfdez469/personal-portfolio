@@ -331,7 +331,13 @@ const EditProjectView = (props) => {
 
   return (
     <>
-      <StepForm Steps={Steps} lang={lang} handleClose={handleClose} onSave={handleSave} />
+      <StepForm
+        Steps={Steps}
+        lang={lang}
+        handleClose={handleClose}
+        onSave={handleSave}
+        title={data ? lang.editTitle : lang.title}
+      />
       <CustomBackdrop open={state.saving} />
     </>
   );

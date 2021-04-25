@@ -287,7 +287,13 @@ const EditProjectView = (props) => {
 
   return (
     <>
-      <StepForm handleClose={handleClose} Steps={Steps} lang={lang} onSave={handleSave} />
+      <StepForm
+        handleClose={handleClose}
+        Steps={Steps}
+        lang={lang}
+        onSave={handleSave}
+        title={lang.title}
+      />
     </>
   );
 };

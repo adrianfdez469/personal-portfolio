@@ -24,20 +24,6 @@ const languageLocales = {
 export const getServerSideProps = async (context) => {
   const { projectid } = context.params;
 
-  /* const project = await prisma.project.findUnique({
-    include: {
-      skills: {
-        select: {
-          skill: true,
-        },
-      },
-      images: true,
-      collaborators: true,
-    },
-    where: {
-      id: +projectid,
-    },
-  }); */
   const project = await getProjectDataByProjectId(+projectid);
   if (!project) {
     return { notFound: true };
