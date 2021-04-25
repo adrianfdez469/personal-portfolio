@@ -34,7 +34,7 @@
       },
       "title": {
         "label": "Títylo de trabajo",
-        "placeholder": "Títylo de trabajo"
+        "placeholder": "Título de trabajo"
       },
       "description": {
         "label": "Sobre tí",
@@ -44,7 +44,7 @@
         "clearLabel": "Limpiar",
         "cancelLabel": "Cancelar",
         "okLabel": "Ok",
-        "formatDate": "dd/mm/yyyy",
+        "formatDate": "dd/MM/yyyy",
         "invalidDate": "Fecha inválida",
         "maxDateMessage": "Fecha mayor que la fecha máxima",
         "minDateMessage": "Fecha menor que la fecha mínima",

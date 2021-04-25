@@ -53,7 +53,7 @@
         "clearLabel": "Limpiar",
         "cancelLabel": "Cancelar",
         "okLabel": "Ok",
-        "formatDate": "dd/mm/yyyy",
+        "formatDate": "dd/MM/yyyy",
         "invalidDate": "Fecha inválida",
         "maxDateMessage": "Fecha mayor que la fecha máxima",
         "minDateMessage": "Fecha menor que la fecha mínima"
