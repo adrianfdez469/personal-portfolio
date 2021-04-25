@@ -2,7 +2,11 @@
 // libs
 import React from 'react';
 import { useRouter } from 'next/router';
-import { getLanguageByLocale, getThemeByContext } from '../../../../backend/preRenderingData';
+import {
+  getLanguageByLocale,
+  getThemeByContext,
+  getProjectDataByProjectId,
+} from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
 import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
@@ -10,7 +14,7 @@ import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
 import { EditProject } from '../../../../views/index';
 import { LangContext } from '../../../../store/contexts/langContext';
 import SkillsCategorysConst from '../../../../constants/skillsCategorysConst';
-import prisma from '../../../../prisma/prisma.instance';
+// import prisma from '../../../../prisma/prisma.instance';
 
 const languageLocales = {
   en: EN,
@@ -20,7 +24,7 @@ const languageLocales = {
 export const getServerSideProps = async (context) => {
   const { projectid } = context.params;
 
-  const project = await prisma.project.findUnique({
+  /* const project = await prisma.project.findUnique({
     include: {
       skills: {
         select: {
@@ -33,10 +37,17 @@ export const getServerSideProps = async (context) => {
     where: {
       id: +projectid,
     },
-  });
+  }); */
+  const project = await getProjectDataByProjectId(+projectid);
   if (!project) {
     return { notFound: true };
   }
+
+  const mapSkill = (sk) => ({
+    id: sk.id,
+    text: sk.name,
+    category: sk.category,
+  });
 
   const projectData = {
     basicInfoData: {
@@ -60,19 +71,11 @@ export const getServerSideProps = async (context) => {
     },
     skillsData: {
       languages: project.skills
-        .filter((obj) => obj.skill.category === SkillsCategorysConst.PROG_LANG)
-        .map((obj) => ({
-          text: obj.skill.name,
-          id: obj.skill.id,
-          category: obj.skill.category,
-        })),
+        .filter((obj) => obj.category === SkillsCategorysConst.PROG_LANG)
+        .map(mapSkill),
       technologies: project.skills
-        .filter((obj) => obj.skill.category === SkillsCategorysConst.PROG_TECH)
-        .map((obj) => ({
-          text: obj.skill.name,
-          id: obj.skill.id,
-          category: obj.skill.category,
-        })),
+        .filter((obj) => obj.category === SkillsCategorysConst.PROG_TECH)
+        .map(mapSkill),
     },
     collaborators: project.collaborators,
     images: project.images.map((image) => ({

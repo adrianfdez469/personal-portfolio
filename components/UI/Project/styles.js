@@ -51,8 +51,7 @@ export const useBodyStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
   },
   gridCardContainer: {
-    marginTop: theme.spacing(0.5),
-
+    // marginTop: theme.spacing(0.5),
     [theme.breakpoints.down('md')]: {
       padding: theme.spacing(1),
     },

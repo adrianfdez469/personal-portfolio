@@ -182,6 +182,66 @@ export const getProjectDataByProjectSlug = async (projectSlug) => {
   return resp.data.projectBySlug;
 };
 
+export const getProjectDataByProjectId = async (projectId) => {
+  const query = `
+    query getData ($id: IntComparer){
+      projects(id: $id){
+        id
+        name
+        description
+        initialDate
+        finalDate
+        skills {
+          id
+          name
+          category
+        }
+        projectLink
+        projectDevLink
+        otherInfo
+        images {
+          id
+          imageUrl
+        }
+        logoUrl
+        collaborators {
+          login
+          avatarUrl
+          email
+          bio
+          name
+          url
+          isOwner
+        }
+        slug
+        projectSlug
+      }
+    }
+  `;
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        id: {
+          equals: projectId,
+        },
+      },
+    }),
+  });
+  if (!response.ok) {
+    throw new Error('Error');
+  }
+  const resp = await response.json();
+  if (resp.data.projects.length !== 1) {
+    throw new Error('Error');
+  }
+  return resp.data.projects[0];
+};
+
 export const getProfileSkills = async (profileId) => {
   const query = `
     query getUserSkills($id: ID!) {

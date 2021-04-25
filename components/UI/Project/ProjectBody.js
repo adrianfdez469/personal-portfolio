@@ -280,7 +280,13 @@ const ProjectBody = () => {
   const project = useProjectContext();
   const styles = useBodyStyles();
   return (
-    <Grid container spacing={2} justify="space-between" className={styles.gridCardContainer}>
+    <Grid
+      container
+      spacing={2}
+      justify="space-between"
+      className={styles.gridCardContainer}
+      style={{ marginTop: 4 }}
+    >
       <CardImages images={project.images} />
 
       <CardProjectLink link={project.projectLink} devLink={project.projectDevLink} />
