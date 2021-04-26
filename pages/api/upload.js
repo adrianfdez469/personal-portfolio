@@ -4,13 +4,18 @@ import { saveFile } from '../../libs/fileManagement';
 
 // TODO: Permisos. Solo para usuarios logueados
 
+const storage =
+  process.env.NODE_ENV === 'development'
+    ? multer.diskStorage({
+        destination: './public/uploads',
+        filename: async (req, file, cb) => {
+          cb(null, file.originalname);
+        },
+      })
+    : multer.memoryStorage();
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: './public/uploads',
-    filename: async (req, file, cb) => {
-      cb(null, file.originalname);
-    },
-  }),
+  storage,
 });
 
 const apiRoute = nextConnect({
@@ -22,15 +27,11 @@ const apiRoute = nextConnect({
   },
 });
 
-apiRoute.use(upload.array('imageFile'));
+apiRoute.use(upload.single('imageFile'));
 
 apiRoute.post(async (req, res) => {
-  const {
-    files: [file],
-  } = req;
-
+  const { file } = req;
   const url = await saveFile(file);
-
   res.status(200).json({ url });
 });
 

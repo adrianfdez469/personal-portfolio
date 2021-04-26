@@ -13,14 +13,14 @@ const languageLocales = {
 
 export async function getServerSideProps(context) {
   const language = await getLanguageByLocale(context.locale, languageLocales);
-  const theme = await getThemeByContext(context);
+  // const theme = await getThemeByContext(context);
   const baseUrl = process.env.NEXTAUTH_URL;
 
   return {
     props: {
       providers: await providersFunc(context),
       language,
-      theme,
+      // theme,
       csrftoken: await csrfToken(context),
       baseUrl,
     },

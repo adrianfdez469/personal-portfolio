@@ -1,24 +1,23 @@
 import cloudinary from './integrations/cloudinary';
 
+const streamifier = require('streamifier');
 const fs = require('fs');
 
 const getLocalFileUrl = (image) => `${image.destination}/${image.originalname}`;
 
-const uploadFileToCloudinary = async (image) => {
+const uploadFileToCloudinary = async (imageBuffer) => {
   try {
-    const imageTempPath = getLocalFileUrl(image);
     const url = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload(imageTempPath, (error, result) => {
-        if (result) {
-          resolve(result);
-        }
-        if (error) {
-          reject(error);
-        }
-      });
-    }).then((result) => {
-      fs.promises.unlink(imageTempPath);
-      return result.url;
+      streamifier.createReadStream(imageBuffer).pipe(
+        cloudinary.uploader.upload_stream((error, result) => {
+          if (result) {
+            resolve(result.url);
+          }
+          if (error) {
+            reject(error);
+          }
+        })
+      );
     });
     return url;
   } catch (err) {
@@ -34,7 +33,7 @@ export const saveFile = async (file) => {
     return imgUrl;
   }
 
-  const imageUrl = await uploadFileToCloudinary(file);
+  const imageUrl = await uploadFileToCloudinary(file.buffer);
   return imageUrl;
 };
 
