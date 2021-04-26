@@ -9,14 +9,19 @@ const uploadFileToCloudinary = async (imageBuffer) => {
   try {
     const url = await new Promise((resolve, reject) => {
       streamifier.createReadStream(imageBuffer).pipe(
-        cloudinary.uploader.upload_stream((error, result) => {
-          if (result) {
-            resolve(result.url);
+        cloudinary.uploader.upload_stream(
+          {
+            folder: process.env.CLOUDINARY_IMG_FOLDER,
+          },
+          (error, result) => {
+            if (result) {
+              resolve(result.url);
+            }
+            if (error) {
+              reject(error);
+            }
           }
-          if (error) {
-            reject(error);
-          }
-        })
+        )
       );
     });
     return url;
@@ -29,7 +34,7 @@ const uploadFileToCloudinary = async (imageBuffer) => {
 export const saveFile = async (file) => {
   if (process.env.NODE_ENV === 'development') {
     const url = getLocalFileUrl(file);
-    const imgUrl = `${process.env.NEXTAUTH_URL}${url.split('./public')[1]}`;
+    const imgUrl = `${process.env.NEXTAUTH_URL}/${url.split('./public')[1]}`;
     return imgUrl;
   }
 
@@ -47,10 +52,13 @@ const deleteFileFromCloudinary = async (path) => {
   try {
     const publicId = path.split('/').pop().split('.')[0];
     const res = await new Promise((resolve, reject) => {
-      cloudinary.uploader.destroy(publicId, (error, result) => {
-        if (error) reject(error);
-        if (result) resolve(result);
-      });
+      cloudinary.uploader.destroy(
+        `${process.env.CLOUDINARY_IMG_FOLDER}/${publicId}`,
+        (error, result) => {
+          if (error) reject(error);
+          if (result) resolve(result);
+        }
+      );
     });
 
     if (res.result !== 'ok') throw new Error('ERROR_DELETING_IMG');
