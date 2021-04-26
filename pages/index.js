@@ -5,7 +5,7 @@ import ES from '../i18n/locales/landing/landign.es.json';
 import EN from '../i18n/locales/landing/landing.en.json';
 
 import { LangContext } from '../store/contexts/langContext';
-import { getLanguageByLocale, getThemeByContext } from '../backend/preRenderingData';
+import { getLanguageByLocale /* , getThemeByContext */ } from '../backend/preRenderingData';
 
 const languageLocales = {
   en: EN,
@@ -14,12 +14,12 @@ const languageLocales = {
 
 export const getServerSideProps = async (context) => {
   const language = await getLanguageByLocale(context.locale, languageLocales);
-  const theme = await getThemeByContext(context);
+  // const theme = await getThemeByContext(context);
 
   return {
     props: {
       language,
-      theme,
+      // theme,
     },
   };
 };
