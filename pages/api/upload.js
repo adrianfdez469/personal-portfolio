@@ -4,15 +4,7 @@ import { saveFile } from '../../libs/fileManagement';
 
 // TODO: Permisos. Solo para usuarios logueados
 
-const storage =
-  process.env.NODE_ENV === 'development'
-    ? multer.diskStorage({
-        destination: './public/uploads',
-        filename: async (req, file, cb) => {
-          cb(null, file.originalname);
-        },
-      })
-    : multer.memoryStorage();
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,

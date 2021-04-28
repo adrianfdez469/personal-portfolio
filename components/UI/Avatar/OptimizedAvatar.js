@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Image from 'next/image';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core';
+import { providerImageLoader } from '../../../libs/helpers';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -16,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ImageLoader = ({ src }) => src;
-
 const OptimizedAvatar = (props) => {
   const { src, width, height, quality, className, children, ...otherProps } = props;
   const styles = useStyles();
@@ -26,7 +25,7 @@ const OptimizedAvatar = (props) => {
     ? () => (
         <Image
           className={styles.image}
-          loader={ImageLoader}
+          loader={providerImageLoader}
           src={src}
           width={width}
           height={height}

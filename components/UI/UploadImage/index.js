@@ -3,6 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, Button } from '@material-ui/core';
 import Webcam from 'react-webcam';
+import Image from 'next/image';
+import { getPublicIdFromImageUrl } from '../../../libs/helpers';
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -108,9 +110,19 @@ const imageUpload = (props) => {
     }
   }, [image, error]);
 
-  const IMAGE_VIEW = (
+  /* const IMAGE_VIEW = (
     <img style={styles} alt="Preview" src={clearPreview ? firstImgRef.current : image} />
+  ); */
+  const IMAGE_VIEW = (
+    <Image
+      alt="Preview"
+      src={clearPreview ? firstImgRef.current : getPublicIdFromImageUrl(image)}
+      style={styles}
+      width={styles.width}
+      height={styles.height}
+    />
   );
+
   const WEBCAM = (
     <div style={styles}>
       <Webcam

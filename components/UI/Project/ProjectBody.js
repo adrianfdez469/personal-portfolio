@@ -25,13 +25,12 @@ import LinkPreview from '../LinkPreview';
 import { useBodyStyles } from './styles';
 import ImageViewer from '../ImageViewer';
 import { useLang } from '../../../store/contexts/langContext';
+import { getPublicIdFromImageUrl } from '../../../libs/helpers';
 
 const dateLocales = {
   en: enLocale,
   es: esLocale,
 };
-
-const ImageLoader = ({ src }) => src;
 
 const CardImages = (props) => {
   const { images } = props;
@@ -50,7 +49,7 @@ const CardImages = (props) => {
     <Grid item xs={12} className={styles.grid}>
       <Card>
         <Grid
-          md={images.length > 1 ? 12 : 6}
+          // md={images.length > 1 ? 12 : 6}
           sm={12}
           item
           container
@@ -75,9 +74,9 @@ const CardImages = (props) => {
                     }}
                   >
                     <Image
-                      loader={ImageLoader}
-                      src={image.imageUrl}
-                      quality={100}
+                      // loader={ImageLoader}
+                      src={getPublicIdFromImageUrl(image.imageUrl)}
+                      quality={30}
                       alt="image"
                       layout="fill"
                       objectFit="contain"

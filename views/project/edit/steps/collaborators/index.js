@@ -69,7 +69,13 @@ const CollaboratorsForm = (props) => {
       {collaborators.map((profile, idx) => (
         <Accordion key={idx.toString()} expanded={idx === expanded} onChange={handleChange(idx)}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <OptimizedAvatar alt={profile.name} src={profile.avatarUrl} quality={20} />
+            <OptimizedAvatar
+              alt={profile.name}
+              src={profile.avatarUrl}
+              quality={75}
+              height={40}
+              width={40}
+            />
 
             <div style={{ marginLeft: 16, display: 'flex', flexDirection: 'column', flex: 1 }}>
               <Typography color="inherit">{profile.name}</Typography>

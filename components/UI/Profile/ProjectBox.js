@@ -8,8 +8,7 @@ import { useProjectBoxStyles } from './styles';
 
 import { useProfile } from '../../../store/contexts/profileContext';
 import { useFilterProject } from '../../../store/contexts/filterProjectContext';
-
-const ImageLoader = ({ src }) => src;
+import { getPublicIdFromImageUrl } from '../../../libs/helpers';
 
 const countFilteredSkills = (project, filters) =>
   project.skills.reduce(
@@ -68,18 +67,25 @@ const ProjectBox = (props) => {
                     position: 'relative',
                   }}
                 >
-                  <Image
-                    loader={ImageLoader}
-                    src={
-                      element.images.length > 0
-                        ? element.images[0].imageUrl
-                        : `/images/no-image-red-2.png`
-                    }
-                    quality={50}
-                    alt="image"
-                    layout="fill"
-                    objectFit="cover"
-                  />
+                  {element.images.length > 0 ? (
+                    <Image
+                      src={getPublicIdFromImageUrl(element.images[0].imageUrl)}
+                      alt="image"
+                      objectFit="cover"
+                      layout="fixed"
+                      width={304}
+                      height={140}
+                    />
+                  ) : (
+                    <Image
+                      src="no-image-red-2_ckq2hb.png"
+                      alt="no-image"
+                      objectFit="cover"
+                      layout="fixed"
+                      width={304}
+                      height={140}
+                    />
+                  )}
                 </div>
                 <CardContent>
                   <Typography variant="h5">{element.name}</Typography>

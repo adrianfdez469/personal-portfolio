@@ -11,3 +11,19 @@ export const isStringEmpty = (text) => {
   }
   return true;
 };
+
+export const getPublicIdFromImageUrl = (url) => {
+  if (url) {
+    const arrPaths = url.split('/');
+    const publicId = `${process.env.NEXT_PUBLIC_CLOUDINARY_IMG_FOLDER}/${arrPaths.pop()}`;
+    return publicId;
+  }
+  return '';
+};
+
+export const providerImageLoader = ({ src, width, quality }) => {
+  // github
+  if (src.includes('github')) return `${src}&s=${(width * quality) / 100}`;
+  // if (src.includes('gitlab')) return `${src}&size=${(width * quality) / 100}`;
+  return src;
+};

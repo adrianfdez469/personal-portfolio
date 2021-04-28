@@ -104,7 +104,7 @@ const GalleryForm = (props) => {
             <ReactProfileImage
               camera
               returnImage={addImageHandler}
-              defaultImage="/images/no-image-red-2.png"
+              defaultImage="no-image-red-2_ckq2hb.png"
               clearPreview
               maxImgSize={maxImgSize}
               isNotImgErrorMsg={lang.galleryStep.body.typeErrMsg}

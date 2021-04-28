@@ -1,9 +1,6 @@
 import cloudinary from './integrations/cloudinary';
 
 const streamifier = require('streamifier');
-const fs = require('fs');
-
-const getLocalFileUrl = (image) => `${image.destination}/${image.originalname}`;
 
 const uploadFileToCloudinary = async (imageBuffer) => {
   try {
@@ -11,15 +8,11 @@ const uploadFileToCloudinary = async (imageBuffer) => {
       streamifier.createReadStream(imageBuffer).pipe(
         cloudinary.uploader.upload_stream(
           {
-            folder: process.env.CLOUDINARY_IMG_FOLDER,
+            folder: process.env.NEXT_PUBLIC_CLOUDINARY_IMG_FOLDER,
           },
           (error, result) => {
-            if (result) {
-              resolve(result.url);
-            }
-            if (error) {
-              reject(error);
-            }
+            if (result) resolve(result.url);
+            if (error) reject(error);
           }
         )
       );
@@ -31,29 +24,14 @@ const uploadFileToCloudinary = async (imageBuffer) => {
   }
 };
 
-export const saveFile = async (file) => {
-  if (process.env.NODE_ENV === 'development') {
-    const url = getLocalFileUrl(file);
-    const imgUrl = `${process.env.NEXTAUTH_URL}/${url.split('./public')[1]}`;
-    return imgUrl;
-  }
-
-  const imageUrl = await uploadFileToCloudinary(file.buffer);
-  return imageUrl;
-};
-
-const deleteLocalFile = async (path) => {
-  const pathSlices = path.split('/');
-  const name = pathSlices.slice(-1);
-  return fs.promises.unlink(`./public/uploads/${name}`).then(() => true);
-};
+export const saveFile = async (file) => uploadFileToCloudinary(file.buffer);
 
 const deleteFileFromCloudinary = async (path) => {
   try {
     const publicId = path.split('/').pop().split('.')[0];
     const res = await new Promise((resolve, reject) => {
       cloudinary.uploader.destroy(
-        `${process.env.CLOUDINARY_IMG_FOLDER}/${publicId}`,
+        `${process.env.NEXT_PUBLIC_CLOUDINARY_IMG_FOLDER}/${publicId}`,
         (error, result) => {
           if (error) reject(error);
           if (result) resolve(result);
@@ -69,9 +47,4 @@ const deleteFileFromCloudinary = async (path) => {
   }
 };
 
-export const deleteFile = async (path) => {
-  if (process.env.NODE_ENV === 'development') {
-    return deleteLocalFile(path);
-  }
-  return deleteFileFromCloudinary(path);
-};
+export const deleteFile = async (path) => deleteFileFromCloudinary(path);

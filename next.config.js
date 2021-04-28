@@ -8,4 +8,8 @@ module.exports = {
     webpack5: true,
     strictPostcssConfiguration: true,
   },
+  images: {
+    loader: 'cloudinary',
+    path: 'https://res.cloudinary.com/dkaifybbg',
+  },
 };
