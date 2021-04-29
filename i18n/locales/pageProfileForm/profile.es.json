@@ -69,9 +69,11 @@
       "label": "Esta información permitirá a los reclutadores contactar contigo"
     },
     "form": {
+      "empty": "Este campo no puede estar vacío",
       "email": {
         "label": "Correo",
-        "placeholder": "Correo electrónico"
+        "placeholder": "Correo electrónico",
+        "invalid": "Correo inválido"
       },
       "phone": {
         "label": "Teléfono",

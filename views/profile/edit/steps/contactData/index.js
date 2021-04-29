@@ -6,10 +6,14 @@ import { Grid, TextField } from '@material-ui/core';
 import StepItem from '../../../../../components/UI/StepForm/StepItem';
 // hooks
 import { useLang } from '../../../../../store/contexts/langContext';
+// Libs
+import { isEmail, isStringEmpty } from '../../../../../libs/helpers';
 
 const PersonalDataForm = ({ data, edit }) => {
   // constants
   const { lang } = useLang();
+
+  const errorEmail = () => !isStringEmpty(data.email) && !isEmail(data.email);
 
   return (
     <StepItem label={lang.contactDataStep.header.label}>
@@ -24,6 +28,8 @@ const PersonalDataForm = ({ data, edit }) => {
             onChange={(event) => edit('email', event.target.value)}
             variant="outlined"
             fullWidth
+            error={errorEmail()}
+            helperText={errorEmail() ? lang.contactDataStep.form.email.invalid : ''}
           />
         </Grid>
         <Grid item xs={12} sm={8} md={6}>

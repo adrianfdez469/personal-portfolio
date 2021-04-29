@@ -9,6 +9,8 @@ import esLocale from 'date-fns/locale/es';
 import enLocale from 'date-fns/locale/en-US';
 // Components
 import StepItem from '../../../../../components/UI/StepForm/StepItem';
+// Libs
+import { isStringEmpty } from '../../../../../libs/helpers';
 // hooks
 import { useLang } from '../../../../../store/contexts/langContext';
 
@@ -38,6 +40,8 @@ const PersonalDataForm = ({ data, edit }) => {
               variant="outlined"
               fullWidth
               autoFocus
+              error={isStringEmpty(data.name)}
+              helperText={isStringEmpty(data.name) ? lang.personalDataStep.form.empty : ''}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
@@ -50,6 +54,8 @@ const PersonalDataForm = ({ data, edit }) => {
               onChange={(event) => edit('title', event.target.value)}
               variant="outlined"
               fullWidth
+              error={isStringEmpty(data.title)}
+              helperText={isStringEmpty(data.title) ? lang.personalDataStep.form.empty : ''}
             />
           </Grid>
           <Grid item xs={12} md={12}>
@@ -58,11 +64,14 @@ const PersonalDataForm = ({ data, edit }) => {
               placeholder={lang.personalDataStep.form.description.placeholder}
               multiline
               rows="5"
+              required
               margin="dense"
               value={data.description}
               onChange={(event) => edit('description', event.target.value)}
               variant="outlined"
               fullWidth
+              error={isStringEmpty(data.description)}
+              helperText={isStringEmpty(data.description) ? lang.personalDataStep.form.empty : ''}
             />
           </Grid>
           <Grid item xs={12} sm={4}>

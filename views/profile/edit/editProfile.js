@@ -10,6 +10,7 @@ import SyncForm from './steps/syncronization';
 import { useLang } from '../../../store/contexts/langContext';
 import { useChangeProfile, useProfile } from '../../../store/contexts/profileContext';
 import useUserPage from '../../../hooks/useUserPage';
+import { isEmail, isStringEmpty } from '../../../libs/helpers';
 
 const PersonalDataForm = dynamic(() => import('./steps/personalData'));
 const ContactDataForm = dynamic(() => import('./steps/contactData'));
@@ -264,12 +265,24 @@ const EditProjectView = (props) => {
     dispatch({ type: actions.SET_PROVIDER_DATA, value: data });
   };
 
+  const personDataValid = () => {
+    return (
+      !isStringEmpty(state.data.personalData.name) &&
+      !isStringEmpty(state.data.personalData.title) &&
+      !isStringEmpty(state.data.personalData.description)
+    );
+  };
+  const contactDataValid = () => {
+    return !(
+      !isStringEmpty(state.data.contactData.email) && !isEmail(state.data.contactData.email)
+    );
+  };
+
   const Steps = [
     {
       cmp: (
         <SyncForm
           setProvidersData={setProvidersData}
-          // setProvidersAvatar={setProvidersAvatar}
           personalData={state.data.personalData}
           contactData={state.data.contactData}
           resetUrl={state.saving}
@@ -280,10 +293,12 @@ const EditProjectView = (props) => {
     {
       cmp: <PersonalDataForm data={state.data.personalData} edit={handleEditPersonalData} />,
       label: lang.step.personalData,
+      isValid: personDataValid,
     },
     {
       cmp: <ContactDataForm data={state.data.contactData} edit={handleEditContactData} />,
       label: lang.step.contactData,
+      isValid: contactDataValid,
     },
   ];
 

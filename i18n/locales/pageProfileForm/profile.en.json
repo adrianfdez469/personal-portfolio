@@ -28,6 +28,7 @@
       "label": "Fill your personal data"
     },
     "form": {
+      "empty": "This field can not be empty",
       "inputName": {
         "label": "Name",
         "placeholder": "Fullname"
@@ -71,7 +72,8 @@
     "form": {
       "email": {
         "label": "Email",
-        "placeholder": "Email"
+        "placeholder": "Email",
+        "invalid": "Invalid email"
       },
       "phone": {
         "label": "Phone",

@@ -27,3 +27,6 @@ export const providerImageLoader = ({ src, width, quality }) => {
   // if (src.includes('gitlab')) return `${src}&size=${(width * quality) / 100}`;
   return src;
 };
+
+export const isEmail = (text) =>
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(text);
