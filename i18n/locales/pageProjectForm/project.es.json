@@ -45,6 +45,7 @@
       "label": "Complete la información sobre el proyecto"
     },
     "form": {
+      "empty": "Este campo no puede estar vacío",
       "inputName": {
         "label": "Nombre",
         "placeholder": "Nombre del proyecto"

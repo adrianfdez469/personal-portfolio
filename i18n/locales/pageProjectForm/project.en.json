@@ -45,6 +45,7 @@
       "label": "Complete the project information"
     },
     "form": {
+      "empty": "This field can not be empty",
       "inputName": {
         "label": "Name",
         "placeholder": "Project name"

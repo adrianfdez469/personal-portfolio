@@ -6,7 +6,7 @@ export const existsObjWithPropValue = (arrObj, prop, value) =>
 export const isStringValidUrl = (text) => /^(ftp|http|https):\/\/[^ "]+$/.test(text);
 
 export const isStringEmpty = (text) => {
-  if (text && text !== '') {
+  if (text && text !== '' && text.toString().trim() !== '') {
     return false;
   }
   return true;

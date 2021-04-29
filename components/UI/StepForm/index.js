@@ -68,7 +68,9 @@ const EditProjectView = (props) => {
 
   const handleNext = () => {
     if (state.activeStep + 1 < Steps.length) {
-      dispatch({ type: actions.NEXT_STEP });
+      if (!Steps[state.activeStep].isValid || Steps[state.activeStep].isValid()) {
+        dispatch({ type: actions.NEXT_STEP });
+      }
     } else {
       onSave();
       dispatch({ type: actions.GO_START });
@@ -141,7 +143,10 @@ const EditProjectView = (props) => {
           <Button
             onClick={handleNext}
             color={state.activeStep === Steps.length - 1 ? 'secondary' : 'primary'}
-            disabled={state.activeStep === Steps.length}
+            disabled={
+              state.activeStep === Steps.length ||
+              (Steps[state.activeStep].isValid && !Steps[state.activeStep].isValid())
+            }
             variant="outlined"
             style={{ width: '100px', margin: '5px' }}
           >

@@ -8,6 +8,7 @@ import SyncForm from './steps/synchronization';
 import SkillCategories from '../../../constants/skillsCategorysConst';
 import useUserPage from '../../../hooks/useUserPage';
 import useMessage from '../../../hooks/useMessage';
+import { isStringEmpty } from '../../../libs/helpers';
 
 const BasicInfoForm = dynamic(() => import('./steps/basicInfo'));
 const GalleryForm = dynamic(() => import('./steps/gallery'));
@@ -223,6 +224,17 @@ const EditProjectView = (props) => {
     [dispatch]
   );
 
+  const isBasicInfoFormValid = () => {
+    if (
+      isStringEmpty(state.data.basicInfoData.name) ||
+      isStringEmpty(state.data.basicInfoData.description) ||
+      isStringEmpty(state.data.basicInfoData.initialDate)
+    ) {
+      return false;
+    }
+    return true;
+  };
+
   const Steps = [
     {
       cmp: <SyncForm selectRepo={setRepoSyncData} />,
@@ -231,6 +243,7 @@ const EditProjectView = (props) => {
     {
       cmp: <BasicInfoForm data={state.data.basicInfoData} changeData={handleChangeBasicInfoData} />,
       label: lang.step.infoLabel,
+      isValid: isBasicInfoFormValid,
     },
     {
       cmp: <SkillsForm data={state.data.skillsData} changeData={handleChangeSkillsData} />,

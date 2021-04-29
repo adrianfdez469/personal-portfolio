@@ -10,6 +10,8 @@ import enLocale from 'date-fns/locale/en-US';
 // Components
 import LinkPreview from '../../../../../components/UI/LinkPreview';
 import StepItem from '../../../../../components/UI/StepForm/StepItem';
+// Libs
+import { isStringEmpty } from '../../../../../libs/helpers';
 // hooks
 import { useLang } from '../../../../../store/contexts/langContext';
 
@@ -68,6 +70,8 @@ const BasicInfoForm = (props) => {
               value={data.name}
               variant="outlined"
               fullWidth
+              error={isStringEmpty(data.name)}
+              helperText={isStringEmpty(data.name) ? lang.infoStep.form.empty : ''}
             />
           </Grid>
           <Grid item xs={12} sm={4} md={3}>
@@ -92,6 +96,9 @@ const BasicInfoForm = (props) => {
               invalidDateMessage={lang.infoStep.form.inputDate.invalidDate}
               invalidLabel={lang.infoStep.form.inputDate.invalidDate}
               maxDateMessage={lang.infoStep.form.inputDate.maxDateMessage}
+              error={isStringEmpty(data.initialDate)}
+              helperText={isStringEmpty(data.initialDate) ? lang.infoStep.form.empty : ''}
+              required
             />
           </Grid>
           <Grid item xs={12} sm={4} md={3}>
@@ -130,6 +137,9 @@ const BasicInfoForm = (props) => {
               onChange={(event) => handleChange('description', event.target.value)}
               variant="outlined"
               fullWidth
+              error={isStringEmpty(data.description)}
+              helperText={isStringEmpty(data.description) ? lang.infoStep.form.empty : ''}
+              required
             />
           </Grid>
           <Grid item xs={12} md={6}>
