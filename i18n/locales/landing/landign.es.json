@@ -17,12 +17,17 @@
   "poweredBy": "Auspiciado por SAR Designs",
   "startBtn": "Comenzar",
   "info": {
-    "title1": "ESTABLEZCA SUS HABILIDADES",
-    "text1": "Podrás registrar todos los conocimientos y habilidades que has adquirido a lo largo de los años para convertirte en un profesional de primera línea.",
-    "title2": "MUESTRA TU TRABAJO",
-    "text2": "Registre todo el trabajo que ha realizado, cargue algunas fotos del mismo o establezca un enlace donde la gente pueda verlo.",
-    "title3": "COMPARTE",
-    "text3": "Muéstrate al mundo. Comparta su enlace Personal Potrfolio™ para que todos lo conozcan."
+    "title1": "QUE ES PERSONAL PORTFOLIO",
+    "text1": "Personal Portfolio es un sitio web donde puedes crear tu página profesional personal, donde puedes enseñarle al mundo lo que haz logrado con el transcurso del tiempo. Será un impacto positivo el hecho que puedas enseñar tu experiencia a travez de la web y así ayudarte a obtener ese trabajo que tanto deseas.",
+
+    "title2": "IMPORTA TUS DATOS DE PERFIL",
+    "text2": "Evita el molesto proceso de escribir toto de nuevo, este no es otro de esos sitios. Importa tus datos personales desde los proveedores que soporta la aplicación sin escribir una sola palabra. Puedes incluso mezclar información de diferentes proveedores y si quieres, los puedes escribir tu mismo.",
+
+    "title3": "MUESTRA TUS PROYECTOS",
+    "text3": "Una de las formas más fáciles de crear esos proyectos que quieres exponer al mundo es mediante el uso de las integraciones con las herramientas más populares de colaboracion de codigo y control de versiones existentes, tales como Github y Gitlab. Esto disminuirá el tiempo en la creación de los proyectos.",
+
+    "title4": "PUBLICA TU PERFIL",
+    "text4": "Una vez que hayas configurado tu perfil, puedes generar una URL personal, hacerla pública, y compartirla con cualquiera que tenga acceso a internet. Lo mejor de todo, es que puedes volver y continuar añadiendo proyectos, manteniendo tu informacion siempre actualizada."
   },
   "aboutUs": {
     "title": "SOLO SOBRE NOSOTROS",

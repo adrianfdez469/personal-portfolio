@@ -17,12 +17,19 @@
   "poweredBy": "Powered By SAR Designs",
   "startBtn": "Get Started",
   "info": {
-    "title1": "SET YOUR SKILLS",
-    "text1": "You can register all the knowleage and abilities you has adquired across the years to make you a first line professional.",
-    "title2": "SHOW YOUR WORK",
-    "text2": "Register all the work that you have done, upload some pictures of it or set a link to where people can see it.",
-    "title3": "SHARE",
-    "text3": "Show yourself to the world. Share your Personal Potrfolio™ link to let everyone to know you."
+
+    "title1": "WHAT IS PERSONAL PORTFOLIO",
+    "text1": "Personal Portfolio is a website where you can create your personal profesional page, where you can show the world what you have acomplish over the years. It will be a positive impact the fact that you can show your experience via web so it will help you to get that job you want.",
+
+    "title2": "IMPORT YOUR PROFILE DATA",
+    "text2": "Avoid the anoing process of writing all over again. This is not another of those sites. Import your personal data from the suported providers without write a single word. You can even mix data from several providers and if you want you can rewrite it yourself.",
+
+    "title3": "SHOW YOUR PROJECTS",
+    "text3": "One of the most easyest ways of create those projects you want to expose to the outside world is by making use of the integrations with the most popular code collaboration and version control tools such as Github and Gitlab. This will decrease your projects creation time to the minimum.",
+
+    "title4": "PUBLIC YOUR PROFILE",
+    "text4": "Once you have done configuring your profile, you can generate a personal URL, make it public, and share it with anyone who has an internet connection. The best thing of all, is that you can came back and still adding projects, so your info is always updated."
+
   },
   "aboutUs": {
     "title": "JUST ABOUT US",

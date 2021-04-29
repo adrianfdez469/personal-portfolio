@@ -102,4 +102,11 @@ export default makeStyles((theme) => ({
     minHeight: '27em',
     clipPath: 'polygon(0 10%, 100% 0, 100% 100%, 0 100%)',
   },
+  imageWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: 5,
+    overflow: 'hidden',
+    maxHeight: 250,
+  },
 }));

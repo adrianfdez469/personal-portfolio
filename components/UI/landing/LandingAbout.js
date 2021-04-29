@@ -26,7 +26,7 @@ const LandingAbout = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="/images/12.jpeg"
+                frontImage="my-avatar_katkth.jpeg"
                 frontBarText="Adrián Fernández Martínez"
                 backHeading={lang.aboutUs.resume}
                 backText={lang.aboutUs.adrianBio}
@@ -36,7 +36,7 @@ const LandingAbout = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="/images/11.jpg"
+                frontImage="jose-avatar_rem7ih.jpg"
                 frontBarText="Jose Adrian Iglesias"
                 backHeading={lang.aboutUs.resume}
                 backText={lang.aboutUs.joseBio}
@@ -46,7 +46,7 @@ const LandingAbout = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="/images/13.jpeg"
+                frontImage="jorge-avatar_kfkqwq.jpeg"
                 frontBarText="Jorge Arce Martínez"
                 backHeading={lang.aboutUs.resume}
                 backText={lang.aboutUs.jorgeBio}
