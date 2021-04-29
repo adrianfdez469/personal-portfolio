@@ -8,6 +8,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import useStyles from './styles';
+import { getPublicIdFromImageUrl } from '../../../libs/helpers';
 
 const ImageViewer = (props) => {
   const { open, handleClose, images, selectedIndex } = props;
@@ -74,8 +75,7 @@ const ImageViewer = (props) => {
         onWheel={handleScroll}
       >
         <Image
-          loader={({ src }) => src}
-          src={images[selected]}
+          src={getPublicIdFromImageUrl(images[selected])}
           quality={100}
           alt="image"
           layout="fill"

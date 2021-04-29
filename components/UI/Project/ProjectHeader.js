@@ -4,7 +4,6 @@ import HeaderTemplate from '../HeaderTemplate';
 import { useProjectContext } from '../../../store/contexts/projectContext';
 import skillCategories from '../../../constants/skillsCategorysConst';
 import { useHeaderStyles } from './styles';
-import AvatarPhoto from '../Avatar/AvatarPhoto';
 
 const ProjectHeader = () => {
   const styles = useHeaderStyles();
@@ -31,7 +30,6 @@ const ProjectHeader = () => {
               ))}
           </Typography>
         }
-        AvatarCmp={project.logoUrl && <AvatarPhoto src={project.logoUrl} size="xsmall" />}
       />
     </>
   );
