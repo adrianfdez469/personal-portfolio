@@ -37,19 +37,6 @@ export default makeStyles((theme) => ({
     paddingTop: '70px',
     paddingBottom: '70px',
   },
-  featuresImgContainer: {
-    height: '100%',
-    width: '100%',
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  featuresImgContainerVert: {
-    width: '100%',
-    minHeight: theme.spacing(20),
-    maxHeight: '60%',
-    overflow: 'hidden',
-    position: 'relative',
-  },
   featuresImg: {
     display: 'flex',
     margin: 'auto',
