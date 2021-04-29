@@ -10,7 +10,7 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: `radial-gradient(circle, transparent 60%, ${theme.palette.background.default} 63%);`,
+    background: `radial-gradient(circle, transparent 62%, ${theme.palette.background.default} 63%);`,
     boxShadow: `0 0 8px ${theme.palette.background.default}`,
   },
   borderLong: {

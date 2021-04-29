@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const OptimizedAvatar = (props) => {
-  const { src, width, height, quality, className, children, ...otherProps } = props;
+  const { src, width, height, quality, className, children, loading, ...otherProps } = props;
   const styles = useStyles();
 
   const cmp = src
@@ -32,6 +32,7 @@ const OptimizedAvatar = (props) => {
           quality={quality}
           alt="avatar"
           layout="fixed"
+          loading={loading}
         />
       )
     : 'div';
@@ -48,11 +49,13 @@ OptimizedAvatar.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   quality: PropTypes.number,
+  loading: PropTypes.oneOf(['lazy', 'eager']),
 };
 OptimizedAvatar.defaultProps = {
   width: 40,
   height: 40,
   quality: 75,
+  loading: 'lazy',
 };
 
 export default React.memo(OptimizedAvatar);

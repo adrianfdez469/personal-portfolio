@@ -84,6 +84,7 @@ const ProjectBox = (props) => {
                       layout="fixed"
                       width={304}
                       height={140}
+                      loading="eager"
                     />
                   )}
                 </div>

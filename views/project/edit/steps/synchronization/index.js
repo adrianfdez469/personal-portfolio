@@ -359,7 +359,7 @@ const SyncForm = (props) => {
                                   alt={repository.ownerLogin}
                                   src={repository.ownerAvatarUrl}
                                   variant="circular"
-                                  // className={styles.smallAvatar}
+                                  loading="eager"
                                 />
                               )}
 
