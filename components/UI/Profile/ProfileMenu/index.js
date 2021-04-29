@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import { makeStyles, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import Menu from './Menu';
+
+const Menu = dynamic(() => import('./Menu'));
 
 const useStyles = makeStyles((theme) => ({
   menuIcon: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Icon = (props) => {
+const Icon = () => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);

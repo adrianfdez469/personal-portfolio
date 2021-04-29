@@ -3,14 +3,16 @@
 // libs
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import { getSession } from 'next-auth/client';
 import StepForm from '../../../components/UI/StepForm';
 import SyncForm from './steps/syncronization';
-import PersonalDataForm from './steps/personalData';
-import ContactDataForm from './steps/contactData';
 import { useLang } from '../../../store/contexts/langContext';
 import { useChangeProfile, useProfile } from '../../../store/contexts/profileContext';
 import useUserPage from '../../../hooks/useUserPage';
+
+const PersonalDataForm = dynamic(() => import('./steps/personalData'));
+const ContactDataForm = dynamic(() => import('./steps/contactData'));
 
 const saveUserProfileQuery = `
   mutation updateUser($userId: ID!, $user: UserParams!) {

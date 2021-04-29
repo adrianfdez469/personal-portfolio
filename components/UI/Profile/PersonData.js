@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { Typography, Chip, Avatar, useTheme } from '@material-ui/core';
-import EditOutlined from '@material-ui/icons/EditOutlined';
-import PostAddOutlined from '@material-ui/icons/PostAddOutlined';
-import PublicIcon from '@material-ui/icons/Public';
 // eslint-disable-next-line import/no-named-as-default-member
 import AvatarPhoto from '../Avatar/AvatarPhoto';
 import { useProfile } from '../../../store/contexts/profileContext';
@@ -17,11 +14,14 @@ import {
 import { useLang } from '../../../store/contexts/langContext';
 import { usePersonDataStyles } from './styles';
 import SkillsCategorys from '../../../constants/skillsCategorysConst';
-import ProfileMenu from './ProfileMenu';
-import ProfileButtons from './Buttons/ProfileButtons';
 import HeaderTemplate from '../HeaderTemplate';
-// import SharePublicLink from '../SharePublicLink';
+
+const EditOutlined = dynamic(() => import('@material-ui/icons/EditOutlined'));
+const PostAddOutlined = dynamic(() => import('@material-ui/icons/PostAddOutlined'));
+const PublicIcon = dynamic(() => import('@material-ui/icons/Public'));
 const SharePublicLink = dynamic(() => import('../SharePublicLink'));
+const ProfileMenu = dynamic(() => import('./ProfileMenu'));
+const ProfileButtons = dynamic(() => import('./Buttons/ProfileButtons'));
 
 const CustomChip = (props) => {
   const { skill, selected, onClick } = props;
