@@ -4,16 +4,18 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/client';
 import StepForm from '../../../components/UI/StepForm';
 import SyncForm from './steps/syncronization';
 import { useLang } from '../../../store/contexts/langContext';
-import { useChangeProfile, useProfile } from '../../../store/contexts/profileContext';
+import { useProfile } from '../../../store/contexts/profileContext';
 import useUserPage from '../../../hooks/useUserPage';
 import { isEmail, isStringEmpty } from '../../../libs/helpers';
 
 const PersonalDataForm = dynamic(() => import('./steps/personalData'));
 const ContactDataForm = dynamic(() => import('./steps/contactData'));
+const CustomBackdrop = dynamic(() => import('../../../components/UI/backdrop'));
 
 const saveUserProfileQuery = `
   mutation updateUser($userId: ID!, $user: UserParams!) {
@@ -170,7 +172,7 @@ const EditProjectView = (props) => {
   // Hooks
   const { lang } = useLang();
   const { user } = useProfile();
-  const changeProfile = useChangeProfile();
+  const router = useRouter();
   const { fetchUri } = useUserPage();
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
@@ -243,9 +245,8 @@ const EditProjectView = (props) => {
       })
       .then((resp) => {
         if (resp.data.updateUser.success) {
-          dispatch({ type: actions.END_SAVING });
-          changeProfile(resp.data.updateUser.user);
           fetchUri(resp.data.updateUser.user.slug);
+          router.push(router.asPath.slice(0, router.asPath.indexOf('/edit')));
           return;
         }
         throw new Error('ERROR_TO_FETCH');
@@ -311,6 +312,7 @@ const EditProjectView = (props) => {
         onSave={handleSave}
         title={lang.title}
       />
+      <CustomBackdrop open={state.saving} />
     </>
   );
 };
