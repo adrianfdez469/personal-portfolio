@@ -9,7 +9,7 @@ import { useLang } from '../../../../../store/contexts/langContext';
 // Libs
 import { isEmail, isStringEmpty } from '../../../../../libs/helpers';
 
-const PersonalDataForm = ({ data, edit }) => {
+const ContactDataForm = ({ data, edit }) => {
   // constants
   const { lang } = useLang();
 
@@ -18,7 +18,7 @@ const PersonalDataForm = ({ data, edit }) => {
   return (
     <StepItem label={lang.contactDataStep.header.label}>
       <Grid container justify="space-between" spacing={1}>
-        <Grid item xs={12} sm={8} md={6}>
+        <Grid item xs={12} sm={6} md={6}>
           <TextField
             label={lang.contactDataStep.form.email.label}
             placeholder={lang.contactDataStep.form.email.placeholder}
@@ -32,7 +32,7 @@ const PersonalDataForm = ({ data, edit }) => {
             helperText={errorEmail() ? lang.contactDataStep.form.email.invalid : ''}
           />
         </Grid>
-        <Grid item xs={12} sm={8} md={6}>
+        <Grid item xs={12} sm={6} md={6}>
           <TextField
             label={lang.contactDataStep.form.phone.label}
             placeholder={lang.contactDataStep.form.phone.placeholder}
@@ -91,7 +91,7 @@ const PersonalDataForm = ({ data, edit }) => {
     </StepItem>
   );
 };
-PersonalDataForm.propTypes = {
+ContactDataForm.propTypes = {
   data: PropTypes.shape({
     email: PropTypes.string.isRequired,
     phone: PropTypes.string.isRequired,
@@ -102,4 +102,4 @@ PersonalDataForm.propTypes = {
   }).isRequired,
   edit: PropTypes.func.isRequired,
 };
-export default React.memo(PersonalDataForm);
+export default React.memo(ContactDataForm);
