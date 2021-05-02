@@ -11,11 +11,11 @@ const reducer = (state, action) => {
   switch (action.type) {
     case actions.CHANGE_PROVIDER_DATA:
       return {
+        ...state,
         user: {
           ...state.user,
           ...action.data,
         },
-        ...state,
       };
     default:
       return state;
@@ -26,7 +26,6 @@ const ProfileProvider = (props) => {
   // eslint-disable-next-line react/prop-types
   const { children, value } = props;
   const [state, dispatch] = useReducer(reducer, value);
-
   const changeProviderData = (data) => {
     dispatch({ type: actions.CHANGE_PROVIDER_DATA, data });
   };
