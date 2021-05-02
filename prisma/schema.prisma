@@ -119,6 +119,7 @@ model Project {
   projectLink    String?         @map("project_link")
   projectDevLink String?         @map("project_devlink")
   logoUrl        String?         @map("url_logo")
+  publicProject  Boolean         @default(true) @map(name: "public_project")
   user           User            @relation(fields: [userId], references: [id])
   skills         ProjectSkills[]
   images         Image[]
