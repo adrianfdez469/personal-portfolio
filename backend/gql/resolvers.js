@@ -238,7 +238,6 @@ const resolvers = {
           project: savedProject,
         };
       } catch (err) {
-        console.log(err);
         return {
           code: err.code || 500,
           success: false,
@@ -353,7 +352,6 @@ const resolvers = {
           message: 'DELETED',
         };
       } catch (err) {
-        console.log(err);
         return {
           code: 500,
           success: false,
