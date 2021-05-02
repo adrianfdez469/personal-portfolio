@@ -40,6 +40,7 @@ const typeDefs = gql`
     collaborators: [Collaborator!]
     slug: String
     projectSlug: String
+    publicProject: Boolean
   }
 
   type User {
@@ -87,6 +88,12 @@ const typeDefs = gql`
     user: User
   }
 
+  type Response implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
   input SkillParams {
     id: ID
     name: String
@@ -115,7 +122,7 @@ const typeDefs = gql`
   
   input ProjectParams {
     # userId: ID
-    name: String!
+    name: String
     description: String
     initialDate: String
     finalDate: String
@@ -126,6 +133,7 @@ const typeDefs = gql`
     otherInfo: String
     collaborators: [CollaboratorParams!] 
     images: [String!]
+    publicProject: Boolean
   }
 
 
@@ -187,11 +195,21 @@ const typeDefs = gql`
     twitterUrl: String
   }
 
+  type Token {
+    id: ID!
+    userId: ID!
+    provider: String
+  }
+
   type Mutation {
     updateUser(userId: ID!, user: UserParams!): updateUserMutationResponse!
     createSkill(name: String!, category: SkillTypes): CreateSkillMutationResponse!
     saveProject(projectId: ID, project: ProjectParams!): SaveProjectMutationResponse!
-
+    
+    deleteToken(id: ID!): Response!
+    deleteProfile(id: ID!): Response!
+    deleteProject(id: ID!): Response!
+    changeProjectVisibility(id: ID!, visibility: Boolean!): SaveProjectMutationResponse!
   }
 
   enum CamelMode {
@@ -247,6 +265,8 @@ const typeDefs = gql`
     projectBySlug(projectSlug: String!): Project
     skills(id: IntComparer, name: StringComparer, category: SkillTypes): [Skill!]
     link(url: String): Link!
+    
+    getUserTokens(userId: ID!): [Token!]
 
     providerRepos(provider: devProviders!): ProvidersResposResponse!
     providerRepoData(provider: devProviders!, id: ID!): DevProviderRepo!
