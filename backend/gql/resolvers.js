@@ -4,6 +4,8 @@ import SkillCatergories from '../../constants/skillsCategorysConst';
 import getPreviewData from '../../libs/metascraper';
 import ProxyProvider from '../../libs/integrations/provider.proxy';
 import { getSlug } from '../../libs/generators';
+import { getPublicIdFromImageUrl } from '../../libs/helpers';
+import { deleteImagesPromise } from '../../libs/integrations/cloudinary';
 
 const resolvers = {
   MutationResponse: {
@@ -57,6 +59,18 @@ const resolvers = {
       const provider = ProxyProvider(args.provider);
       return provider.getUserDataByContext(context);
     },
+    getUserTokens: async (parent, { userId }, { prisma }) =>
+      prisma.userTokens.findMany({
+        where: {
+          userId: +userId,
+        },
+        select: {
+          accessToken: false,
+          id: true,
+          userId: true,
+          provider: true,
+        },
+      }),
   },
   Mutation: {
     createSkill: (parent, args, { prisma }) => {
@@ -257,6 +271,117 @@ const resolvers = {
           user,
         }));
     },
+    deleteToken: async (parent, { id }, { prisma }) => {
+      const deleteToken = await prisma.userTokens.delete({
+        where: {
+          id: +id,
+        },
+      });
+
+      if (deleteToken) {
+        return {
+          code: 200,
+          success: true,
+          message: 'DELETED',
+        };
+      }
+      return {
+        code: 500,
+        success: false,
+        message: 'ERROR',
+      };
+    },
+    deleteProfile: async (parent, { id }, { prisma }) => {
+      try {
+        let imageIds = [];
+        const projectsId = await prisma.project.findMany({
+          where: { userId: +id },
+          select: { id: true },
+        });
+
+        if (projectsId.length > 0) {
+          imageIds = await prisma.image.findMany({
+            where: {
+              projectId: {
+                in: projectsId.map((p) => p.id),
+              },
+            },
+            select: {
+              imageUrl: true,
+              id: true,
+            },
+          });
+        }
+        const cant = await prisma.$executeRaw(`DELETE FROM users WHERE users.id = ${+id};`);
+        if (imageIds.length > 0 && cant === 1) {
+          deleteImagesPromise(imageIds.map((i) => getPublicIdFromImageUrl(i.imageUrl)));
+        }
+
+        return {
+          code: 200,
+          success: true,
+          message: 'DELETED',
+        };
+      } catch (err) {
+        return {
+          code: 500,
+          success: false,
+          message: 'ERROR',
+        };
+      }
+    },
+    deleteProject: async (parent, { id }, { prisma }) => {
+      try {
+        const imageIds = await prisma.image.findMany({
+          where: {
+            projectId: +id,
+          },
+          select: {
+            imageUrl: true,
+            id: true,
+          },
+        });
+
+        const cant = await prisma.$executeRaw(`DELETE FROM projects WHERE projects.id = ${+id};`);
+        if (imageIds.length > 0 && cant === 1) {
+          deleteImagesPromise(imageIds.map((i) => getPublicIdFromImageUrl(i.imageUrl)));
+        }
+
+        return {
+          code: 200,
+          success: true,
+          message: 'DELETED',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          code: 500,
+          success: false,
+          message: 'ERROR',
+        };
+      }
+    },
+    changeProjectVisibility: async (parent, { id, visibility }, { prisma }) =>
+      prisma.project
+        .update({
+          where: {
+            id: +id,
+          },
+          data: {
+            publicProject: visibility,
+          },
+        })
+        .then((updatedProject) => ({
+          code: 200,
+          success: true,
+          message: 'USER_UPDATED',
+          project: updatedProject,
+        }))
+        .catch(() => ({
+          code: 500,
+          success: false,
+          message: 'ERROR',
+        })),
   },
   User: {
     projects: (user, args, { prisma }) =>
