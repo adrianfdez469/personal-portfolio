@@ -31,5 +31,57 @@
     },
     "hideProfile": "Hide your profile",
     "publicProfile": "Make public your profile"
+  },
+  "menu": {
+    "settings": "Settings",
+    "privacy": "Privacy and Security",
+    "share": "Share",
+    "shareDescription": "Send a email to your fiends to share this app with them.",
+    "bug": "Report a bug",
+    "bugDescription": "Report a bug and we will correct it as soon as possible.",
+    "donation": "Make a donation",
+    "donationDescription": "Help us to improve growing and scaling by supporting us with a little donation."
+  },
+  "settings": {
+    "SecAndPriv": "Security and Privacy",
+    "providerTokens": "Provider Tokens",
+    "securityText1": "Tokens are used to allow tha application to have access to your information with one or more providers.You can erase them if you want, aldo, you may have to provide it again if you need to import some other information from the provider.",
+    "securityText2": "You can double-check this erase action by going to the provider and login with your account, and making the token invalid.",
+    "noTokens": "No tokens to show",
+
+    "projectSettings": "Project Settings",
+    "selectProject": "Select a project",
+    "projectSettingText1": "Switch your project visibility for your public profile.",
+    "deleteProject": "Delete project",
+    "deleteProjectDesc": "To delete the project you should write the word 'delete'",
+
+    "profileSettings": "Profile Settings",
+    "publicUrl": "Public Url",
+    "deleteProfile": "Delete profile",
+    "deleteProfileDesc": "To delete your profile you should write the word 'delete'",
+    "deleteNote": "Note: Be aware that if you DELETE your profile, you will lose all your information",
+
+    "msg": {
+      "errorLoadingToken": "Error loading tokens",
+      "errorDeletingToken": "Error deleting token",
+      "deleteTokenAks": "Are you sure you want to delete the token?",
+      "tokenDeleted": "Token deleted",
+      "errorLoadingProjects": "Error loading projects",
+      "userSlugSaved": "Slug saved",
+      "userSlugSavedError": "Error saving the user slug",
+      "deleteUserProfile": "Are you sure you want to delete your profile?",
+      "profileDeleted": "Profile deleted",
+      "errorDeletingProfile": "Error deleting profile",
+      "deleteProject": "Are you sure you want to delete the selected project?",
+      "projectDeleted": "Project deleted",
+      "errorDeleteingProject": "Error deleting project",
+      "errorSwtchingProjectVisibility": "Error switching project visibility",
+      "visibilityChanged": "Project visibility changed"
+    },
+    "yes": "YES",
+    "no": "NO",
+    "delete": "DELETE",
+    "none": "NONE",
+    "change": "CHANGE"
   }
 }

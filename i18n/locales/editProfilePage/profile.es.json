@@ -31,5 +31,56 @@
     },
     "hideProfile": "Esconde tu perfil",
     "publicProfile": "Publica tu perfil"
+  },
+  "menu": {
+    "settings": "Configuración",
+    "privacy": "Privacidad y Seguridad",
+    "share": "Compartir",
+    "shareDescription": "Envía un correo a tus amigos y compártela con ellos.",
+    "bug": "Reportar error",
+    "bugDescription": "Reporta un error y lo arreglaremos lo mas pronto posible.",
+    "donation": "Realiza una donación",
+    "donationDescription": "Ayúdanos a crecer y escalar realizandonos una pequeña donación."
+  },
+  "settings": {
+    "SecAndPriv": "Seguridad y Privacidad",
+    "providerTokens": "Tokens de proveedores",
+    "securityText1": "Los tokens son usados para permitir el acceso de esta aplicación a tu información en uno o más proveedores. Puedes borrarlos si deseas, sinembargo, si deseas en algún momento importar otra información los necesitarás y tendras otorgar los permisos nuevamente.",
+    "securityText2": "Para mayor seguridad, puedes dirigirte a la aplicación que otorgó el token, e invalidando el mismo para que no pueda ser usado.",
+    "noTokens": "No hay tokens para mostrar",
+
+    "projectSettings": "Configuración de proyectos",
+    "selectProject": "Seleccione un proyecto",
+    "projectSettingText1": "Cambie la visibilidad del proyecto para el perfil público.",
+    "deleteProject": "Eliminar proyecto",
+    "deleteProjectDesc": "Para eliminar el proyecto debes escribir la palabra 'delete'",
+
+    "profileSettings": "Configuración de perfil",
+    "publicUrl": "Url pública",
+    "deleteProfile": "Eliminar perfil",
+    "deleteProfileDesc": "Para eliminar tu perfil, debes escribir la palabra 'delete'",
+    "deleteNote": "Nota: Sea conciente de que si ELIMINA su perfil, perderá toda su información.",
+
+    "msg": {
+      "errorLoadingToken": "Error al cargar los tokens",
+      "errorDeletingToken": "Error al eliminar el token",
+      "deleteTokenAks": "¿Está seguro que desea eliminar el token?",
+      "tokenDeleted": "Token eliminado",
+      "errorLoadingProjects": "Error al cargar los proyectos",
+      "userSlugSaved": "El slug del usuario ha sido salvado",
+      "userSlugSavedError": "Error al salvar el slug del usuario",
+      "deleteUserProfile": "¿Está seguro que desea eliminar su perfil?",
+      "profileDeleted": "Perfil eliminado",
+      "errorDeletingProfile": "Error eliminando perfil",
+      "deleteProject": "¿Está seguro que desea eliminar el proyecto seleccionado?",
+      "projectDeleted": "Proyecto eliminado",
+      "errorSwtchingProjectVisibility": "Error al cambiar la visibilidad del proyecto",
+      "visibilityChanged": "La visibilidad del proyecto ha sido cambiada"
+    },
+    "yes": "SI",
+    "no": "NO",
+    "delete": "ELIMINAR",
+    "none": "NINGUNO",
+    "change": "CAMBIAR"
   }
 }
