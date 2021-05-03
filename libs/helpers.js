@@ -13,9 +13,9 @@ export const isStringEmpty = (text) => {
 };
 
 export const getPublicIdFromImageUrl = (url) => {
-  if (url) {
-    const arrPaths = url.split('/');
-    const publicId = `${process.env.NEXT_PUBLIC_CLOUDINARY_IMG_FOLDER}/${arrPaths.pop()}`;
+  if (url && url !== '') {
+    const id = url.split('/').pop().split('.')[0];
+    const publicId = `${process.env.NEXT_PUBLIC_CLOUDINARY_IMG_FOLDER}/${id}`;
     return publicId;
   }
   return '';

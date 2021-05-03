@@ -1,4 +1,5 @@
 import cloudinary from './integrations/cloudinary';
+import { getPublicIdFromImageUrl } from './helpers';
 
 const streamifier = require('streamifier');
 
@@ -28,17 +29,13 @@ export const saveFile = async (file) => uploadFileToCloudinary(file.buffer);
 
 const deleteFileFromCloudinary = async (path) => {
   try {
-    const publicId = path.split('/').pop().split('.')[0];
+    const publicId = getPublicIdFromImageUrl(path);
     const res = await new Promise((resolve, reject) => {
-      cloudinary.uploader.destroy(
-        `${process.env.NEXT_PUBLIC_CLOUDINARY_IMG_FOLDER}/${publicId}`,
-        (error, result) => {
-          if (error) reject(error);
-          if (result) resolve(result);
-        }
-      );
+      cloudinary.uploader.destroy(publicId, (error, result) => {
+        if (error) reject(error);
+        if (result) resolve(result);
+      });
     });
-
     if (res.result !== 'ok') throw new Error('ERROR_DELETING_IMG');
     return true;
   } catch (err) {

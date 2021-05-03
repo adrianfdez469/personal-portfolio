@@ -340,10 +340,10 @@ const resolvers = {
             id: true,
           },
         });
-
         const cant = await prisma.$executeRaw(`DELETE FROM projects WHERE projects.id = ${+id};`);
         if (imageIds.length > 0 && cant === 1) {
-          deleteImagesPromise(imageIds.map((i) => getPublicIdFromImageUrl(i.imageUrl)));
+          const imagesPublicIds = imageIds.map((i) => getPublicIdFromImageUrl(i.imageUrl));
+          deleteImagesPromise(imagesPublicIds);
         }
 
         return {
