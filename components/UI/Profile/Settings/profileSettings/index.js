@@ -1,9 +1,19 @@
 import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { signOut } from 'next-auth/client';
-import { Typography, Button, Box, Divider, TextField } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Box,
+  Divider,
+  TextField,
+  FormControlLabel,
+  Switch,
+} from '@material-ui/core';
 import { yellow } from '@material-ui/core/colors';
 import WarningIcon from '@material-ui/icons/Warning';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { useLang } from '../../../../../store/contexts/langContext';
 import { useProfile, useChangeProfile } from '../../../../../store/contexts/profileContext';
 import useUserPage from '../../../../../hooks/useUserPage';
@@ -11,7 +21,7 @@ import useMessage from '../../../../../hooks/useMessage';
 import useStyles from '../styles';
 import Backdrop from '../../../backdrop';
 
-const saveUserSlug = `
+const saveUser = `
     mutation updateUser($userId: ID!, $user: UserParams!) {
       updateUser(userId: $userId, user: $user){
         code
@@ -24,6 +34,7 @@ const saveUserSlug = `
       }
     }
 `;
+
 const deleteProfile = `
 mutation deleteProfile ($id: ID!){
   deleteProfile(id:$id){
@@ -34,7 +45,6 @@ mutation deleteProfile ($id: ID!){
 }  
 `;
 
-// Para eliminar permanentemente el perfil
 // Para poner preferencias: abierto a trabajo
 // Preferencias de tipos de trabajos
 
@@ -50,6 +60,10 @@ const actions = {
   SAVED: 'SAVED',
   ERROR_SAVING: 'ERROR_SAVING',
   DELETE_ERROR: 'DELETE_ERROR',
+
+  SWITCH_VISIBILITY: 'SWITCH_VISIBILITY',
+  VISIBILITY_SWITCHED: 'VISIBILITY_SWITCHED',
+  SWITCHED_VISIBILITY_ERROR: 'SWITCHED_VISIBILITY_ERROR',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -83,6 +97,21 @@ const reducer = (state, action) => {
         ...state,
         saving: false,
       };
+    case actions.SWITCH_VISIBILITY:
+      return {
+        ...state,
+        saving: true,
+      };
+    case actions.VISIBILITY_SWITCHED:
+      return {
+        ...state,
+        saving: false,
+      };
+    case actions.SWITCHED_VISIBILITY_ERROR:
+      return {
+        ...state,
+        saving: false,
+      };
     default:
       return state;
   }
@@ -108,7 +137,7 @@ const ProfileSettings = (props) => {
     dispatch({ type: actions.CHANGE_TEXT, text, valid: isValid });
   };
 
-  const handleSave = async () => {
+  const handleSaveSlug = async () => {
     if (state.slugValid && state.slug !== user.slug) {
       dispatch({ type: actions.SAVE });
       fetch('/api/graphql', {
@@ -117,7 +146,7 @@ const ProfileSettings = (props) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: saveUserSlug,
+          query: saveUser,
           variables: {
             userId: user.id,
             user: {
@@ -204,17 +233,74 @@ const ProfileSettings = (props) => {
     setDeleteField(event.target.value.toUpperCase());
   };
 
+  const handleChangeUserVisbility = (event, checked) => {
+    dispatch({ type: actions.SWITCH_VISIBILITY });
+    fetch('/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: saveUser,
+        variables: {
+          userId: user.id,
+          user: {
+            publicProfile: checked,
+          },
+        },
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error(response.statusText);
+      })
+      .then((resp) => {
+        if (resp.data.updateUser.success) {
+          dispatch({ type: actions.VISIBILITY_SWITCHED });
+
+          changeProfile({ publicProfile: checked });
+          fetchUri(state.slug);
+          showMessage(lang.settings.msg.userVisibilityChanged, 'success');
+          return;
+        }
+        throw new Error(resp.data.updateUser.message);
+      })
+      .catch(() => {
+        dispatch({ type: actions.SWITCHED_VISIBILITY_ERROR });
+        showMessage(lang.settings.msg.errorChangingUserVisibility, 'error');
+      });
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(getUri(state.slug));
+    showMessage(lang.settings.msg.urlCopied, 'info');
+  };
+
   return (
     <>
       <Box hidden={hidden}>
         <Typography variant="h5">{lang.settings.profileSettings}</Typography>
         <Divider style={{ marginBottom: 8 }} />
-        <Box p={2} className={styles.bordered}>
+        <Box mt={1} p={2} className={styles.bordered}>
           <Typography>{lang.settings.publicUrl}</Typography>
-          <Typography color="textSecondary" style={{ display: 'flex', flexFlow: 'wrap' }}>
-            {`${getUri()}/`}
-            <Typography color="primary">{`${state.slug}`}</Typography>
-          </Typography>
+          <Box className={styles.flexRow}>
+            <Typography color="textSecondary" style={{ display: 'flex', flexFlow: 'wrap' }}>
+              {`${getUri()}/`}
+              <Typography color="primary">{`${state.slug}`}</Typography>
+            </Typography>
+            <Button
+              size="small"
+              variant="outlined"
+              className={styles.butotonMargin}
+              onClick={handleCopy}
+              color="secondary"
+              disabled={state.dirty}
+            >
+              {lang.publicUrl.buttons.copy}
+            </Button>
+          </Box>
           <Box className={styles.flexRow}>
             <TextField
               autoFocus
@@ -229,7 +315,7 @@ const ProfileSettings = (props) => {
             <Button
               size="small"
               variant="outlined"
-              onClick={handleSave}
+              onClick={handleSaveSlug}
               color="secondary"
               className={styles.butotonMargin}
               disabled={!state.dirty || !state.slugValid}
@@ -239,8 +325,23 @@ const ProfileSettings = (props) => {
           </Box>
           <Typography variant="subtitle2">{lang.publicUrl.note}</Typography>
         </Box>
-        <Box mt={2} />
-        <Box p={2} className={styles.bordered}>
+
+        <Box mt={2} p={2} className={[styles.bordered, styles.flexSpaced].join(' ')}>
+          <FormControlLabel
+            control={
+              <Switch
+                color="primary"
+                checked={user.publicProfile}
+                onChange={handleChangeUserVisbility}
+              />
+            }
+            label={lang.settings.profileSwitchText}
+          />
+          {user.publicProfile && <VisibilityIcon color="primary" />}
+          {!user.publicProfile && <VisibilityOffIcon color="disabled" />}
+        </Box>
+
+        <Box mt={2} p={2} className={styles.bordered}>
           <Box style={{ display: 'flex' }}>
             <WarningIcon style={{ marginRight: 8, color: yellow[500] }} color="primary" />
             <Typography>{lang.settings.deleteProfile}</Typography>

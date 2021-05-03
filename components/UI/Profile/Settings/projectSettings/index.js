@@ -320,7 +320,6 @@ const ProjectSettings = (props) => {
                   checked={state.selectedProject && state.selectedProject.publicProject}
                   onChange={handleChangeVisbility}
                   disabled={!state.selectedProject}
-                  name="checkedA"
                 />
               }
               label={lang.settings.projectSettingText1}
@@ -329,7 +328,7 @@ const ProjectSettings = (props) => {
             {state.selectedProject && !state.selectedProject.publicProject && <VisibilityOffIcon />}
           </Box>
 
-          <Box mt={1} p={2} className={styles.bordered}>
+          <Box mt={2} p={2} className={styles.bordered}>
             <Box style={{ display: 'flex' }}>
               <WarningIcon style={{ marginRight: 8, color: yellow[600] }} />
               <Typography>{lang.settings.deleteProject}</Typography>
