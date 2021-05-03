@@ -18,8 +18,6 @@ import HeaderTemplate from '../HeaderTemplate';
 
 const EditOutlined = dynamic(() => import('@material-ui/icons/EditOutlined'));
 const PostAddOutlined = dynamic(() => import('@material-ui/icons/PostAddOutlined'));
-const PublicIcon = dynamic(() => import('@material-ui/icons/Public'));
-const SharePublicLink = dynamic(() => import('../SharePublicLink'));
 const ProfileMenu = dynamic(() => import('./ProfileMenu'));
 const ProfileButtons = dynamic(() => import('./Buttons/ProfileButtons'));
 
@@ -69,16 +67,6 @@ const PersonData = (props) => {
   const router = useRouter();
   const styles = usePersonDataStyles();
 
-  const [shareLinkIsOpen, setShareLinkOpen] = React.useState(false);
-
-  const handleClickOpenShareLink = () => {
-    setShareLinkOpen(true);
-  };
-
-  const handleCloseShareLink = () => {
-    setShareLinkOpen(false);
-  };
-
   const handleClickSkill = (skillObj) => {
     if (
       filterProject &&
@@ -104,13 +92,6 @@ const PersonData = (props) => {
           name: lang.buttons.addProjectButton,
           onClick: () => {},
           link: `${router.asPath}/projects/new`,
-        },
-        {
-          icon: <PublicIcon className={styles.editableButtonsIcons} />,
-          name: lang.buttons.sharedPortfolioButton,
-          onClick: () => {
-            handleClickOpenShareLink(true);
-          },
         },
       ]
     : [];
@@ -153,7 +134,6 @@ const PersonData = (props) => {
         }
         Menu={edit && <ProfileMenu />}
       />
-      {edit && <SharePublicLink open={shareLinkIsOpen} handleClose={handleCloseShareLink} />}
     </>
   );
 };

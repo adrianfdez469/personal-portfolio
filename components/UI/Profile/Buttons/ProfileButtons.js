@@ -5,26 +5,15 @@ import { IconButton, Tooltip } from '@material-ui/core';
 
 const ProfileButtons = (props) => {
   const { editableActions, size } = props;
-  return editableActions.map((action) => {
-    if (action.link) {
-      return (
-        <Link key={action.name} href={action.link} passHref>
-          <Tooltip title={action.name}>
-            <IconButton onClick={action.onClick} size={size}>
-              {action.icon}
-            </IconButton>
-          </Tooltip>
-        </Link>
-      );
-    }
-    return (
-      <Tooltip title={action.name} key={action.name}>
+  return editableActions.map((action) => (
+    <Link key={action.name} href={action.link} passHref>
+      <Tooltip title={action.name}>
         <IconButton onClick={action.onClick} size={size}>
           {action.icon}
         </IconButton>
       </Tooltip>
-    );
-  });
+    </Link>
+  ));
 };
 
 ProfileButtons.propTypes = {
