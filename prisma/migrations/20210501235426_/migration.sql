@@ -27,3 +27,10 @@ ALTER TABLE public.user_tokens
     ON DELETE CASCADE
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
+
+ALTER TABLE public.accounts
+  ADD CONSTRAINT accounts_fk FOREIGN KEY (user_id)
+    REFERENCES public.users(id)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
