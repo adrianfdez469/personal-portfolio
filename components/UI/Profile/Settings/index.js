@@ -19,13 +19,14 @@ import {
 import SettingIcon from '@material-ui/icons/Settings';
 import SecurityIcon from '@material-ui/icons/Security';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-
+import WorkIcon from '@material-ui/icons/Work';
 import { useLang } from '../../../../store/contexts/langContext';
 
 import useStyles from './styles';
 import SecurityPrivacy from './securitySettings';
 import ProfileSettings from './profileSettings';
 import ProjectSettings from './projectSettings';
+import JobPreferences from './jobPreferences';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -92,6 +93,20 @@ const Settings = (props) => {
                     </ListItemIcon>
                     <ListItemText primary={lang.settings.projectSettings} />
                   </ListItem>
+
+                  <Divider variant="fullWidth" />
+                  <ListItem
+                    button
+                    selected={optionSelected === 3}
+                    onClick={() => {
+                      setOptSelected(3);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <WorkIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={lang.settings.jobPreferences} />
+                  </ListItem>
                 </List>
               </Box>
             </Grid>
@@ -99,6 +114,7 @@ const Settings = (props) => {
               <SecurityPrivacy hidden={optionSelected !== 0} />
               <ProfileSettings hidden={optionSelected !== 1} />
               <ProjectSettings hidden={optionSelected !== 2} />
+              <JobPreferences hidden={optionSelected !== 3} />
             </Grid>
           </Grid>
         </Box>

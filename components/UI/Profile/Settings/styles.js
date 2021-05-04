@@ -42,7 +42,17 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       flexDirection: 'row',
       alignItems: 'center',
+      // justifyContent: 'space-between',
+    },
+  },
+  spaceBetWeen: {
+    [theme.breakpoints.up('sm')]: {
       justifyContent: 'space-between',
+    },
+  },
+  spaceEvenly: {
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'space-evenly',
     },
   },
   butotonMargin: {

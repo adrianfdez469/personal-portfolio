@@ -45,9 +45,6 @@ mutation deleteProfile ($id: ID!){
 }  
 `;
 
-// Para poner preferencias: abierto a trabajo
-// Preferencias de tipos de trabajos
-
 const initialState = {
   slug: '',
   slugValid: true,
@@ -285,7 +282,7 @@ const ProfileSettings = (props) => {
         <Divider style={{ marginBottom: 8 }} />
         <Box mt={1} p={2} className={styles.bordered}>
           <Typography>{lang.settings.publicUrl}</Typography>
-          <Box className={styles.flexRow}>
+          <Box className={[styles.flexRow, styles.spaceBetWeen].join(' ')}>
             <Typography color="textSecondary" style={{ display: 'flex', flexFlow: 'wrap' }}>
               {`${getUri()}/`}
               <Typography color="primary">{`${state.slug}`}</Typography>
@@ -301,7 +298,7 @@ const ProfileSettings = (props) => {
               {lang.publicUrl.buttons.copy}
             </Button>
           </Box>
-          <Box className={styles.flexRow}>
+          <Box className={[styles.flexRow, styles.spaceBetWeen].join(' ')}>
             <TextField
               autoFocus
               margin="dense"

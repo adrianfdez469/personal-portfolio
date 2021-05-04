@@ -380,12 +380,42 @@ const resolvers = {
           success: false,
           message: 'ERROR',
         })),
+    saveJobPreference: (parent, { userId, jobPreference }, { prisma }) =>
+      prisma.jobPreferences
+        .upsert({
+          where: {
+            userId: +userId,
+          },
+          create: {
+            ...jobPreference,
+          },
+          update: {
+            ...jobPreference,
+          },
+        })
+        .then((resp) => ({
+          code: 200,
+          success: true,
+          message: 'JOB_PREFERENCE_UPDATED',
+          jobPreference: resp,
+        }))
+        .catch(() => ({
+          code: 500,
+          success: false,
+          message: 'ERROR',
+        })),
   },
   User: {
     projects: (user, args, { prisma }) =>
       prisma.project.findMany({
         where: {
           userId: user.id,
+        },
+      }),
+    jobPreference: (user, args, { prisma }) =>
+      prisma.jobPreferences.findUnique({
+        where: {
+          userId: +user.id,
         },
       }),
   },

@@ -62,6 +62,12 @@
     "deleteNote": "Note: Be aware that if you DELETE your profile, you will lose all your information.",
     "profileSwitchText": "Switch your your public profile visibility",
 
+    "jobPreferences": "Job Preferences",
+    "SwitchWorkingStatusText": "Open to work",
+    "SwitchOpenRelocation": "Open to relocation",
+    "SwitchRemoteAvailable": "Remote available",
+    "minSalary": "Minimum Salary (USD)",
+
     "msg": {
       "errorLoadingToken": "Error loading tokens.",
       "errorDeletingToken": "Error deleting token.",
@@ -80,7 +86,11 @@
       "visibilityChanged": "Project visibility changed.",
       "userVisibilityChanged": "User visibility changed.",
       "errorChangingUserVisibility": "Error switching user visibility.",
-      "urlCopied": "The public profile URL was copied to the clipboard."
+      "urlCopied": "The public profile URL was copied to the clipboard.",
+      "preferencesSaved": "Your job preferences are saved.",
+      "preferencesSavedError": "Error saving job preferences.",
+
+      "errorLoadingJobPrefData": "Error loading job preferences data."
     },
     "yes": "YES",
     "no": "NO",

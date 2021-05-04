@@ -62,6 +62,12 @@
     "deleteNote": "Nota: Sea conciente de que si ELIMINA su perfil, perderá toda su información.",
     "profileSwitchText": "Cambia la visibilidad de tu perfil público",
 
+    "jobPreferences": "Preferencia laboral",
+    "SwitchWorkingStatusText": "Abierto a trabajo",
+    "SwitchOpenRelocation": "Reubicable",
+    "SwitchRemoteAvailable": "Trabajo remoto",
+    "minSalary": "Salario mínimo (USD)",
+
     "msg": {
       "errorLoadingToken": "Error al cargar los tokens.",
       "errorDeletingToken": "Error al eliminar el token.",
@@ -75,11 +81,15 @@
       "errorDeletingProfile": "Error eliminando perfil.",
       "deleteProject": "¿Está seguro que desea eliminar el proyecto seleccionado?",
       "projectDeleted": "Proyecto eliminado.",
+      "errorDeleteingProject": "Error eliminando proyecto.",
       "errorSwtchingProjectVisibility": "Error al cambiar la visibilidad del proyecto.",
       "visibilityChanged": "La visibilidad del proyecto ha sido cambiada.",
       "userVisibilityChanged": "La visibilidad ha sigo cambiada.",
       "errorChangingUserVisibility": "Error cambiando la visibilidad.",
-      "urlCopied": "La URL del perfil público fue copiada al portapapeles."
+      "urlCopied": "La URL del perfil público fue copiada al portapapeles.",
+      "preferencesSaved": "Sus preferencias laborales han sido salvadas.",
+      "preferencesSavedError": "Error salvando preferencias laborales.",
+      "errorLoadingJobPrefData": "Error al cargar los datos de preferencia laboral."
     },
     "yes": "SI",
     "no": "NO",

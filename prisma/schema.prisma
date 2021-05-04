@@ -41,29 +41,41 @@ model Session {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map(name: "email_verified")
-  image         String?
-  slug          String?   @unique
-  title         String?
-  description   String?
-  theme         String    @default("orangeDark")
-  gitlabLink    String?   @map("gitlab_link")
-  githubLink    String?   @map("github_link")
-  linkedinLink  String?   @map("linkedin_link")
-  twitterLink   String?   @map("twitter_link")
-  phone         String?
-  experience    Int?
-  birthday      DateTime?
-  gender        Gender?
-  publicProfile Boolean   @default(false) @map(name: "public_profile")
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  Project       Project[]
+  id             Int             @id @default(autoincrement())
+  name           String?
+  email          String?         @unique
+  emailVerified  DateTime?       @map(name: "email_verified")
+  image          String?
+  slug           String?         @unique
+  title          String?
+  description    String?
+  theme          String          @default("orangeDark")
+  gitlabLink     String?         @map("gitlab_link")
+  githubLink     String?         @map("github_link")
+  linkedinLink   String?         @map("linkedin_link")
+  twitterLink    String?         @map("twitter_link")
+  phone          String?
+  experience     Int?
+  birthday       DateTime?
+  gender         Gender?
+  publicProfile  Boolean         @default(false) @map(name: "public_profile")
+  createdAt      DateTime        @default(now()) @map(name: "created_at")
+  updatedAt      DateTime        @default(now()) @map(name: "updated_at")
+  Project        Project[]
+  jobPreferences JobPreferences?
 
   @@map(name: "users")
+}
+
+model JobPreferences {
+  userId           Int      @id @default(autoincrement()) @map("user_id")
+  openToWork       Boolean? @map("opent_to_work")
+  openToRelocation Boolean? @map("opent_to_relocation")
+  remoteAvailable  Boolean? @map("remote_availability")
+  minSalary        Float?   @map("montly_min_salary")
+  user             User     @relation(fields: [userId], references: [id])
+
+  @@map(name: "job_preferences")
 }
 
 model VerificationRequest {

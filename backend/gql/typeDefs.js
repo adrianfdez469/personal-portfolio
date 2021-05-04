@@ -62,6 +62,15 @@ const typeDefs = gql`
     phone: String
     gender: gender
     birthday: Date
+    jobPreference: JobPreference
+  }
+
+  type JobPreference {
+    userId: ID!
+    openToWork: Boolean
+    openToRelocation: Boolean
+    remoteAvailable: Boolean
+    minSalary: Float
   }
 
   interface MutationResponse {
@@ -86,6 +95,12 @@ const typeDefs = gql`
     success: Boolean!
     message: String!
     user: User
+  }
+  type SaveJobPreferenceResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    jobPreference: JobPreference
   }
 
   type Response implements MutationResponse {
@@ -155,6 +170,13 @@ const typeDefs = gql`
     gender: gender
     birthday: String
   }
+
+  input JobPreferenceParams {
+    openToWork: Boolean
+    openToRelocation: Boolean
+    remoteAvailable: Boolean
+    minSalary: Float
+  }
   
   type DevProviderRepo {
     id: ID!
@@ -210,6 +232,8 @@ const typeDefs = gql`
     deleteProfile(id: ID!): Response!
     deleteProject(id: ID!): Response!
     changeProjectVisibility(id: ID!, visibility: Boolean!): SaveProjectMutationResponse!
+
+    saveJobPreference(userId: ID!, jobPreference: JobPreferenceParams!):SaveJobPreferenceResponse!  
   }
 
   enum CamelMode {
