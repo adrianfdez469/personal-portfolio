@@ -4,7 +4,6 @@ import Error from 'next/error';
 import {
   getProfileDataBySlug,
   getLanguageByLocale,
-  getThemeByThemeKey,
   getProfileSkills,
   // eslint-disable-next-line import/named
 } from '../../backend/preRenderingData';
@@ -38,7 +37,7 @@ export const getStaticProps = async (context) => {
       };
     }
     const language = await getLanguageByLocale(context.locale, languageLocales);
-    const theme = await getThemeByThemeKey(profileData.user.theme);
+    const { theme } = profileData.user;
     const profileSkills = await getProfileSkills(profileData.user.id);
 
     const props = { language, theme, profile: { ...profileData, skills: profileSkills } };

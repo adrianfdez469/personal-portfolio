@@ -1,36 +1,23 @@
 {
   "en": "English",
   "es": "Español",
-  "themes": {
-    "orange": "Anaranjado",
-    "orangeDark": "Anaranjado Oscuro",
-    "default": "Azul",
-    "dark": "Azul Oscuro",
-    "pink": "Rosado",
-    "purple": "Morado"
-  },
   "buttons": {
     "editButton": "Editar Perfil",
-    "themeButton": "Cambiar Tema",
     "logoutButton": "Salir",
     "languageButton": "Cambiar a idioma",
     "addProjectButton": "Adicionar Proyecto",
     "sharedPortfolioButton": "Compartir Portafolio",
-    "feedbackButton": "Reportar error"
+    "feedbackButton": "Reportar error",
+    "copy": "copiar",
+    "save": "salvar",
+    "close": "cerrar",
+    "reset": "Resetear"
   },
   "publicUrl": {
-    "title": "URL Pública",
     "label": "Ruta de usuario",
     "helperText": "Personalice la URL para su perfil",
     "errorText": "Ruta inválida",
-    "note": "Nota: La URL personalizada debe contener 5-100 letras o números. Recomendamos incluir una cadena que lo identifique, como su nombre. Por favor, no use espacios, símbolos, o caracteres especiales.",
-    "buttons": {
-      "copy": "copiar",
-      "save": "salvar",
-      "close": "cerrar"
-    },
-    "hideProfile": "Esconde tu perfil",
-    "publicProfile": "Publica tu perfil"
+    "note": "Nota: La URL personalizada debe contener 5-100 letras o números. Recomendamos incluir una cadena que lo identifique, como su nombre. Por favor, no use espacios, símbolos, o caracteres especiales."
   },
   "menu": {
     "settings": "Configuración",
@@ -68,6 +55,15 @@
     "SwitchRemoteAvailable": "Trabajo remoto",
     "minSalary": "Salario mínimo (USD)",
 
+    "stylesPreferences": "Styles Preferences",
+    "useDarkMode": "Usar modo oscuro",
+    "primaryColor": "Color Primario",
+    "secondaryColor": "Color Secundario",
+    "shade": "Sombra",
+    "tonal": "Tono",
+    "light": "Claro",
+    "main": "Principal",
+    "dark": "Oscuro",
     "msg": {
       "errorLoadingToken": "Error al cargar los tokens.",
       "errorDeletingToken": "Error al eliminar el token.",
@@ -89,7 +85,9 @@
       "urlCopied": "La URL del perfil público fue copiada al portapapeles.",
       "preferencesSaved": "Sus preferencias laborales han sido salvadas.",
       "preferencesSavedError": "Error salvando preferencias laborales.",
-      "errorLoadingJobPrefData": "Error al cargar los datos de preferencia laboral."
+      "errorLoadingJobPrefData": "Error al cargar los datos de preferencia laboral.",
+      "styleSaved": "Estilos salvados.",
+      "styleSavedError": "Error salvando estilos."
     },
     "yes": "SI",
     "no": "NO",

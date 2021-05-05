@@ -3,7 +3,7 @@ import { useProfile } from '../store/contexts/profileContext';
 
 const useUserPage = () => {
   const urlRef = useRef();
-  const { user } = useProfile();
+  const profile = useProfile();
 
   useEffect(() => {
     urlRef.current = `${window.location.protocol}//${window.location.host}`;
@@ -11,7 +11,7 @@ const useUserPage = () => {
 
   const fetchUri = (slug) => {
     if (slug) {
-      if ((user && user.publicProfile) || !user) {
+      if (profile?.user?.publicProfile || !profile) {
         fetch(`${urlRef.current}/${slug}`);
       }
     }

@@ -36,23 +36,10 @@ import { useProfile } from '../../../../store/contexts/profileContext';
 import { useLang } from '../../../../store/contexts/langContext';
 import { useChangeTheme } from '../../../../store/contexts/themeContext';
 // eslint-disable-next-line import/named
-import { themesLoader } from '../../../../themes';
+// import { themesLoader } from '../../../../themes';
 import useStyles from './styles';
 
 const Settings = dynamic(() => import('../Settings'));
-
-const saveUserTheme = `
-    mutation updateUser($userId: ID!, $user: UserParams!) {
-      updateUser(userId: $userId, user: $user){
-        code
-        success
-        message
-        user {
-          theme
-        }
-      }
-    }
-`;
 
 const Menu = (props) => {
   const { open, anchorEl, handleClose } = props;
@@ -63,32 +50,6 @@ const Menu = (props) => {
   const setTheme = useChangeTheme();
   const [currentTheme, setCurrentTheme] = useState(user.theme);
   const [settingsOpen, setSettingsOpen] = useState();
-
-  const selectTheme = async (themeKey) => {
-    const theme = await themesLoader[themeKey].getTheme();
-    setTheme(theme);
-    setCurrentTheme(themeKey);
-    handleClose();
-    localStorage.setItem('theme', themeKey);
-    const session = await getSession();
-    if (session && session.userId) {
-      fetch('/api/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: saveUserTheme,
-          variables: {
-            userId: session.userId,
-            user: {
-              theme: themeKey,
-            },
-          },
-        }),
-      });
-    }
-  };
 
   const handleLogout = () => {
     signOut({
@@ -214,30 +175,6 @@ const Menu = (props) => {
                           );
                         })
                       : []}
-                  </Select>
-                </FormControl>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon>
-                  <ColorLensIcon />
-                </ListItemIcon>
-                <FormControl fullWidth>
-                  <Select
-                    value={currentTheme}
-                    displayEmpty
-                    className={styles.menuSelectField}
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                    {Object.keys(themesLoader).map((theme) => (
-                      <MenuItem
-                        value={theme}
-                        key={theme}
-                        onClick={() => selectTheme(theme)}
-                        disabled={theme === currentTheme}
-                      >
-                        {lang.themes[theme]}
-                      </MenuItem>
-                    ))}
                   </Select>
                 </FormControl>
               </ListItem>

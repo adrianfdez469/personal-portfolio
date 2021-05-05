@@ -295,7 +295,7 @@ const ProfileSettings = (props) => {
               color="secondary"
               disabled={state.dirty}
             >
-              {lang.publicUrl.buttons.copy}
+              {lang.buttons.copy}
             </Button>
           </Box>
           <Box className={[styles.flexRow, styles.spaceBetWeen].join(' ')}>
@@ -317,7 +317,7 @@ const ProfileSettings = (props) => {
               className={styles.butotonMargin}
               disabled={!state.dirty || !state.slugValid}
             >
-              {lang.publicUrl.buttons.save}
+              {lang.buttons.save}
             </Button>
           </Box>
           <Typography variant="subtitle2">{lang.publicUrl.note}</Typography>

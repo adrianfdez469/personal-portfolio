@@ -1,36 +1,23 @@
 {
   "en": "English",
   "es": "Español",
-  "themes": {
-    "orange": "Orange",
-    "orangeDark": "Dark Orange",
-    "default": "Blue",
-    "dark": "Dark Blue",
-    "pink": "Pink",
-    "purple": "Purple"
-  },
   "buttons": {
     "editButton": "Edit Profile",
-    "themeButton": "Change Theme",
     "logoutButton": "Logout",
     "languageButton": "Change idiom",
     "addProjectButton": "Add Project",
     "sharedPortfolioButton": "Share Portfolio",
-    "feedbackButton": "Report Bugs"
+    "feedbackButton": "Report Bugs",
+    "copy": "copy",
+    "save": "save",
+    "close": "close",
+    "reset": "reset"
   },
   "publicUrl": {
-    "title": "Public URL",
     "label": "User route",
     "helperText": "Personalize the URL for your profile",
     "errorText": "Invalid route",
-    "note": "Note: Your custom URL must contain 5-100 letters or numbers. We recomend to include an identification string, such as your name. Please, do not use spaces, symbols, or special characters.",
-    "buttons": {
-      "copy": "copy",
-      "save": "save",
-      "close": "close"
-    },
-    "hideProfile": "Hide your profile",
-    "publicProfile": "Make public your profile"
+    "note": "Note: Your custom URL must contain 5-100 letters or numbers. We recomend to include an identification string, such as your name. Please, do not use spaces, symbols, or special characters."
   },
   "menu": {
     "settings": "Settings",
@@ -68,6 +55,15 @@
     "SwitchRemoteAvailable": "Remote available",
     "minSalary": "Minimum Salary (USD)",
 
+    "stylesPreferences": "Styles Preferences",
+    "useDarkMode": "Use dark mode",
+    "primaryColor": "Primary Color",
+    "secondaryColor": "Secondary Color",
+    "shade": "Shade",
+    "tonal": "Tonal",
+    "light": "Light",
+    "main": "Main",
+    "dark": "Dark",
     "msg": {
       "errorLoadingToken": "Error loading tokens.",
       "errorDeletingToken": "Error deleting token.",
@@ -89,8 +85,9 @@
       "urlCopied": "The public profile URL was copied to the clipboard.",
       "preferencesSaved": "Your job preferences are saved.",
       "preferencesSavedError": "Error saving job preferences.",
-
-      "errorLoadingJobPrefData": "Error loading job preferences data."
+      "errorLoadingJobPrefData": "Error loading job preferences data.",
+      "styleSaved": "Styles saved.",
+      "styleSavedError": "Error saving styles."
     },
     "yes": "YES",
     "no": "NO",

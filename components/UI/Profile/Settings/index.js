@@ -20,6 +20,7 @@ import SettingIcon from '@material-ui/icons/Settings';
 import SecurityIcon from '@material-ui/icons/Security';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import WorkIcon from '@material-ui/icons/Work';
+import PaletteIcon from '@material-ui/icons/Palette';
 import { useLang } from '../../../../store/contexts/langContext';
 
 import useStyles from './styles';
@@ -27,6 +28,7 @@ import SecurityPrivacy from './securitySettings';
 import ProfileSettings from './profileSettings';
 import ProjectSettings from './projectSettings';
 import JobPreferences from './jobPreferences';
+import StylesPreferences from './stylePreferences';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -35,6 +37,11 @@ const Settings = (props) => {
   const { lang } = useLang();
   const styles = useStyles();
   const [optionSelected, setOptSelected] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpand = () => {
+    setExpanded((state) => !state);
+  };
 
   return (
     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -44,7 +51,7 @@ const Settings = (props) => {
             {lang.menu.settings}
           </Typography>
           <Button autoFocus color="inherit" onClick={handleClose}>
-            {lang.publicUrl.buttons.close}
+            {lang.buttons.close}
           </Button>
         </Toolbar>
       </AppBar>
@@ -52,7 +59,7 @@ const Settings = (props) => {
       <Container maxWidth="lg">
         <Box className={styles.mainBox}>
           <Grid container spacing={4}>
-            <Grid md={4} xs={12} item>
+            <Grid md={!expanded ? 3 : 1} xs={12} item>
               <Box className={styles.bordered}>
                 <List>
                   <ListItem
@@ -78,7 +85,7 @@ const Settings = (props) => {
                     <ListItemIcon>
                       <AccountCircleIcon />
                     </ListItemIcon>
-                    <ListItemText primary={lang.settings.profileSettings} />
+                    {!expanded && <ListItemText primary={lang.settings.profileSettings} />}
                   </ListItem>
                   <Divider variant="fullWidth" />
                   <ListItem
@@ -91,7 +98,7 @@ const Settings = (props) => {
                     <ListItemIcon>
                       <SettingIcon />
                     </ListItemIcon>
-                    <ListItemText primary={lang.settings.projectSettings} />
+                    {!expanded && <ListItemText primary={lang.settings.projectSettings} />}
                   </ListItem>
 
                   <Divider variant="fullWidth" />
@@ -105,16 +112,31 @@ const Settings = (props) => {
                     <ListItemIcon>
                       <WorkIcon />
                     </ListItemIcon>
-                    <ListItemText primary={lang.settings.jobPreferences} />
+                    {!expanded && <ListItemText primary={lang.settings.jobPreferences} />}
+                  </ListItem>
+
+                  <Divider variant="fullWidth" />
+                  <ListItem
+                    button
+                    selected={optionSelected === 4}
+                    onClick={() => {
+                      setOptSelected(4);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <PaletteIcon />
+                    </ListItemIcon>
+                    {!expanded && <ListItemText primary={lang.settings.stylesPreferences} />}
                   </ListItem>
                 </List>
               </Box>
             </Grid>
-            <Grid md={8} xs={12} item>
+            <Grid md={!expanded ? 9 : 11} xs={12} item>
               <SecurityPrivacy hidden={optionSelected !== 0} />
               <ProfileSettings hidden={optionSelected !== 1} />
               <ProjectSettings hidden={optionSelected !== 2} />
               <JobPreferences hidden={optionSelected !== 3} />
+              <StylesPreferences hidden={optionSelected !== 4} />
             </Grid>
           </Grid>
         </Box>

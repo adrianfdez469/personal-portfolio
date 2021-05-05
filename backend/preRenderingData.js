@@ -1,6 +1,3 @@
-import { getSession } from 'next-auth/client';
-// import prisma from '../prisma/prisma.instance';
-
 export const getLanguageByLocale = async (locale, languageLocales) => {
   const lang = locale;
 
@@ -56,15 +53,13 @@ ${
     : ''
 }
 `;
-const queryUserDataById = (id, includeProjects = false) => {
-  return `
+const queryUserDataById = (id, includeProjects = false) => `
     {
       user(id: ${id}) {
         ${queryUserBody(includeProjects)}
       }
     }
   `;
-};
 const queryUserDataBySlug = (slug, includeProjects = false) => `
   {
     userBySlug(slug: "${slug}") {
@@ -83,32 +78,19 @@ const makeRequest = async (query) => {
       query,
     }),
   });
+
   if (!response.ok) {
-    console.log(response);
     throw new Error('Error');
   }
+
   const resp = await response.json();
   return resp;
 };
 
-export const getThemeByThemeKey = async (themeKey) => {
-  const themesLoader = await import('../themes').then((cmp) => cmp.themesLoader);
-  const theme = await themesLoader[themeKey].getTheme();
-  return theme;
-};
-
 export const getThemeByUserId = async (userId) => {
-  const { user } = await makeRequest(queryUserDataById(userId, false));
-  if (user && user.theme) {
-    return getThemeByThemeKey(user.theme);
-  }
-  return null;
-};
-
-export const getThemeByContext = async (context) => {
-  const session = await getSession(context);
-  if (session && session.userId) {
-    return getThemeByUserId(+session.userId);
+  const { data } = await makeRequest(queryUserDataById(userId, false));
+  if (data.user && data.user.theme) {
+    return data.user.theme;
   }
   return null;
 };
@@ -125,6 +107,12 @@ export const getProfileDataBySlug = async (slug, includeProjects = false) => {
   return {
     user: { ...profileData.data.userBySlug },
   };
+};
+
+export const getThemeByUserSlug = async (userSlug) => {
+  const { user } = await getProfileDataBySlug(userSlug, false);
+  if (user && user.theme) return user.theme;
+  return null;
 };
 
 export const getProjectDataByProjectSlug = async (projectSlug) => {
@@ -273,11 +261,13 @@ export const getProfileSkills = async (profileId) => {
   }
   const resp = await response.json();
   const skills = resp.data.user.projects.reduce((acum, project) => {
+    let acumulator;
     project.skills.forEach((sk) => {
+      acumulator = { ...acum };
       if (acum[sk.name]) {
-        acum[sk.name]['cant'] = acum[sk.name]['cant'] + 1;
+        acumulator[sk.name].cant = acum[sk.name].cant + 1;
       } else {
-        acum = {
+        acumulator = {
           ...acum,
           [sk.name]: {
             cant: 1,
@@ -286,15 +276,13 @@ export const getProfileSkills = async (profileId) => {
         };
       }
     });
-    return acum;
+    return acumulator;
   }, {});
 
   return Object.keys(skills)
-    .map((skill) => {
-      return {
-        skill,
-        ...skills[skill],
-      };
-    })
+    .map((skill) => ({
+      skill,
+      ...skills[skill],
+    }))
     .sort((a, b) => b.cant - a.cant);
 };

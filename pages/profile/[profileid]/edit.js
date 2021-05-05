@@ -7,7 +7,6 @@ import { LangContext } from '../../../store/contexts/langContext';
 import {
   getLanguageByLocale,
   getProfileDataById,
-  getThemeByThemeKey,
   // eslint-disable-next-line import/named
 } from '../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
@@ -26,7 +25,7 @@ const createPropsObject = async (context) => {
 
     const language = await getLanguageByLocale(context.locale, languageLocales);
     const profileData = await getProfileDataById(+session.userId);
-    const theme = await getThemeByThemeKey(profileData.user.theme);
+    const { theme } = profileData.user;
 
     const resp = { language, theme, profile: profileData };
 

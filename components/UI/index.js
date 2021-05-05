@@ -9,4 +9,3 @@ export { default as ProjectBox } from './Profile/ProjectBox';
 export { default as FeedbackButton } from './Buttons/FeedbackButton';
 export { default as LanguageButton } from './Buttons/LanguageButton';
 export { default as LogoutButton } from './Buttons/LogoutButton';
-export { default as ThemeButton } from './Buttons/ThemeButton';

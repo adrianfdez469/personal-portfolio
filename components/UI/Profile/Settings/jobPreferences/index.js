@@ -256,7 +256,7 @@ const JobPreferences = (props) => {
               />
             </FormControl>
             <Button variant="contained" onClick={handleSave}>
-              {lang.publicUrl.buttons.save}
+              {lang.buttons.save}
             </Button>
           </Box>
         </Box>

@@ -1,33 +1,20 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Box, Container, Grid, Hidden, IconButton } from '@material-ui/core';
-import { Brightness7 } from '@material-ui/icons';
+import { Box, Container, Grid, Hidden } from '@material-ui/core';
 import useStyles from './styles';
 import IntroHeader from './introHeader/IntroHeader';
-import useMessage from '../../../hooks/useMessage';
 import LanguageButton from '../Buttons/LanguageButton';
 import { useLang } from '../../../store/contexts/langContext';
 
 const LandingIntro = () => {
   const classes = useStyles();
   const { lang } = useLang();
-  const [showMessage] = useMessage();
-
-  const show = () => {
-    showMessage(
-      'Lo hemos logrado, esto es lo que queriamos hacer asd asd asdasd asdasda asdasdad fwwfwefw casdasdad.',
-      'default'
-    );
-  };
 
   return (
     <>
       <Container className={classes.root}>
         <Box align="end">
           <LanguageButton title={lang.buttons.languageButton} />
-          <IconButton className={classes.globalButtons} onClick={show}>
-            <Brightness7 />
-          </IconButton>
         </Box>
         <Grid
           container

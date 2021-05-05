@@ -418,6 +418,7 @@ const resolvers = {
           userId: +user.id,
         },
       }),
+    theme: (user) => JSON.stringify(user.theme),
   },
   Project: {
     initialDate: (project) =>
@@ -563,6 +564,9 @@ const resolvers = {
           return null;
       }
     },
+  },
+  Theme: {
+    json: (theme) => JSON.stringify(theme.json),
   },
 };
 

@@ -1,16 +1,7 @@
 {
   "en": "English",
   "es": "Español",
-  "themes": {
-    "orange": "Orange",
-    "orangeDark": "Dark Orange",
-    "default": "Blue",
-    "dark": "Dark Blue",
-    "pink": "Pink",
-    "purple": "Purple"
-  },
   "buttons": {
-    "themeButton": "Change Theme",
     "languageButton": "Change idiom"
   },
   "subtitle": "The place where you can expose your work to the world",

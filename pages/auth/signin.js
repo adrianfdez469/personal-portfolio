@@ -1,7 +1,7 @@
 import React from 'react';
 import { providers as providersFunc, csrfToken } from 'next-auth/client';
 import { LoginView } from '../../views';
-import { getLanguageByLocale, getThemeByContext } from '../../backend/preRenderingData';
+import { getLanguageByLocale } from '../../backend/preRenderingData';
 import ES from '../../i18n/locales/auth/auth.es.json';
 import EN from '../../i18n/locales/auth/auth.en.json';
 import { LangContext } from '../../store/contexts/langContext';
@@ -13,14 +13,12 @@ const languageLocales = {
 
 export async function getServerSideProps(context) {
   const language = await getLanguageByLocale(context.locale, languageLocales);
-  // const theme = await getThemeByContext(context);
   const baseUrl = process.env.NEXTAUTH_URL;
 
   return {
     props: {
       providers: await providersFunc(context),
       language,
-      // theme,
       csrftoken: await csrfToken(context),
       baseUrl,
     },

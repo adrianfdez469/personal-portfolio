@@ -38,8 +38,9 @@ const ProfileProvider = (props) => {
 };
 
 export const useProfile = () => {
-  const [state] = useContext(ProfileContext);
-  return state;
+  const state = useContext(ProfileContext);
+  if (state && state[0]) return state[0];
+  return null;
 };
 export const useChangeProfile = () => {
   const changeProfile = useContext(ProfileContext)[1];

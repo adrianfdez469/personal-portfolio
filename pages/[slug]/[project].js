@@ -4,7 +4,7 @@ import Error from 'next/error';
 import {
   getProjectDataByProjectSlug,
   getLanguageByLocale,
-  getThemeByContext,
+  getThemeByUserSlug,
   // eslint-disable-next-line import/named
 } from '../../backend/preRenderingData';
 import { LangContext } from '../../store/contexts/langContext';
@@ -36,7 +36,8 @@ export const getStaticProps = async (context) => {
       };
     }
     const language = await getLanguageByLocale(context.locale, languageLocales);
-    const theme = await getThemeByContext(context);
+    const theme = await getThemeByUserSlug(context.params.slug);
+    console.log('theme', theme);
     const props = { language, theme, project: projectData };
 
     return {

@@ -29,7 +29,7 @@ const createPropsObject = async (context) => {
     }
     const language = await getLanguageByLocale(context.locale, languageLocales);
     const profileData = await getProfileDataById(+session.userId, true);
-    const theme = await getThemeByThemeKey(profileData.user.theme);
+    const { theme } = profileData.user;
     const profileSkills = await getProfileSkills(+session.userId);
     const resp = { language, theme, profile: { ...profileData, skills: profileSkills } };
     return resp;

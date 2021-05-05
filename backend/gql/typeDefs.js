@@ -65,6 +65,13 @@ const typeDefs = gql`
     jobPreference: JobPreference
   }
 
+  type Theme {
+    id: ID!
+    name: String!
+    json: String!
+    actual: Boolean
+  }
+
   type JobPreference {
     userId: ID!
     openToWork: Boolean
@@ -151,6 +158,12 @@ const typeDefs = gql`
     publicProject: Boolean
   }
 
+  input UserThemeParams {
+    id: ID
+    name: String!
+    json: String!
+    actual: Boolean
+  }
 
   input UserParams {
     name: String

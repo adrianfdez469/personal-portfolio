@@ -49,7 +49,6 @@ model User {
   slug           String?         @unique
   title          String?
   description    String?
-  theme          String          @default("orangeDark")
   gitlabLink     String?         @map("gitlab_link")
   githubLink     String?         @map("github_link")
   linkedinLink   String?         @map("linkedin_link")
@@ -58,11 +57,14 @@ model User {
   experience     Int?
   birthday       DateTime?
   gender         Gender?
+  theme          Json            @default("{\"palette\":{\"primary\":{\"main\":\"#ff9100\"},\"secondary\":{\"main\":\"#1985ff\"},\"error\":{\"main\":\"#ff1744\"},\"type\":\"dark\"}}")
   publicProfile  Boolean         @default(false) @map(name: "public_profile")
   createdAt      DateTime        @default(now()) @map(name: "created_at")
   updatedAt      DateTime        @default(now()) @map(name: "updated_at")
   Project        Project[]
   jobPreferences JobPreferences?
+
+
 
   @@map(name: "users")
 }

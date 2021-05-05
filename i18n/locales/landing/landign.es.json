@@ -1,16 +1,7 @@
 {
   "en": "English",
   "es": "Español",
-  "themes": {
-    "orange": "Anaranjado",
-    "orangeDark": "Anaranjado Oscuro",
-    "default": "Azul",
-    "dark": "Azul Oscuro",
-    "pink": "Rosado",
-    "purple": "Morado"
-  },
   "buttons": {
-    "themeButton": "Cambiar tema",
     "languageButton": "Cambiar idioma"
   },
   "subtitle": "El lugar donde puedes exponer tu trabajo al mundo",

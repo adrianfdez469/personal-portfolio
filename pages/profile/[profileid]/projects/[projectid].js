@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import {
   getLanguageByLocale,
-  getThemeByContext,
+  getThemeByUserId,
   getProjectDataByProjectId,
 } from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
@@ -23,7 +23,6 @@ const languageLocales = {
 
 export const getServerSideProps = async (context) => {
   const { projectid } = context.params;
-
   const project = await getProjectDataByProjectId(+projectid);
   if (!project) {
     return { notFound: true };
@@ -73,7 +72,7 @@ export const getServerSideProps = async (context) => {
 
   const obj = {
     language: await getLanguageByLocale(context.locale, languageLocales),
-    theme: await getThemeByContext(context),
+    theme: await getThemeByUserId(+context.query.profileid),
     projectData,
     projectId: +projectid,
   };
