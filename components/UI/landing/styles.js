@@ -1,4 +1,5 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { fade } from '@material-ui/core';
 
 export default makeStyles((theme) => ({
   root: {
@@ -11,31 +12,36 @@ export default makeStyles((theme) => ({
   // heading: {
   //   fontWeight: 'bold',
   // },
-  paper: {
+  /* paper: {
     background: 'rgba(205, 205, 205, 0.6)',
     borderRadius: 20,
     color: 'white',
     textShadow: '1px 1px #000000',
     zIndex: 2,
     margin: 'auto',
-  },
+  }, */
   second: {
-    marginBottom: 12,
-    marginLeft: 12,
-    marginRight: 12,
+    marginBottom: theme.spacing(1.5),
+    marginLeft: theme.spacing(1.5),
+    marginRight: theme.spacing(1.5),
   },
   first: {
-    marginTop: 12,
-    marginBottom: 12,
-    marginLeft: 12,
-    marginRight: 12,
+    margin: theme.spacing(1.5),
   },
   featuresBack: {
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: fade(theme.palette.background.paper, 0.9),
+    background: `linear-gradient(0deg, ${fade(theme.palette.background.paper, 0)} 0%, ${fade(
+      theme.palette.background.paper,
+      0.9
+    )} 5%,  ${fade(theme.palette.background.paper, 0.9)} 95%, ${fade(
+      theme.palette.background.paper,
+      0
+    )} 100%)`,
     minHeight: '60em',
-    clipPath: 'polygon(0 5%, 100% 1%, 100% 95%, 0% 99%)',
-    paddingTop: '70px',
-    paddingBottom: '70px',
+    // clipPath: 'polygon(0 5%, 100% 1%, 100% 95%, 0% 99%)',
+    paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(6),
+    boxShadow: '0px 0px 0px transparent',
   },
   featuresImg: {
     display: 'flex',
@@ -74,7 +80,8 @@ export default makeStyles((theme) => ({
   },
   aboutStyle: {
     height: 'auto',
-    marginBottom: '3em',
+    marginBottom: theme.spacing(6),
+    marginTop: theme.spacing(6),
   },
   headerText: {
     // '-webkit-text-stroke-width': '0.01em',
@@ -84,10 +91,15 @@ export default makeStyles((theme) => ({
     color: theme.palette.primary.main,
   },
   footerStyle: {
-    backgroundColor: theme.palette.background.paper,
-    paddingTop: '3em',
+    // backgroundColor: theme.palette.background.paper,
+    background: `linear-gradient(180deg, ${fade(theme.palette.background.paper, 0)} 0%, ${fade(
+      theme.palette.background.paper,
+      0.9
+    )} 5%,  ${fade(theme.palette.background.paper, 0.9)} 100%)`,
+    paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(6),
     minHeight: '27em',
-    clipPath: 'polygon(0 10%, 100% 0, 100% 100%, 0 100%)',
+    // clipPath: 'polygon(0 10%, 100% 0, 100% 100%, 0 100%)',
   },
   imageWrapper: {
     display: 'flex',

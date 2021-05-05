@@ -10,8 +10,8 @@ export default makeStyles((theme) => ({
     marginRight: '2em',
     marginBottom: '2em',
     position: 'relative',
-    border: `0.1em solid ${theme.palette.primary.light}`,
-    borderRadius: '1em',
+    borderRadius: theme.spacing(2),
+    overflow: 'hidden',
   },
   cardFront: {
     overflow: 'hidden',
