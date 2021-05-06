@@ -261,13 +261,11 @@ export const getProfileSkills = async (profileId) => {
   }
   const resp = await response.json();
   const skills = resp.data.user.projects.reduce((acum, project) => {
-    let acumulator;
     project.skills.forEach((sk) => {
-      acumulator = { ...acum };
       if (acum[sk.name]) {
-        acumulator[sk.name].cant = acum[sk.name].cant + 1;
+        acum[sk.name].cant = acum[sk.name].cant + 1;
       } else {
-        acumulator = {
+        acum = {
           ...acum,
           [sk.name]: {
             cant: 1,
@@ -276,7 +274,7 @@ export const getProfileSkills = async (profileId) => {
         };
       }
     });
-    return acumulator;
+    return acum;
   }, {});
 
   return Object.keys(skills)
