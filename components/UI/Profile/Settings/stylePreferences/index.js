@@ -103,8 +103,6 @@ const StylesPreferences = (props) => {
     setloading(true);
     const principal = mainColorPickerStateRef.current.getColors();
     const secondary = secondaryColorPickerStateRef.current.getColors();
-    console.log(principal);
-    console.log(secondary);
     const themeObj = {
       palette: {
         primary: {

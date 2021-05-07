@@ -16,7 +16,6 @@ import useStyles from './styles';
 
 const ColorPicker = React.forwardRef((props, _ref) => {
   const { title, hexCol, lightCol, darkCol, shade, tonal } = props;
-  console.log(title, hexCol, lightCol, darkCol, shade, tonal);
   const { lang } = useLang();
 
   const [hexColor, setHexColor] = useState(hexCol);
