@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Typography,
@@ -17,7 +17,8 @@ import { useProfile } from '../../../../../store/contexts/profileContext';
 import { useChangeTheme } from '../../../../../store/contexts/themeContext';
 import Backdrop from '../../../backdrop';
 import useMessage from '../../../../../hooks/useMessage';
-import useColorPicker from '../../../ColorPicker';
+// import useColorPicker from '../../../ColorPicker';
+import ColorPicker from '../../../ColorPicker';
 import useStyles from '../styles';
 
 const saveUserThemeQuery = `
@@ -48,23 +49,8 @@ const StylesPreferences = (props) => {
   const [shadeColor, setShadeColor] = React.useState(5);
   const setTheme = useChangeTheme();
 
-  const [MainColorPicker, getMainCpState] = useColorPicker(
-    lang.settings.primaryColor,
-    palette.primary.main,
-    palette.primary.light,
-    palette.primary.dark,
-    Shades[shadeColor],
-    tonalOffset
-  );
-
-  const [SecondaryColorPicker, getSecCpState] = useColorPicker(
-    lang.settings.secondaryColor,
-    palette.secondary.main,
-    palette.secondary.light,
-    palette.secondary.dark,
-    Shades[shadeColor],
-    tonalOffset
-  );
+  const mainColorPickerStateRef = useRef();
+  const secondaryColorPickerStateRef = useRef();
 
   const handleChangeDarkMode = (event, checked) => {
     setDarkMode(checked);
@@ -115,8 +101,10 @@ const StylesPreferences = (props) => {
 
   const handleSave = () => {
     setloading(true);
-    const principal = getMainCpState();
-    const secondary = getSecCpState();
+    const principal = mainColorPickerStateRef.current.getColors();
+    const secondary = secondaryColorPickerStateRef.current.getColors();
+    console.log(principal);
+    console.log(secondary);
     const themeObj = {
       palette: {
         primary: {
@@ -203,8 +191,24 @@ const StylesPreferences = (props) => {
           />
         </Box>
         <Box className={[styles.flexRow].join(' ')}>
-          <MainColorPicker />
-          <SecondaryColorPicker />
+          <ColorPicker
+            ref={mainColorPickerStateRef}
+            title={lang.settings.primaryColor}
+            hexCol={palette.primary.main}
+            lightCol={palette.primary.light}
+            darkCol={palette.primary.dark}
+            shade={Shades[shadeColor]}
+            tonal={tonalOffset}
+          />
+          <ColorPicker
+            ref={secondaryColorPickerStateRef}
+            title={lang.settings.secondaryColor}
+            hexCol={palette.secondary.main}
+            lightCol={palette.secondary.light}
+            darkCol={palette.secondary.dark}
+            shade={Shades[shadeColor]}
+            tonal={tonalOffset}
+          />
         </Box>
       </Box>
       <Backdrop open={loading} />

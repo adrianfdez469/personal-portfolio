@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useImperativeHandle } from 'react';
+import PropTypes from 'prop-types';
 import {
   Typography,
   Box,
@@ -13,7 +14,9 @@ import CheckIcon from '@material-ui/icons/Check';
 import { useLang } from '../../../store/contexts/langContext';
 import useStyles from './styles';
 
-const useColorPicker = (title, hexCol, lightCol, darkCol, shade, tonal) => {
+const ColorPicker = React.forwardRef((props, _ref) => {
+  const { title, hexCol, lightCol, darkCol, shade, tonal } = props;
+  console.log(title, hexCol, lightCol, darkCol, shade, tonal);
   const { lang } = useLang();
 
   const [hexColor, setHexColor] = useState(hexCol);
@@ -22,6 +25,14 @@ const useColorPicker = (title, hexCol, lightCol, darkCol, shade, tonal) => {
   const [selectedColor, setSelectedColor] = useState();
 
   const styles = useStyles();
+
+  useImperativeHandle(_ref, () => ({
+    getColors: () => ({
+      hexColor,
+      lightHexColor,
+      darkHexColor,
+    }),
+  }));
 
   const handleSelect = (colorName) => {
     setSelectedColor(colorName);
@@ -50,7 +61,7 @@ const useColorPicker = (title, hexCol, lightCol, darkCol, shade, tonal) => {
     }
   }, [shade]);
 
-  const component = (
+  return (
     <Box p={2} className={styles.bgColor}>
       <Box p={2} className={styles.bordered}>
         <Box m={1} className={styles.flexSpaced}>
@@ -124,15 +135,15 @@ const useColorPicker = (title, hexCol, lightCol, darkCol, shade, tonal) => {
       </Box>
     </Box>
   );
+});
 
-  return [
-    () => component,
-    () => ({
-      hexColor,
-      lightHexColor,
-      darkHexColor,
-    }),
-  ];
+ColorPicker.propTypes = {
+  title: PropTypes.string.isRequired,
+  hexCol: PropTypes.string.isRequired,
+  lightCol: PropTypes.string.isRequired,
+  darkCol: PropTypes.string.isRequired,
+  shade: PropTypes.number.isRequired,
+  tonal: PropTypes.number.isRequired,
 };
 
-export default useColorPicker;
+export default ColorPicker;
