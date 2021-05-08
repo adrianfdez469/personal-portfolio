@@ -1,6 +1,15 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { fade } from '@material-ui/core';
 
 export default makeStyles((theme) => ({
+  back: {
+    backgroundImage: "url('/images/1.jpg')",
+    backgroundPosition: 'center center',
+    backgroundAttachment: 'fixed',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    zIndex: -1,
+  },
   overAllContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -10,6 +19,8 @@ export default makeStyles((theme) => ({
   card: {
     padding: theme.spacing(2),
     width: 'auto',
+    background: fade(theme.palette.background.paper, 0.8),
+    boxShadow: '0px 0px 0px transparent',
   },
   container: {
     display: 'flex',

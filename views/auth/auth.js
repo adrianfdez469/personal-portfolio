@@ -17,54 +17,56 @@ const AuthenticationPage = ({ providers, csrfToken, baseUrl }) => {
   const { lang } = useLang();
 
   return (
-    <Container maxWidth="xs" className={classes.overAllContainer}>
-      <Paper className={classes.card} style={{ display: greaterXsSize ? 'block' : 'contents' }}>
-        {router.query && router.query.error === 'OAuthAccountNotLinked' && (
-          <Typography align="center" color="primary">
-            {lang.oAuthAccountNotLinkedMsg}
-          </Typography>
-        )}
-        <div className={classes.container}>
-          {providers.email && (
-            <>
-              <div className={classes.form}>
-                <form className={classes.form} method="post" action="/api/auth/signin/email">
-                  <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-                  <TextField
-                    name="email"
-                    id="email"
-                    className={classes.textField}
-                    label={lang.emailLabel}
-                    placeholder={lang.examleEmail}
-                    autoComplete="email"
-                    variant="outlined"
-                    margin="dense"
-                  />
-                  <LoginButtonFactory id="email" key="email" type="submit" />
-                </form>
-              </div>
-
-              <div my={2} className={classes.separator}>
-                <Divider className={classes.divider} orientation="horizontal" />
-                <div className={classes.circle}>
-                  <Typography variant="button" className={classes.circleText}>
-                    {lang.orSeparator}
-                  </Typography>
-                </div>
-              </div>
-            </>
+    <div className={classes.back}>
+      <Container maxWidth="xs" className={classes.overAllContainer}>
+        <Paper className={classes.card} style={{ display: greaterXsSize ? 'block' : 'contents' }}>
+          {router.query && router.query.error === 'OAuthAccountNotLinked' && (
+            <Typography align="center" color="primary">
+              {lang.oAuthAccountNotLinkedMsg}
+            </Typography>
           )}
+          <div className={classes.container}>
+            {providers.email && (
+              <>
+                <div className={classes.form}>
+                  <form className={classes.form} method="post" action="/api/auth/signin/email">
+                    <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+                    <TextField
+                      name="email"
+                      id="email"
+                      className={classes.textField}
+                      label={lang.emailLabel}
+                      placeholder={lang.examleEmail}
+                      autoComplete="email"
+                      variant="outlined"
+                      margin="dense"
+                    />
+                    <LoginButtonFactory id="email" key="email" type="submit" />
+                  </form>
+                </div>
 
-          <div className={classes.loginButtons}>
-            {Object.values(providers)
-              .filter((provider) => provider.id !== 'email')
-              .map((provider) => (
-                <LoginButtonFactory id={provider.id} key={provider.id} baseUrl={baseUrl} />
-              ))}
+                <div my={2} className={classes.separator}>
+                  <Divider className={classes.divider} orientation="horizontal" />
+                  <div className={classes.circle}>
+                    <Typography variant="button" className={classes.circleText}>
+                      {lang.orSeparator}
+                    </Typography>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className={classes.loginButtons}>
+              {Object.values(providers)
+                .filter((provider) => provider.id !== 'email')
+                .map((provider) => (
+                  <LoginButtonFactory id={provider.id} key={provider.id} baseUrl={baseUrl} />
+                ))}
+            </div>
           </div>
-        </div>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+    </div>
   );
 };
 
