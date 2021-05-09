@@ -13,7 +13,8 @@
     "FormData": false,
     "localStorage": false,
     "window": false,
-    "navigator": false
+    "navigator": false,
+    "File": false
   },
   "rules": {
     "prettier/prettier": [

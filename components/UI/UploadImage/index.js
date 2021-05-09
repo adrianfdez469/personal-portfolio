@@ -132,7 +132,7 @@ const imageUpload = (props) => {
         videoConstraints={{
           facingMode: 'user',
         }}
-        screenshotFormat="image/jpeg"
+        screenshotFormat="image/webp"
         width={styles.width - 5}
         height={styles.height - 5}
       />

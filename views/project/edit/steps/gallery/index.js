@@ -15,6 +15,12 @@ import useGalleryStyles from './styles';
 // constants
 import { maxImagesCount, maxImgSize } from '../../../../../constants/projectImagesConst';
 
+function urltoFile(url, filename, mimeType) {
+  return fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((buf) => new File([buf], filename, { type: mimeType }));
+}
+
 const GalleryForm = (props) => {
   const { images, changeData } = props;
   // hooks
@@ -24,7 +30,12 @@ const GalleryForm = (props) => {
   const { lang } = useLang();
 
   // handlers
-  const addImageHandler = async (base64Img, imageFile) => {
+  const addImageHandler = async (base64Img, image) => {
+    let imageFile = image;
+    if (!imageFile) {
+      imageFile = await urltoFile(base64Img, 'Camera.jpeg', 'image/jpeg');
+    }
+
     setUploading(true);
     const formData = new FormData();
     formData.append('imageFile', imageFile);
