@@ -94,6 +94,9 @@
       "takeBtn": "Tomar",
       "sizeErrMsg": "Tamaño máximo",
       "typeErrMsg": "Solo imágenes"
+    },
+    "msg": {
+      "uploadImageError": "La imagen no pudo ser salvada"
     }
   },
   "skillsStep": {

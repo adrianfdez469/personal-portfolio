@@ -6,6 +6,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import ReactProfileImage from '../../../../../components/UI/UploadImage';
 // Hooks
 import { useLang } from '../../../../../store/contexts/langContext';
+import useMessage from '../../../../../hooks/useMessage';
 // Components
 import CustomBackdrop from '../../../../../components/UI/backdrop';
 import StepItem from '../../../../../components/UI/StepForm/StepItem';
@@ -15,16 +16,16 @@ import useGalleryStyles from './styles';
 // constants
 import { maxImagesCount, maxImgSize } from '../../../../../constants/projectImagesConst';
 
-function urltoFile(url, filename, mimeType) {
-  return fetch(url)
+const urltoFile = (url, filename, mimeType) =>
+  fetch(url)
     .then((res) => res.arrayBuffer())
     .then((buf) => new File([buf], filename, { type: mimeType }));
-}
 
 const GalleryForm = (props) => {
   const { images, changeData } = props;
   // hooks
   const galleryStyles = useGalleryStyles();
+  const [showMessage] = useMessage();
   // const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const { lang } = useLang();
@@ -54,8 +55,8 @@ const GalleryForm = (props) => {
         const imageId = Math.random();
         changeData([...images, { id: imageId, img: base64Img, file: imageFile, url: resp.url }]);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
+        showMessage(lang.galleryStepmsg.uploadImageError, 'error');
       })
       .finally(() => {
         setUploading(false);

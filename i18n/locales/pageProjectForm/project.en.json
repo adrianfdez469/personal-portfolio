@@ -94,6 +94,9 @@
       "takeBtn": "Take",
       "sizeErrMsg": "Max size",
       "typeErrMsg": "Only images"
+    },
+    "msg": {
+      "uploadImageError": "Image can't be saved"
     }
   },
   "skillsStep": {
