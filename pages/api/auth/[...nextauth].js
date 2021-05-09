@@ -17,6 +17,14 @@ export default (req, res) =>
       Providers.LinkedIn({
         clientId: process.env.LINKEDIN_CLIENT_ID,
         clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+        scope: 'r_liteprofile,r_emailaddress', // ,r_basicprofile', // r_fullprofile', // , 'w_member_social',
+        profile: async (profile, tokens) => {
+          const linkedInProvider = ProxyProvider('linkedin');
+          const loginProfileData = await linkedInProvider.getUserLoginDataByToken(
+            tokens.accessToken
+          );
+          return loginProfileData;
+        },
       }),
       Providers.Google({
         clientId: process.env.GOOGLE_CLIENT_ID,
@@ -64,6 +72,7 @@ export default (req, res) =>
         // console.log(token);
         // console.log(user);
         // console.log(account);
+        // console.log(profile);
 
         const newToken = token;
         // Add access_token to the token right after signin
@@ -77,6 +86,7 @@ export default (req, res) =>
     },
     events: {
       async createUser(user) {
+        // console.log('Create user event', user);
         if (user && user.id) {
           let slug = '';
           if (user.name && user.name !== '') {
@@ -99,15 +109,12 @@ export default (req, res) =>
         }
       },
       async signIn(data) {
+        // console.log('signIn Event', data);
         const provider = ProxyProvider(data.account.provider);
         if (!provider) {
           return;
         }
-        if (!data.isNewUser) {
-          provider.deleteEnhanceToken(data.user.id, prisma);
-          return;
-        }
-        if (data.account.accessToken && data.account.accessToken !== '') {
+        if (data.isNewUser && data.account.accessToken && data.account.accessToken !== '') {
           const userProviderData = await provider.getUserDataByToken(data.account.accessToken);
           await prisma.user.update({
             data: {
@@ -127,6 +134,12 @@ export default (req, res) =>
             },
           });
         }
+
+        // Comentareo esto porque no es necesario eliminar los tokens vencidos.
+        /* if (!data.isNewUser) {
+          provider.deleteEnhanceToken(data.user.id, prisma);
+          return;
+        } */
       },
     },
     secret: process.env.NEXTAUTH_SHA_SECRET,
