@@ -215,7 +215,7 @@ const SyncForm = (props) => {
   }, []);
   const handleSelectLinkedinButton = useCallback(() => {
     dispatch({ type: actions.SELECT_LINKEDIN_PROVIDER_BUTTON });
-    getProviderUserData('linkedin');
+    getProviderUserData('linkedin', '&scope=r_liteprofile,r_emailaddress');
   }, []);
 
   useEffect(() => {

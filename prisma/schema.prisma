@@ -177,7 +177,7 @@ enum SkillCatergory {
 enum Provider {
   github
   gitlab
-  linkedIn
+  linkedin
 }
 
 enum Gender {

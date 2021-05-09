@@ -1,4 +1,8 @@
-export const getUserDataByContext = async () => {};
+import { getSession } from 'next-auth/client';
+import { generateHash, checkHash } from '../../bcrypt';
+import { findEnhanceToken } from './provider.common';
+
+const provider = 'linkedin';
 
 const fetchUserBasicData = async (accessToken) => {
   const response = await fetch(
@@ -84,20 +88,111 @@ export const getUserLoginDataByToken = async (accessToken) => {
 };
 
 export const getUserDataByToken = async (accessToken) => {
-  /* 
+  const data = await getUserLoginDataByToken(accessToken);
+  return {
     name: data.name,
-    title: '',
-    about: data.bio,
-    experience: exp,
-    birthday: null,
-    gender: null,
+    // title: '',
+    // about: '',
+    // experience: null,
+    // birthday: null,
+    // gender: null,
     email: data.email,
-    phone: null,
-    provider: 'github',
-    githubUrl: data.url,
-    gitlabUrl: '',
-    linkedinUrl: '',
-    twitterUrl,
-    avatarUrl: data.avatarUrl,
-  */
+    // phone: null,
+    provider: provider,
+    // githubUrl: '',
+    // gitlabUrl: '',
+    // linkedinUrl: '',
+    // twitterUrl,
+    avatarUrl: data.image,
+  };
+};
+
+const getLinkInToken = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    throw new Error('NO_SESSION');
+  }
+  const accessToken = await findEnhanceToken(session.userId, context.prisma, provider);
+  console.log(accessToken);
+  if (!accessToken) {
+    if (session.tokenProvider !== provider) {
+      throw new Error('NO_PROVIDER_TOKEN');
+    }
+    if (!session.accessToken) {
+      throw new Error('NO_ACCESS_TOKEN_ON_SESSION');
+    }
+    return session.accessToken;
+  }
+  return accessToken;
+};
+
+export const getUserDataByContext = async (context) => {
+  const accessToken = await getLinkInToken(context);
+  return getUserDataByToken(accessToken);
+};
+
+export const getLoginPageUrl = (querys) => {
+  const scope = querys.scope ? `&scope=${querys.scope}` : '';
+  const param = JSON.stringify({
+    provider,
+    originalPath: `${process.env.NEXTAUTH_URL}${querys.originalPath}`,
+  });
+  const redirectUrl = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?param=${param}`;
+  const hash = generateHash(process.env.BCRYPT_HASH_STRING);
+  // example: GET https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={your_client_id}&redirect_uri={your_callback_url}&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social
+  return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.LINKEDIN_CLIENT_ID}&redirect_uri=${redirectUrl}&state=${hash}${scope}`;
+};
+
+const requestLinkinEnhanceToken = async (code, originalPath) => {
+  const uri = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?param=${JSON.stringify({
+    provider,
+    originalPath: `${originalPath}`,
+  })}`;
+  // example:  https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code={authorization_code_from_step2_response}&redirect_uri={your_callback_url}&client_id={your_client_id}&client_secret={your_client_secret}'
+  const response = await fetch(
+    `https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=${code}&client_id=${process.env.LINKEDIN_CLIENT_ID}&client_secret=${process.env.LINKEDIN_CLIENT_SECRET}&redirect_uri=${uri}`,
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('GET_TOKEN_FAIL');
+  }
+  const accessToken = await response.json();
+  return accessToken.access_token;
+};
+
+export const respMiddleware = async (req, res, code, state, originalPath, prisma) => {
+  const checked = checkHash(process.env.BCRYPT_HASH_STRING, state);
+  if (checked) {
+    const session = await getSession({ req });
+
+    const accessToken = await requestLinkinEnhanceToken(code, originalPath);
+
+    await prisma.userTokens.upsert({
+      where: {
+        userId_provider: {
+          provider,
+          userId: session.userId,
+        },
+      },
+      create: {
+        accessToken,
+        provider,
+        userId: session.userId,
+      },
+      update: {
+        accessToken,
+      },
+    });
+    res.writeHead(301, {
+      Location: `${originalPath}`,
+    });
+    res.end();
+  }
 };

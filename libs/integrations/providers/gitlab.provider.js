@@ -2,10 +2,13 @@ import { getSession } from 'next-auth/client';
 import DateFnsAdapter from '@date-io/date-fns';
 // import prisma from '../../../prisma/prisma.instance';
 import { generateHash, checkHash } from '../../bcrypt';
+import { findEnhanceToken } from './provider.common';
+
+const provider = 'gitlab';
 
 const requestGitlabEnhanceToken = async (code, originalPath) => {
   const uri = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?param=${JSON.stringify({
-    provider: 'gitlab',
+    provider,
     originalPath: `${originalPath}`,
   })}`;
   const response = await fetch(
@@ -22,27 +25,15 @@ const requestGitlabEnhanceToken = async (code, originalPath) => {
   return accessToken.access_token;
 };
 
-const findEnhanceToken = async (userId, prisma) => {
-  const userToken = await prisma.userTokens.findUnique({
-    where: {
-      userId_provider: {
-        provider: 'gitlab',
-        userId,
-      },
-    },
-  });
-  if (userToken) return userToken.accessToken;
-  return null;
-};
 const getGitlabToken = async (context) => {
   const session = await getSession(context);
 
   if (!session) {
     throw new Error('NO_SESSION');
   }
-  const accessToken = await findEnhanceToken(session.userId, context.prisma);
+  const accessToken = await findEnhanceToken(session.userId, context.prisma, provider);
   if (!accessToken) {
-    if (session.tokenProvider !== 'gitlab') {
+    if (session.tokenProvider !== provider) {
       throw new Error('NO_PROVIDER_TOKEN');
     }
     if (!session.accessToken) {
@@ -56,7 +47,7 @@ const getGitlabToken = async (context) => {
 export const getLoginPageUrl = (querys) => {
   const scope = querys.scope ? `&scope=${querys.scope}` : '';
   const param = JSON.stringify({
-    provider: 'gitlab',
+    provider,
     originalPath: `${process.env.NEXTAUTH_URL}${querys.originalPath}`,
   });
   const redirectUrl = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?param=${param}`;
@@ -72,13 +63,13 @@ export const respMiddleware = async (req, res, code, state, originalPath, prisma
     await prisma.userTokens.upsert({
       where: {
         userId_provider: {
-          provider: 'gitlab',
+          provider,
           userId: session.userId,
         },
       },
       create: {
         accessToken,
-        provider: 'gitlab',
+        provider,
         userId: session.userId,
       },
       update: {
@@ -123,7 +114,7 @@ export const getUserDataByToken = async (accessToken) => {
       gender: null,
       email: data.public_email || data.email,
       phone: null,
-      provider: 'gitlab',
+      provider,
       githubUrl: '',
       gitlab: data.web_url,
       linkedinUrl: linkedin,
@@ -173,7 +164,7 @@ export const getRepos = async (context) => {
           nameWithOwner: repo.path_with_namespace,
           owner: repo.owner,
           isPrivate: repo.visibility === 'private',
-          provider: 'gitlab',
+          provider,
         })),
         scopes: '',
       };
@@ -239,7 +230,7 @@ export const getRepoData = async (context, projectId) => {
       nameWithOwner: repo.path_with_namespace,
       owner: repo.owner,
       isPrivate: repo.visibility === 'private',
-      provider: 'gitlab',
+      provider,
       createdAt: repo.created_at,
       url: repo.web_url,
       deploymentUrl: '',

@@ -1,7 +1,9 @@
 import { getSession } from 'next-auth/client';
 import DateFnsAdapter from '@date-io/date-fns';
-// import prisma from '../../../prisma/prisma.instance';
 import { generateHash, checkHash } from '../../bcrypt';
+import { findEnhanceToken } from './provider.common';
+
+const provider = 'github';
 
 const gqlRepos = (first = 50) => `
   query { 
@@ -89,28 +91,15 @@ const gqlUserData = () => `
   }
 `;
 
-const findEnhanceToken = async (userId, prisma) => {
-  const userToken = await prisma.userTokens.findUnique({
-    where: {
-      userId_provider: {
-        provider: 'github',
-        userId,
-      },
-    },
-  });
-  if (userToken) return userToken.accessToken;
-  return null;
-};
-
 const getGithubToken = async (context) => {
   const session = await getSession(context);
 
   if (!session) {
     throw new Error('NO_SESSION');
   }
-  const accessToken = await findEnhanceToken(session.userId, context.prisma);
+  const accessToken = await findEnhanceToken(session.userId, context.prisma, provider);
   if (!accessToken) {
-    if (session.tokenProvider !== 'github') {
+    if (session.tokenProvider !== provider) {
       throw new Error('NO_PROVIDER_TOKEN');
     }
     if (!session.accessToken) {
@@ -142,7 +131,7 @@ const requestGithubEnhanceToken = async (code, state) => {
 export const getLoginPageUrl = (querys) => {
   const scope = querys.scope ? `&scope=${querys.scope}` : '';
   const param = JSON.stringify({
-    provider: 'github',
+    provider,
     originalPath: `${process.env.NEXTAUTH_URL}${querys.originalPath}`,
   });
   const redirectUrl = `${process.env.NEXTAUTH_URL}/api/customAuth/providerCallback?param=${param}`;
@@ -159,13 +148,13 @@ export const respMiddleware = async (req, res, code, state, originalPath, prisma
     await prisma.userTokens.upsert({
       where: {
         userId_provider: {
-          provider: 'github',
+          provider,
           userId: session.userId,
         },
       },
       create: {
         accessToken,
-        provider: 'github',
+        provider,
         userId: session.userId,
       },
       update: {
@@ -183,7 +172,7 @@ export const deleteEnhanceToken = async (userId, prisma) => {
   prisma.userTokens.delete({
     where: {
       userId_provider: {
-        provider: 'github',
+        provider,
         userId,
       },
     },
@@ -224,7 +213,7 @@ export const getUserDataByToken = async (accessToken) => {
       gender: null,
       email: data.email,
       phone: null,
-      provider: 'github',
+      provider,
       githubUrl: data.url,
       gitlabUrl: '',
       linkedinUrl: '',
@@ -260,7 +249,7 @@ export const getRepos = async (context) => {
     return {
       repos: (await response.json()).data.viewer.repositories.nodes.map((repository) => ({
         ...repository,
-        provider: 'github',
+        provider,
       })),
       scopes,
     };
@@ -289,7 +278,7 @@ export const getRepoData = async (context, projectId) => {
     const { data } = await response.json();
     return {
       ...data.node,
-      provider: 'github',
+      provider,
     };
   }
   throw new Error('CANT_LOAD_PROVIDER_DATA');
