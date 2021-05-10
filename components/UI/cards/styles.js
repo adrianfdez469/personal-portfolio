@@ -1,4 +1,4 @@
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { makeStyles, fade } from '@material-ui/core';
 
 export default makeStyles((theme) => ({
   cardSize: {
@@ -22,7 +22,7 @@ export default makeStyles((theme) => ({
     minHeight: 50,
     width: '100%',
     position: 'relative',
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: fade(theme.palette.primary.main, 0.5),
     bottom: '5.5em',
     transition: 'all 0.3s ease',
     zIndex: 6,
