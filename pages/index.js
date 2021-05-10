@@ -12,13 +12,6 @@ const languageLocales = {
   es: ES,
 };
 
-export async function getStaticPaths(context) {
-  return {
-    paths: context.locales.map((locale) => ({ locale })),
-    fallback: false,
-  };
-}
-
 export const getStaticProps = async (context) => {
   const language = await getLanguageByLocale(context.locale, languageLocales);
   const props = { language };
