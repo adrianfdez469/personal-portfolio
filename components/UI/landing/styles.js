@@ -104,8 +104,8 @@ export default makeStyles((theme) => ({
   imageWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: 5,
+    borderRadius: theme.spacing(2),
     overflow: 'hidden',
-    maxHeight: 250,
+    maxHeight: '60vh',
   },
 }));

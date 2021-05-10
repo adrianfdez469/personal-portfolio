@@ -10,9 +10,9 @@ const LandingFeatures = () => {
 
   return (
     <Paper className={styles.featuresBack}>
-      <Container maxWidth="xl">
+      <Container maxWidth="md">
         <Grid container alignContent="space-between" spacing={4}>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12}>
             <Box style={{ marginBottom: 16, marginTop: 16 }}>
               <Typography gutterBottom variant="h4" align="center" color="primary">
                 {lang.info.title1}
@@ -35,7 +35,7 @@ const LandingFeatures = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12}>
             <Box style={{ marginBottom: 16, marginTop: 16 }}>
               <Typography gutterBottom variant="h4" align="center" color="primary">
                 {lang.info.title2}
@@ -58,7 +58,7 @@ const LandingFeatures = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12}>
             <Box style={{ marginBottom: 16, marginTop: 16 }}>
               <Typography gutterBottom variant="h4" align="center" color="primary">
                 {lang.info.title3}
@@ -81,7 +81,7 @@ const LandingFeatures = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12}>
             <Box style={{ marginBottom: 16, marginTop: 16 }}>
               <Typography gutterBottom variant="h4" align="center" color="primary">
                 {lang.info.title4}
