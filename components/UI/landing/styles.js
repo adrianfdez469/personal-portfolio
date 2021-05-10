@@ -67,16 +67,12 @@ export default makeStyles((theme) => ({
     height: '15em',
   },
   featureCardDivider: {
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   featureCardText: {
     marginTop: '1em',
-  },
-  featuresCardHover: {
-    // '&:hover': {
-    //   transform: 'scale(1.02) translate(0px, -8px)',
-    //   transition: 'all 300ms ease-in-out 0s',
-    // },
+    fontSize: '1.5em',
+    fontWeight: '100',
   },
   aboutStyle: {
     height: 'auto',
