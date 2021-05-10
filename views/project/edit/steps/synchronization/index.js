@@ -1,5 +1,5 @@
 // Ext libs
-import React, { useEffect, useReducer, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import {
@@ -159,7 +159,7 @@ const reducer = (state, action) => {
   }
 };
 
-const SyncForm = (props) => {
+const SyncForm = React.forwardRef((props, _ref) => {
   const { selectRepo } = props;
   // hooks
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -302,6 +302,13 @@ const SyncForm = (props) => {
       });
   };
 
+  useImperativeHandle(_ref, () => ({
+    clearRepo: () => {
+      dispatch({ type: actions.DESELECT_PROVIDER_REPO });
+      selectRepo(null);
+    },
+  }));
+
   useEffect(() => {
     if (router.query.provider) {
       handleSelectButton(router.query.provider);
@@ -438,7 +445,7 @@ const SyncForm = (props) => {
       <Backdrop open={loadingProviderRepos} />
     </StepItem>
   );
-};
+});
 
 SyncForm.propTypes = {
   selectRepo: PropTypes.func.isRequired,

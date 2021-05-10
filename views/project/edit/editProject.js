@@ -1,5 +1,5 @@
 // libs
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import PropTypes from 'prop-types';
 import StepForm from '../../../components/UI/StepForm';
@@ -101,6 +101,7 @@ const reducer = (state, action) => {
         ...state,
         saving: false,
         error: false,
+        ...(actions.data && { data: actions.data }),
       };
     case actions.CHANGE_BASIC_DATA:
       return {
@@ -155,6 +156,7 @@ const EditProjectView = (props) => {
     data ? { ...initialState, data: data } : initialState
   );
   const [showMessage] = useMessage();
+  const syncRef = useRef();
 
   const setRepoSyncData = useCallback(
     (data) => {
@@ -237,7 +239,7 @@ const EditProjectView = (props) => {
 
   const Steps = [
     {
-      cmp: <SyncForm selectRepo={setRepoSyncData} />,
+      cmp: <SyncForm ref={syncRef} selectRepo={setRepoSyncData} />,
       label: lang.step.syncyLabel,
     },
     {
@@ -324,7 +326,14 @@ const EditProjectView = (props) => {
       .then((resp) => {
         if (resp.data.saveProject.success) {
           showMessage(lang.msg.projectSaved, 'success');
-          dispatch({ type: actions.END_SAVING });
+
+          if (data) {
+            dispatch({ type: actions.END_SAVING });
+          } else {
+            dispatch({ type: actions.END_SAVING, data: initialState.data });
+            syncRef.current.clearRepo();
+          }
+
           fetchUri(resp.data.saveProject.slug);
           fetchUri(
             `${resp.data.saveProject.project.slug}/${resp.data.saveProject.project.projectSlug}`
