@@ -26,30 +26,33 @@ const LandingAbout = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="my-avatar_katkth.jpeg"
-                frontBarText="Adrián Fernández Martínez"
+                frontImage="Thor_ivzviy.jpg"
+                frontBarText="Thor"
                 backHeading={lang.aboutUs.resume}
                 backText={lang.aboutUs.adrianBio}
+                quality={20}
               />
             </Box>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="jose-avatar_rem7ih.jpg"
-                frontBarText="Jose Adrian Iglesias"
+                frontImage="blackPanther_km4ye9.jpg"
+                frontBarText="Black Panther"
                 backHeading={lang.aboutUs.resume}
                 backText={lang.aboutUs.joseBio}
+                quality={5}
               />
             </Box>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Box align="center">
               <MaterialCard
-                frontImage="jorge-avatar_kfkqwq.jpeg"
-                frontBarText="Jorge Arce Martínez"
+                frontImage="ironMan_pslbbv.jpg"
+                frontBarText="Iron Man"
                 backHeading={lang.aboutUs.resume}
                 backText={lang.aboutUs.jorgeBio}
+                quality={1}
               />
             </Box>
           </Grid>

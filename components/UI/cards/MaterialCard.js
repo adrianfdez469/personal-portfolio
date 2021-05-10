@@ -9,7 +9,7 @@ import LinkedIn from '@material-ui/icons/LinkedIn';
 import Facebook from '@material-ui/icons/Facebook';
 import useStyles from './styles';
 
-const MaterialCard = ({ frontImage, frontBarText, backHeading, backText }) => {
+const MaterialCard = ({ frontImage, frontBarText, backHeading, backText, quality }) => {
   const classes = useStyles();
   const [showDetail, setshowDetail] = useState(false);
 
@@ -28,7 +28,7 @@ const MaterialCard = ({ frontImage, frontBarText, backHeading, backText }) => {
     <Paper className={classes.cardSize}>
       <Grow in={!showDetail}>
         <div id="front" className={classes.cardFront}>
-          <Image layout="fill" src={frontImage} alt="avatar" quality={50} objectFit="cover" />
+          <Image layout="fill" src={frontImage} alt="avatar" quality={quality} objectFit="cover" />
         </div>
       </Grow>
       <Paper id="bar" className={className}>
@@ -103,4 +103,5 @@ MaterialCard.propTypes = {
   frontBarText: PropTypes.string.isRequired,
   backHeading: PropTypes.string.isRequired,
   backText: PropTypes.string.isRequired,
+  quality: PropTypes.number.isRequired,
 };
