@@ -3,7 +3,7 @@
   "es": "Español",
   "buttons": {
     "editButton": "Edit Profile",
-    "logoutButton": "Logout",
+    "logoutButton": "Log Out",
     "languageButton": "Change idiom",
     "addProjectButton": "Add Project",
     "sharedPortfolioButton": "Share Portfolio",
