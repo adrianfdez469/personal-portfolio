@@ -70,29 +70,17 @@ const Settings = (props) => {
                     }}
                   >
                     <ListItemIcon>
-                      <SecurityIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={lang.settings.SecAndPriv} />
-                  </ListItem>
-                  <Divider variant="fullWidth" />
-                  <ListItem
-                    button
-                    selected={optionSelected === 1}
-                    onClick={() => {
-                      setOptSelected(1);
-                    }}
-                  >
-                    <ListItemIcon>
                       <AccountCircleIcon />
                     </ListItemIcon>
                     {!expanded && <ListItemText primary={lang.settings.profileSettings} />}
                   </ListItem>
                   <Divider variant="fullWidth" />
+
                   <ListItem
                     button
-                    selected={optionSelected === 2}
+                    selected={optionSelected === 1}
                     onClick={() => {
-                      setOptSelected(2);
+                      setOptSelected(1);
                     }}
                   >
                     <ListItemIcon>
@@ -102,6 +90,20 @@ const Settings = (props) => {
                   </ListItem>
 
                   <Divider variant="fullWidth" />
+
+                  <ListItem
+                    button
+                    selected={optionSelected === 2}
+                    onClick={() => {
+                      setOptSelected(2);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <WorkIcon />
+                    </ListItemIcon>
+                    {!expanded && <ListItemText primary={lang.settings.jobPreferences} />}
+                  </ListItem>
+
                   <ListItem
                     button
                     selected={optionSelected === 3}
@@ -110,10 +112,11 @@ const Settings = (props) => {
                     }}
                   >
                     <ListItemIcon>
-                      <WorkIcon />
+                      <SecurityIcon />
                     </ListItemIcon>
-                    {!expanded && <ListItemText primary={lang.settings.jobPreferences} />}
+                    <ListItemText primary={lang.settings.SecAndPriv} />
                   </ListItem>
+                  <Divider variant="fullWidth" />
 
                   <Divider variant="fullWidth" />
                   <ListItem
@@ -132,10 +135,10 @@ const Settings = (props) => {
               </Box>
             </Grid>
             <Grid md={!expanded ? 9 : 11} xs={12} item>
-              <SecurityPrivacy hidden={optionSelected !== 0} />
-              <ProfileSettings hidden={optionSelected !== 1} />
-              <ProjectSettings hidden={optionSelected !== 2} />
-              <JobPreferences hidden={optionSelected !== 3} />
+              <ProfileSettings hidden={optionSelected !== 0} />
+              <ProjectSettings hidden={optionSelected !== 1} />
+              <JobPreferences hidden={optionSelected !== 2} />
+              <SecurityPrivacy hidden={optionSelected !== 3} />
               <StylesPreferences hidden={optionSelected !== 4} />
             </Grid>
           </Grid>

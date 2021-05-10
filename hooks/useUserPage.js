@@ -1,26 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useProfile } from '../store/contexts/profileContext';
 
 const useUserPage = () => {
-  const urlRef = useRef();
   const profile = useProfile();
+  const [url, setUrl] = useState();
 
   useEffect(() => {
-    urlRef.current = `${window.location.protocol}//${window.location.host}`;
+    setUrl(`${window.location.protocol}//${window.location.host}`);
   }, []);
 
   const fetchUri = (slug) => {
     if (slug) {
       if (profile?.user?.publicProfile || !profile) {
-        fetch(`${urlRef.current}/${slug}`);
+        fetch(`${url}/${slug}`);
       }
     }
   };
   const getUri = (slug) => {
     if (slug) {
-      return `${urlRef.current}/${slug}`;
+      return `${url}/${slug}`;
     }
-    return urlRef.current;
+    return url;
   };
 
   return {
