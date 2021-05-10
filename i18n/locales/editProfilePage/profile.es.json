@@ -53,7 +53,7 @@
     "SwitchWorkingStatusText": "Abierto a trabajo",
     "SwitchOpenRelocation": "Reubicable",
     "SwitchRemoteAvailable": "Trabajo remoto",
-    "minSalary": "Salario mínimo (USD)",
+    "minSalary": "Salario mínimo (USD/mes)",
 
     "stylesPreferences": "Styles Preferences",
     "useDarkMode": "Usar modo oscuro",

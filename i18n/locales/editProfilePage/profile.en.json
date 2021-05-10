@@ -47,13 +47,13 @@
     "deleteProfile": "Delete profile",
     "deleteProfileDesc": "To delete your profile you should write the word 'delete'",
     "deleteNote": "Note: Be aware that if you DELETE your profile, you will lose all your information.",
-    "profileSwitchText": "Switch your your public profile visibility",
+    "profileSwitchText": "Switch your public profile visibility",
 
     "jobPreferences": "Job Preferences",
     "SwitchWorkingStatusText": "Open to work",
     "SwitchOpenRelocation": "Open to relocation",
     "SwitchRemoteAvailable": "Remote available",
-    "minSalary": "Minimum Salary (USD)",
+    "minSalary": "Minimum Salary (USD/month)",
 
     "stylesPreferences": "Styles Preferences",
     "useDarkMode": "Use dark mode",
