@@ -2,6 +2,7 @@
 import React from 'react';
 import { getSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
+import { SnackbarProvider } from 'notistack';
 import ProfileProvider from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
 import {
@@ -48,15 +49,23 @@ const Edit = (props) => {
   const { language, profile } = props;
   const router = useRouter();
   return (
-    <LangContext.Provider value={language}>
-      <ProfileProvider value={profile}>
-        <EditProfile
-          handleClose={() => {
-            router.replace(`/profile/${router.query.profileid}`);
-          }}
-        />
-      </ProfileProvider>
-    </LangContext.Provider>
+    <SnackbarProvider
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      maxSnack={3}
+    >
+      <LangContext.Provider value={language}>
+        <ProfileProvider value={profile}>
+          <EditProfile
+            handleClose={() => {
+              router.replace(`/profile/${router.query.profileid}`);
+            }}
+          />
+        </ProfileProvider>
+      </LangContext.Provider>
+    </SnackbarProvider>
   );
 };
 

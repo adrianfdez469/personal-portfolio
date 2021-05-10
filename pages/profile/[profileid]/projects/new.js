@@ -2,6 +2,7 @@
 // libs
 import React from 'react';
 import { useRouter } from 'next/router';
+import { SnackbarProvider } from 'notistack';
 import { getLanguageByLocale, getThemeByUserId } from '../../../../backend/preRenderingData';
 // Languages (Estos son usados en los metodos getStaticProps, por lo que no son incluidos en el frontend)
 import ES from '../../../../i18n/locales/pageProjectForm/project.es.json';
@@ -42,14 +43,22 @@ const NewProject = (props) => {
   }
 
   return (
-    <LangContext.Provider value={language}>
-      <EditProject
-        open
-        handleClose={() => {
-          router.replace(`/profile/${router.query.profileid}`);
-        }}
-      />
-    </LangContext.Provider>
+    <SnackbarProvider
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      maxSnack={3}
+    >
+      <LangContext.Provider value={language}>
+        <EditProject
+          open
+          handleClose={() => {
+            router.replace(`/profile/${router.query.profileid}`);
+          }}
+        />
+      </LangContext.Provider>
+    </SnackbarProvider>
   );
 };
 

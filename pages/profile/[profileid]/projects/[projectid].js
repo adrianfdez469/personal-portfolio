@@ -2,6 +2,7 @@
 // libs
 import React from 'react';
 import { useRouter } from 'next/router';
+import { SnackbarProvider } from 'notistack';
 import {
   getLanguageByLocale,
   getThemeByUserId,
@@ -14,7 +15,6 @@ import EN from '../../../../i18n/locales/pageProjectForm/project.en.json';
 import { EditProject } from '../../../../views/index';
 import { LangContext } from '../../../../store/contexts/langContext';
 import SkillsCategorysConst from '../../../../constants/skillsCategorysConst';
-// import prisma from '../../../../prisma/prisma.instance';
 
 const languageLocales = {
   en: EN,
@@ -91,16 +91,24 @@ const NewProject = (props) => {
   }
 
   return (
-    <LangContext.Provider value={language}>
-      <EditProject
-        open
-        data={projectData}
-        projectId={projectId}
-        handleClose={() => {
-          router.replace(`/profile/${router.query.profileid}`);
-        }}
-      />
-    </LangContext.Provider>
+    <SnackbarProvider
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      maxSnack={3}
+    >
+      <LangContext.Provider value={language}>
+        <EditProject
+          open
+          data={projectData}
+          projectId={projectId}
+          handleClose={() => {
+            router.replace(`/profile/${router.query.profileid}`);
+          }}
+        />
+      </LangContext.Provider>
+    </SnackbarProvider>
   );
 };
 

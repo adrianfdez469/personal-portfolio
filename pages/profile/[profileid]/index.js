@@ -1,11 +1,11 @@
 import React from 'react';
 import { getSession } from 'next-auth/client';
+import { SnackbarProvider } from 'notistack';
 import { Profile } from '../../../views';
 import ProfileProvider from '../../../store/contexts/profileContext';
 import { LangContext } from '../../../store/contexts/langContext';
 import {
   getLanguageByLocale,
-  getThemeByThemeKey,
   getProfileDataById,
   getProfileSkills,
   // eslint-disable-next-line import/named
@@ -55,11 +55,19 @@ const ProfilePage = (props) => {
   // eslint-disable-next-line react/prop-types
   const { language, profile } = props;
   return (
-    <LangContext.Provider value={language}>
-      <ProfileProvider value={profile}>
-        <Profile edit />
-      </ProfileProvider>
-    </LangContext.Provider>
+    <SnackbarProvider
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      maxSnack={3}
+    >
+      <LangContext.Provider value={language}>
+        <ProfileProvider value={profile}>
+          <Profile edit />
+        </ProfileProvider>
+      </LangContext.Provider>
+    </SnackbarProvider>
   );
 };
 
