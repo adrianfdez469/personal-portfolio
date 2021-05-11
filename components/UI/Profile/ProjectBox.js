@@ -32,17 +32,18 @@ const ProjectBox = (props) => {
       `${window.location.protocol}//${window.location.host}/${user.slug}/${project.projectSlug}`
     );
   };
-
   return (
     <Grid container spacing={2} className={styles.grid}>
       {user.projects
         .filter((project) =>
-          project.skills.some((skill) => {
-            if (filterProject && filterProject.skill && filterProject.skill.length > 0) {
-              return filterProject.skill.find((skillFilter) => skillFilter === skill.name);
-            }
-            return true;
-          })
+          filterProject.skill && filterProject.skill.length > 0
+            ? project.skills.some((skill) => {
+                if (filterProject && filterProject.skill && filterProject.skill.length > 0) {
+                  return filterProject.skill.find((skillFilter) => skillFilter === skill.name);
+                }
+                return true;
+              })
+            : true
         )
         .sort((prevProj, nextProjec) => {
           if (filterProject && filterProject.skill && filterProject.skill.length > 0) {
