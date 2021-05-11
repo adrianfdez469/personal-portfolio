@@ -110,29 +110,31 @@ export default (req, res) =>
       },
       async signIn(data) {
         // console.log('signIn Event', data);
-        const provider = ProxyProvider(data.account.provider);
-        if (!provider) {
-          return;
-        }
-        if (data.isNewUser && data.account.accessToken && data.account.accessToken !== '') {
-          const userProviderData = await provider.getUserDataByToken(data.account.accessToken);
-          await prisma.user.update({
-            data: {
-              name: userProviderData.name,
-              email: userProviderData.email,
-              image: userProviderData.avatarUrl,
-              title: userProviderData.title,
-              description: userProviderData.about,
-              githubLink: userProviderData.githubUrl,
-              linkedinLink: userProviderData.linkedinUrl,
-              gitlabLink: userProviderData.gitlabUrl,
-              twitterLink: userProviderData.twitterUrl,
-              experience: userProviderData.experience,
-            },
-            where: {
-              id: data.user.id,
-            },
-          });
+        if (data.isNewUser) {
+          const provider = ProxyProvider(data.account.provider);
+          if (!provider) {
+            return;
+          }
+          if (data.account.accessToken && data.account.accessToken !== '') {
+            const userProviderData = await provider.getUserDataByToken(data.account.accessToken);
+            await prisma.user.update({
+              data: {
+                name: userProviderData.name,
+                email: userProviderData.email,
+                image: userProviderData.avatarUrl,
+                title: userProviderData.title,
+                description: userProviderData.about,
+                githubLink: userProviderData.githubUrl,
+                linkedinLink: userProviderData.linkedinUrl,
+                gitlabLink: userProviderData.gitlabUrl,
+                twitterLink: userProviderData.twitterUrl,
+                experience: userProviderData.experience,
+              },
+              where: {
+                id: data.user.id,
+              },
+            });
+          }
         }
 
         // Comentareo esto porque no es necesario eliminar los tokens vencidos.
