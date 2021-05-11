@@ -60,15 +60,8 @@ const queryUserDataById = (id, includeProjects = false) => `
       }
     }
   `;
-const queryUserDataBySlug = (slug, includeProjects = false) => `
-  {
-    userBySlug(slug: "${slug}") {
-      ${queryUserBody(includeProjects)}
-    }
-  }
-`;
 
-const makeRequest = async (query) => {
+const makeRequest = async (query, variables) => {
   const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
     method: 'POST',
     headers: {
@@ -76,6 +69,7 @@ const makeRequest = async (query) => {
     },
     body: JSON.stringify({
       query,
+      ...(variables && { variables }),
     }),
   });
 
@@ -98,76 +92,6 @@ export const getThemeByUserId = async (userId) => {
 export const getProfileDataById = async (id, includeProjects = false) => {
   const profileData = await makeRequest(queryUserDataById(id, includeProjects));
   return profileData.data;
-};
-export const getProfileDataBySlug = async (slug, includeProjects = false) => {
-  const profileData = await makeRequest(queryUserDataBySlug(slug, includeProjects));
-  if (!profileData || !profileData.data || !profileData.data.userBySlug) {
-    return null;
-  }
-  return {
-    user: { ...profileData.data.userBySlug },
-  };
-};
-
-export const getThemeByUserSlug = async (userSlug) => {
-  const { user } = await getProfileDataBySlug(userSlug, false);
-  if (user && user.theme) return user.theme;
-  return null;
-};
-
-export const getProjectDataByProjectSlug = async (projectSlug) => {
-  const query = `
-    query getData ($projectSlug: String!){
-      projectBySlug(projectSlug: $projectSlug){
-        id
-        name
-        description
-        initialDate
-        finalDate
-        skills {
-          id
-          name
-          category
-        }
-        projectLink
-        projectDevLink
-        otherInfo
-        images {
-          id
-          imageUrl
-        }
-        logoUrl
-        collaborators {
-          login
-          avatarUrl
-          email
-          bio
-          name
-          url
-          isOwner
-        }
-        slug
-        projectSlug
-      }
-    }
-  `;
-  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/graphql`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-      variables: {
-        projectSlug,
-      },
-    }),
-  });
-  if (!response.ok) {
-    throw new Error('Error');
-  }
-  const resp = await response.json();
-  return resp.data.projectBySlug;
 };
 
 export const getProjectDataByProjectId = async (projectId) => {

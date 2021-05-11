@@ -2,9 +2,7 @@
 import React from 'react';
 import Error from 'next/error';
 import {
-  getProjectDataByProjectSlug,
   getLanguageByLocale,
-  getThemeByUserSlug,
   // eslint-disable-next-line import/named
 } from '../../backend/preRenderingData';
 import { LangContext } from '../../store/contexts/langContext';
@@ -13,6 +11,7 @@ import ES from '../../i18n/locales/projectPage/project.es.json';
 import EN from '../../i18n/locales/projectPage/project.en.json';
 import { revalidationErrorTime, revalidationTime } from '../../constants/pageRevalidationTime';
 import Project from '../../views/project/Project';
+import prisma from '../../prisma/prisma.instance';
 
 const languageLocales = {
   en: EN,
@@ -21,12 +20,55 @@ const languageLocales = {
 
 // This function gets called at build time
 export async function getStaticPaths() {
-  return { paths: [], fallback: true };
+  const publicProfiles = await prisma.user.findMany({
+    where: {
+      publicProfile: true,
+    },
+    select: {
+      slug: true,
+      Project: {
+        select: {
+          projectSlug: true,
+        },
+      },
+    },
+  });
+
+  const paths = publicProfiles.reduce((acum, user) => {
+    const projects = user.Project.map((project) => ({
+      params: {
+        slug: user.slug,
+        project: project.projectSlug,
+      },
+    }));
+    return [...acum, ...projects];
+  }, []);
+  return {
+    paths,
+    fallback: true,
+  };
 }
 
 export const getStaticProps = async (context) => {
   try {
-    const projectData = await getProjectDataByProjectSlug(context.params.project);
+    const projectData = await prisma.project.findFirst({
+      where: {
+        projectSlug: context.params.project,
+        user: {
+          slug: context.params.slug,
+        },
+      },
+      include: {
+        collaborators: true,
+        images: true,
+        skills: {
+          include: {
+            skill: true,
+          },
+        },
+      },
+    });
+
     if (!projectData) {
       return {
         props: {
@@ -35,9 +77,30 @@ export const getStaticProps = async (context) => {
         revalidate: revalidationErrorTime,
       };
     }
+
+    const { initialDate, finalDate, skills, ...pj } = projectData;
+
+    const proj = {
+      ...pj,
+      slug: context.params.slug,
+      initialDate: initialDate ? new Date(initialDate).getTime() : null,
+      finalDate: finalDate ? new Date(finalDate).getTime() : null,
+      skills: skills.map((sk) => sk.skill),
+    };
+
+    const profileData = await prisma.user.findFirst({
+      where: {
+        slug: context.params.slug,
+        publicProfile: true,
+      },
+      select: {
+        theme: true,
+      },
+    });
+
     const language = await getLanguageByLocale(context.locale, languageLocales);
-    const theme = await getThemeByUserSlug(context.params.slug);
-    const props = { language, theme, project: projectData };
+    const { theme } = profileData;
+    const props = { language, theme, project: proj };
 
     return {
       props,
