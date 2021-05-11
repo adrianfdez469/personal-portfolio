@@ -228,7 +228,7 @@ const SyncForm = React.forwardRef((props, _ref) => {
         if (data.errors && data.errors.length > 0) {
           if (data.errors[0].message === 'NO_PROVIDER_TOKEN') {
             dispatch({ type: actions.SET_ERROR_LOADING_PROVIDER_REPOS, data: 'NO_PROVIDER_TOKEN' });
-            if (providerSelected === 'gitlab') {
+            if (router.query.provider === 'gitlab') {
               handleNavigateToGetAccess('gitlab', '&scope=read_user+openid+profile+email+read_api');
             }
             return;
