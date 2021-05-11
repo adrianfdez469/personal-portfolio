@@ -411,6 +411,9 @@ const resolvers = {
         where: {
           userId: user.id,
         },
+        orderBy: {
+          initialDate: 'desc',
+        },
       }),
     jobPreference: (user, args, { prisma }) =>
       prisma.jobPreferences.findUnique({
