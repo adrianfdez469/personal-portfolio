@@ -30,6 +30,9 @@ export async function getStaticPaths() {
         select: {
           projectSlug: true,
         },
+        where: {
+          publicProject: true,
+        },
       },
     },
   });
@@ -54,6 +57,7 @@ export const getStaticProps = async (context) => {
     const projectData = await prisma.project.findFirst({
       where: {
         projectSlug: context.params.project,
+        publicProject: true,
         user: {
           slug: context.params.slug,
         },
@@ -97,6 +101,15 @@ export const getStaticProps = async (context) => {
         theme: true,
       },
     });
+
+    if (!profileData) {
+      return {
+        props: {
+          error: 404,
+        },
+        revalidate: revalidationErrorTime,
+      };
+    }
 
     const language = await getLanguageByLocale(context.locale, languageLocales);
     const { theme } = profileData;

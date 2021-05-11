@@ -45,6 +45,9 @@ export const getStaticProps = async (context) => {
       },
       include: {
         Project: {
+          where: {
+            publicProject: true,
+          },
           include: {
             // collaborators: true,
             images: true,
