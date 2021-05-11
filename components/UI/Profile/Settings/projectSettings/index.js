@@ -128,6 +128,17 @@ const reducer = (state, action) => {
   }
 };
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 const ProjectSettings = (props) => {
   const { hidden } = props;
   const { user } = useProfile();
@@ -298,15 +309,20 @@ const ProjectSettings = (props) => {
               displayEmpty
               inputProps={{ 'aria-label': 'Without label' }}
               fullWidth
+              MenuProps={MenuProps}
             >
               <MenuItem value="">
                 <em>{lang.settings.none}</em>
               </MenuItem>
               {state.projects.map((project) => (
                 <MenuItem key={project.id} value={project}>
-                  <Box>
-                    <Typography variant="body1">{project.name}</Typography>
-                    <Typography variant="caption">{project.description}</Typography>
+                  <Box className={styles.menuStyle}>
+                    <Typography variant="body1" display="block" noWrap>
+                      {project.name}
+                    </Typography>
+                    <Typography variant="caption" display="block" noWrap color="textSecondary">
+                      {project.description}
+                    </Typography>
                   </Box>
                 </MenuItem>
               ))}

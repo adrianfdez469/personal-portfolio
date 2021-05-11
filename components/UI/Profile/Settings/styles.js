@@ -85,6 +85,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: theme.spacing(8),
   },
+  menuStyle: {
+    maxWidth: '90vw',
+    overflow: 'hidden',
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '60vw',
+    },
+  },
 }));
 
 export default useStyles;
