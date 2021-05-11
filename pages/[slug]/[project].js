@@ -37,7 +37,6 @@ export const getStaticProps = async (context) => {
     }
     const language = await getLanguageByLocale(context.locale, languageLocales);
     const theme = await getThemeByUserSlug(context.params.slug);
-    console.log('theme', theme);
     const props = { language, theme, project: projectData };
 
     return {

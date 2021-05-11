@@ -44,7 +44,7 @@ const PersonData = (props) => {
           className={styles.south}
           style={!AvatarCmp || !SecondaryAvatarSection ? { padding: '8px 32px 8px 32px' } : null}
         >
-          <Typography align="center" className={styles.text}>
+          <Typography align="center" variant="h6" className={styles.text}>
             {description}
           </Typography>
           {description && description !== '' && DesciptionLowAreaCmp && (

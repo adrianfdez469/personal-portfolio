@@ -62,10 +62,10 @@ const usePersonDataStyles = makeStyles((theme) => ({
     },
   },
   text: {
-    fontSize: theme.spacing(1.6),
+    fontSize: theme.spacing(1.8),
     textAlign: 'justify',
     [theme.breakpoints.up('sm')]: {
-      fontSize: theme.spacing(2),
+      fontSize: theme.spacing(2.5),
     },
   },
   editButtonsDesktop: {
