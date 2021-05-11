@@ -1,12 +1,12 @@
 import React from 'react';
-import { Typography, Chip } from '@material-ui/core';
+import { Chip } from '@material-ui/core';
 import HeaderTemplate from '../HeaderTemplate';
 import { useProjectContext } from '../../../store/contexts/projectContext';
 import skillCategories from '../../../constants/skillsCategorysConst';
-import { useHeaderStyles } from './styles';
+// import { useHeaderStyles } from './styles';
 
 const ProjectHeader = () => {
-  const styles = useHeaderStyles();
+  // const styles = useHeaderStyles();
   const project = useProjectContext();
 
   return (
@@ -15,7 +15,7 @@ const ProjectHeader = () => {
         headerTitle={project.name}
         description={project.description}
         DesciptionLowAreaCmp={
-          <Typography align="center" color="primary" className={styles.text}>
+          <div>
             {project.skills
               .sort((prev) => (prev.category === skillCategories.PROG_LANG ? -1 : 1))
               .map((skill) => (
@@ -28,7 +28,7 @@ const ProjectHeader = () => {
                   style={{ margin: 4 }}
                 />
               ))}
-          </Typography>
+          </div>
         }
       />
     </>

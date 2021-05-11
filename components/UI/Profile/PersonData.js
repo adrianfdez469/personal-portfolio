@@ -116,7 +116,7 @@ const PersonData = (props) => {
         headerSubTitle={user.title}
         description={user.description}
         DesciptionLowAreaCmp={
-          <Typography align="center" color="primary" className={styles.text}>
+          <div>
             {skills
               .filter((skill) => skill.category === SkillsCategorys.PROG_LANG)
               .map((skill) => (
@@ -130,7 +130,7 @@ const PersonData = (props) => {
                   onClick={() => handleClickSkill(skill)}
                 />
               ))}
-          </Typography>
+          </div>
         }
         Menu={edit && <ProfileMenu />}
       />
