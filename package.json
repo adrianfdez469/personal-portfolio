@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "dev1": "docker-compose up -d & yarn dev",
     "build": "next build",
     "start": "next start -p $PORT",
@@ -47,6 +47,7 @@
     "uuid-v4": "^0.1.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^7.19.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-prettier": "^7.2.0",
