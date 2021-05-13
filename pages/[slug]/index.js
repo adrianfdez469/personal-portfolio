@@ -72,7 +72,7 @@ export const getStaticProps = async (context) => {
         revalidate: revalidationErrorTime,
       };
     }
-    const { createdAt, updatedAt, Project, ...userData } = profileData;
+    const { createdAt, updatedAt, Project, birthday, ...userData } = profileData;
     const projects = Project.map((p) => {
       const { initialDate, finalDate, skills, ...projectData } = p;
 
@@ -81,6 +81,7 @@ export const getStaticProps = async (context) => {
         slug: userData.slug,
         initialDate: initialDate ? new Date(initialDate).getTime() : null,
         finalDate: finalDate ? new Date(finalDate).getTime() : null,
+        birthday: birthday ? new Date(birthday).getTime() : null,
         skills: skills.map((sk) => sk.skill),
       };
     });
