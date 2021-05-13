@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/client';
 import { generateHash, checkHash } from '../../bcrypt';
-import { findEnhanceToken } from './provider.common';
+import { findEnhanceToken, deleteUserToken } from './provider.common';
 
 const provider = 'linkedin';
 
@@ -128,8 +128,17 @@ const getLinkInToken = async (context) => {
 };
 
 export const getUserDataByContext = async (context) => {
-  const accessToken = await getLinkInToken(context);
-  return getUserDataByToken(accessToken);
+  try {
+    const accessToken = await getLinkInToken(context);
+    const userData = await getUserDataByToken(accessToken);
+    return userData;
+  } catch (err) {
+    if (err.message === 'UNAUTHORIZED') {
+      await deleteUserToken(context, provider);
+      return getUserDataByContext(context);
+    }
+    throw err;
+  }
 };
 
 export const getLoginPageUrl = (querys) => {

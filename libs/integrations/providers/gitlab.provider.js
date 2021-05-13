@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/client';
 import DateFnsAdapter from '@date-io/date-fns';
 // import prisma from '../../../prisma/prisma.instance';
 import { generateHash, checkHash } from '../../bcrypt';
-import { findEnhanceToken } from './provider.common';
+import { findEnhanceToken, deleteUserToken } from './provider.common';
 
 const provider = 'gitlab';
 
@@ -129,8 +129,17 @@ export const getUserDataByToken = async (accessToken) => {
 };
 
 export const getUserDataByContext = async (context) => {
-  const accessToken = await getGitlabToken(context);
-  return getUserDataByToken(accessToken);
+  try {
+    const accessToken = await getGitlabToken(context);
+    const userData = await getUserDataByToken(accessToken);
+    return userData;
+  } catch (err) {
+    if (err.message === 'UNAUTHORIZED') {
+      await deleteUserToken(context, provider);
+      return getUserDataByContext(context);
+    }
+    throw err;
+  }
 };
 
 export const getRepos = async (context) => {
@@ -170,11 +179,13 @@ export const getRepos = async (context) => {
       };
     }
     if (response.status === 401) {
-      throw new Error('UNAUTHORIZED');
+      await deleteUserToken(context, provider);
+      return getRepos(context);
     }
   }
   if (userResponse.status === 401) {
-    throw new Error('UNAUTHORIZED');
+    await deleteUserToken(context, provider);
+    return getRepos(context);
   }
   throw new Error('INTERNAL_ERROR');
 };
@@ -244,15 +255,4 @@ export const getRepoData = async (context, projectId) => {
     throw new Error('UNAUTHORIZED');
   }
   throw new Error('INTERNAL_ERROR');
-};
-
-export const deleteEnhanceToken = async (userId, prisma) => {
-  prisma.userTokens.delete({
-    where: {
-      userId_provider: {
-        provider: 'github',
-        userId,
-      },
-    },
-  });
 };

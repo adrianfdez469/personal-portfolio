@@ -136,12 +136,6 @@ export default (req, res) =>
             });
           }
         }
-
-        // Comentareo esto porque no es necesario eliminar los tokens vencidos.
-        /* if (!data.isNewUser) {
-          provider.deleteEnhanceToken(data.user.id, prisma);
-          return;
-        } */
       },
     },
     secret: process.env.NEXTAUTH_SHA_SECRET,

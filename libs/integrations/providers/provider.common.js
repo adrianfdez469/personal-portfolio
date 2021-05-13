@@ -1,4 +1,5 @@
-// eslint-disable-next-line import/prefer-default-export
+import { getSession } from 'next-auth/client';
+
 export const findEnhanceToken = async (userId, prisma, provider) => {
   const userToken = await prisma.userTokens.findUnique({
     where: {
@@ -10,4 +11,20 @@ export const findEnhanceToken = async (userId, prisma, provider) => {
   });
   if (userToken) return userToken.accessToken;
   return null;
+};
+
+export const deleteUserToken = async (context, provider) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    throw new Error('NO_SESSION');
+  }
+  return context.prisma.userTokens.delete({
+    where: {
+      userId_provider: {
+        provider,
+        userId: session.userId,
+      },
+    },
+  });
 };

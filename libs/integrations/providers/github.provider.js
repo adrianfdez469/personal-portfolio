@@ -1,7 +1,7 @@
 import { getSession } from 'next-auth/client';
 import DateFnsAdapter from '@date-io/date-fns';
 import { generateHash, checkHash } from '../../bcrypt';
-import { findEnhanceToken } from './provider.common';
+import { findEnhanceToken, deleteUserToken } from './provider.common';
 
 const provider = 'github';
 
@@ -168,17 +168,6 @@ export const respMiddleware = async (req, res, code, state, originalPath, prisma
   }
 };
 
-export const deleteEnhanceToken = async (userId, prisma) => {
-  prisma.userTokens.delete({
-    where: {
-      userId_provider: {
-        provider,
-        userId,
-      },
-    },
-  });
-};
-
 export const getUserDataByToken = async (accessToken) => {
   const response = await fetch('https://api.github.com/graphql', {
     method: 'POST',
@@ -222,14 +211,24 @@ export const getUserDataByToken = async (accessToken) => {
     };
   }
   if (response.status === 401) {
+    // Eliminar el token de github porque ya no sirve y volver a llamar al get repos
     throw new Error('UNAUTHORIZED');
   }
   throw new Error('INTERNAL_ERROR');
 };
 
 export const getUserDataByContext = async (context) => {
-  const accessToken = await getGithubToken(context);
-  return getUserDataByToken(accessToken);
+  try {
+    const accessToken = await getGithubToken(context);
+    const userData = await getUserDataByToken(accessToken);
+    return userData;
+  } catch (err) {
+    if (err.message === 'UNAUTHORIZED') {
+      await deleteUserToken(context, provider);
+      return getUserDataByContext(context);
+    }
+    throw err;
+  }
 };
 
 export const getRepos = async (context) => {
@@ -255,7 +254,9 @@ export const getRepos = async (context) => {
     };
   }
   if (response.status === 401) {
-    throw new Error('UNAUTHORIZED');
+    // Eliminar el token de github porque ya no sirve y volver a llamar al get repos
+    await deleteUserToken(context, provider);
+    return getRepos(context);
   }
   throw new Error('INTERNAL_ERROR');
 };
