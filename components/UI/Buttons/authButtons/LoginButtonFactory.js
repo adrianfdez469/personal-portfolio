@@ -41,20 +41,14 @@ const CustomLinkedinLoginButton = (props) => {
   return <LinkedInLoginButton onClick={onClick} text={`${lang.signInWithText} LinkedIn`} />;
 };
 
-const CustomEmailLoginButton = (/* props */) => {
-  // const { id, callbackUrl } = props;
+const CustomEmailLoginButton = () => {
   const { lang } = useLang();
-
-  const onClick = useCallback(() => {
-    // signIn(id, { callbackUrl });
-  }, []);
 
   const EmailLoginButton = createButton({
     text: `${lang.signInWithText} ${lang.emailLabel}`,
     icon: createSvgIcon(EmailIcon),
     style: { background: '#3b5998' },
     activeStyle: { background: '#293e69' },
-    onClick,
   });
 
   return <EmailLoginButton />;
@@ -67,7 +61,6 @@ const CustomButtonPropType = {
 CustomGithubLoginButton.propTypes = CustomButtonPropType;
 CustomGoogleLoginButton.propTypes = CustomButtonPropType;
 CustomLinkedinLoginButton.propTypes = CustomButtonPropType;
-// CustomEmailLoginButton.propTypes = CustomButtonPropType;
 
 const LogginButtonFactory = (props) => {
   const { baseUrl } = props;

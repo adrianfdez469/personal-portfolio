@@ -31,7 +31,6 @@ export default (req, res) =>
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       }),
       // Passwordless / email sign in
-      /*
       Providers.Email({
         server: {
           host: process.env.EMAIL_SERVER_HOST,
@@ -42,7 +41,7 @@ export default (req, res) =>
           },
         },
         from: process.env.EMAIL_FROM,
-      }), */
+      }),
     ],
     pages: {
       signIn: '/auth/signin',
