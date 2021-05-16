@@ -9,19 +9,30 @@ import {
 import PropTypes from 'prop-types';
 
 import { useRouter } from 'next/router';
-// import { getCsrfToken } from 'next-auth/client';
+import { useSession } from 'next-auth/client';
 
 import { useLang } from '../../store/contexts/langContext';
 // Styles
 import useStyles from './styles';
 // Components
 import { LoginButtonFactory } from '../../components/UI/index';
+import Backdrop from '../../components/UI/backdrop';
 
 const AuthenticationPage = ({ baseUrl }) => {
   const classes = useStyles();
   const greaterXsSize = useMediaQuery((theme) => theme.breakpoints.up(390));
   const router = useRouter();
   const { lang } = useLang();
+  const [session, loading] = useSession();
+  const [routing, setRouting] = React.useState(false);
+
+  React.useEffect(() => {
+    if (session && session.userId) {
+      setRouting(true);
+      router.push(`${baseUrl}/profile/${session.userId}`);
+    }
+  }, [session]);
+
   /* const [csrfToken, setCsrfToken] = React.useState();
 
   React.useEffect(() => {
@@ -65,13 +76,14 @@ const AuthenticationPage = ({ baseUrl }) => {
             </div> */}
 
             <div className={classes.loginButtons}>
-              <LoginButtonFactory id="github" baseUrl={baseUrl} />
-              <LoginButtonFactory id="google" baseUrl={baseUrl} />
-              <LoginButtonFactory id="linkedin" baseUrl={baseUrl} />
+              <LoginButtonFactory id="github" />
+              <LoginButtonFactory id="google" />
+              <LoginButtonFactory id="linkedin" />
             </div>
           </div>
         </Paper>
       </Container>
+      <Backdrop open={loading || routing} />
     </div>
   );
 };

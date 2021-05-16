@@ -12,30 +12,30 @@ import PropTypes from 'prop-types';
 import { useLang } from '../../../../store/contexts/langContext';
 
 const CustomGithubLoginButton = (props) => {
-  const { id, callbackUrl } = props;
+  const { id } = props;
   const { lang } = useLang();
   const onClick = useCallback(() => {
-    signIn(id, { callbackUrl });
+    signIn(id);
   }, [id]);
 
   return <GithubLoginButton onClick={onClick} text={`${lang.signInWithText} GitHub`} />;
 };
 
 const CustomGoogleLoginButton = (props) => {
-  const { id, callbackUrl } = props;
+  const { id } = props;
   const { lang } = useLang();
   const onClick = useCallback(() => {
-    signIn(id, { callbackUrl });
+    signIn(id);
   }, [id]);
 
   return <GoogleLoginButton onClick={onClick} text={`${lang.signInWithText} Google`} />;
 };
 
 const CustomLinkedinLoginButton = (props) => {
-  const { id, callbackUrl } = props;
+  const { id } = props;
   const { lang } = useLang();
   const onClick = useCallback(() => {
-    signIn(id, { callbackUrl });
+    signIn(id);
   }, [id]);
 
   return <LinkedInLoginButton onClick={onClick} text={`${lang.signInWithText} LinkedIn`} />;
@@ -56,23 +56,19 @@ const CustomEmailLoginButton = () => {
 
 const CustomButtonPropType = {
   id: PropTypes.string.isRequired,
-  callbackUrl: PropTypes.string.isRequired,
 };
 CustomGithubLoginButton.propTypes = CustomButtonPropType;
 CustomGoogleLoginButton.propTypes = CustomButtonPropType;
 CustomLinkedinLoginButton.propTypes = CustomButtonPropType;
 
 const LogginButtonFactory = (props) => {
-  const { baseUrl } = props;
-  const callbackUrl = `${baseUrl}/api/redirector?redirect_to=EDIT_USER`;
-
   switch (props.id) {
     case 'github':
-      return <CustomGithubLoginButton id="github" callbackUrl={callbackUrl} />;
+      return <CustomGithubLoginButton id="github" />;
     case 'google':
-      return <CustomGoogleLoginButton id="google" callbackUrl={callbackUrl} />;
+      return <CustomGoogleLoginButton id="google" />;
     case 'linkedin':
-      return <CustomLinkedinLoginButton id="linkedin" callbackUrl={callbackUrl} />;
+      return <CustomLinkedinLoginButton id="linkedin" />;
     case 'email':
       return <CustomEmailLoginButton />;
     default:
@@ -82,7 +78,6 @@ const LogginButtonFactory = (props) => {
 
 LogginButtonFactory.propTypes = {
   id: PropTypes.string.isRequired,
-  baseUrl: PropTypes.string.isRequired,
 };
 
 export default React.memo(LogginButtonFactory);
