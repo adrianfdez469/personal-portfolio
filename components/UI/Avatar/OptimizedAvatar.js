@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.text.primary,
   },
 }));
 
@@ -38,7 +37,13 @@ const OptimizedAvatar = (props) => {
     : 'div';
 
   return (
-    <Avatar component={cmp} variant="circular" className={styles.avatar} {...otherProps}>
+    <Avatar
+      component={cmp}
+      variant="circular"
+      className={styles.avatar}
+      style={{ width, height }}
+      {...otherProps}
+    >
       {children}
     </Avatar>
   );

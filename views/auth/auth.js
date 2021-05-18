@@ -1,15 +1,9 @@
 // Libs
 import React from 'react';
-import {
-  Container,
-  Typography,
-  /* TextField, Divider, */ useMediaQuery,
-  Paper,
-} from '@material-ui/core';
+import { Container, Typography, TextField, Divider, useMediaQuery, Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
-
+import { getCsrfToken, useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/client';
 
 import { useLang } from '../../store/contexts/langContext';
 // Styles
@@ -33,11 +27,11 @@ const AuthenticationPage = ({ baseUrl }) => {
     }
   }, [session]);
 
-  /* const [csrfToken, setCsrfToken] = React.useState();
+  const [csrfToken, setCsrfToken] = React.useState();
 
   React.useEffect(() => {
     getCsrfToken().then((csrf) => setCsrfToken(csrf));
-  }, []); */
+  }, []);
 
   return (
     <div className={classes.back}>
@@ -49,7 +43,7 @@ const AuthenticationPage = ({ baseUrl }) => {
             </Typography>
           )}
           <div className={classes.container}>
-            {/* <div className={classes.form}>
+            <div className={classes.form}>
               <form className={classes.form} method="post" action="/api/auth/signin/email">
                 <input name="csrfToken" type="hidden" value={csrfToken} />
                 <TextField
@@ -65,7 +59,6 @@ const AuthenticationPage = ({ baseUrl }) => {
                 <LoginButtonFactory id="email" />
               </form>
             </div>
-
             <div my={2} className={classes.separator}>
               <Divider className={classes.divider} orientation="horizontal" />
               <div className={classes.circle}>
@@ -73,7 +66,7 @@ const AuthenticationPage = ({ baseUrl }) => {
                   {lang.orSeparator}
                 </Typography>
               </div>
-            </div> */}
+            </div>
 
             <div className={classes.loginButtons}>
               <LoginButtonFactory id="github" />

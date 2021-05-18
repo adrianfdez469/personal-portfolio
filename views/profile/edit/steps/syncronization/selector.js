@@ -89,6 +89,25 @@ const SelectAvatar = ({ userAvatar, providerAvatar, fieldText, change }) => {
       </FormControl>
     );
   }
+  if (empty(userAvatar) && !empty(providerAvatar)) {
+    return (
+      <FormControl component="fieldset">
+        <FormLabel component="legend" style={{ width: 'auto', textAlign: 'center' }}>
+          {fieldText}
+        </FormLabel>
+        <RadioGroup row aria-label="position" name="avatar" defaultValue={userAvatar}>
+          <div className={styles.avatar}>
+            <SelectableAvatarPhoto
+              selected={selected === 'provider'}
+              onClick={() => changeSelected('provider')}
+            >
+              <AvatarPhoto size="small" src={providerAvatar} />
+            </SelectableAvatarPhoto>
+          </div>
+        </RadioGroup>
+      </FormControl>
+    );
+  }
   return null;
 };
 

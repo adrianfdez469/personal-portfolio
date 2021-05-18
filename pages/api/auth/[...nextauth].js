@@ -63,11 +63,11 @@ export default (req, res) =>
         const resultSession = { ...session };
         resultSession.accessToken = token.accessToken;
         resultSession.tokenProvider = token.provider;
-        resultSession.userId = token.userId;
+        resultSession.userId = token.userId || token.sub;
         return resultSession;
       },
       async jwt(token, user, account /* , profile, isNewUser */) {
-        // console.log(' -------------- CALBACK jwt');
+        // console.log(' -------------- CALLBACK jwt');
         // console.log(token);
         // console.log(user);
         // console.log(account);
@@ -75,10 +75,16 @@ export default (req, res) =>
 
         const newToken = token;
         // Add access_token to the token right after signin
-        if (account && account.accessToken) {
-          newToken.accessToken = account.accessToken;
-          newToken.provider = account.provider;
-          newToken.userId = user.id;
+        if (account) {
+          if (account.type === 'email') {
+            newToken.provider = 'email';
+            newToken.userId = user.id;
+          }
+          if (account.accessToken) {
+            newToken.accessToken = account.accessToken;
+            newToken.provider = account.provider;
+            newToken.userId = user.id;
+          }
         }
         return newToken;
       },
