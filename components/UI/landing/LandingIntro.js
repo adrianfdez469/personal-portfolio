@@ -23,7 +23,7 @@ const LandingIntro = () => {
           alignItems="center"
           style={{ height: '85vh' }}
         >
-          <Grid item>
+          <Grid item style={{ width: '100%' }}>
             <Box align="center">
               <Hidden lgDown>
                 <IntroHeader mainHeadingVariant="h1" secondaryHeadingVariant="h5" />

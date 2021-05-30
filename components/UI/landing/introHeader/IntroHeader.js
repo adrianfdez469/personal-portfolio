@@ -1,25 +1,21 @@
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import Link from 'next/link';
 import React from 'react';
-import PropTypes from 'prop-types';
 import useStyles from './styles';
 import { useLang } from '../../../../store/contexts/langContext';
 
-const IntroHeader = ({ mainHeadingVariant, secondaryHeadingVariant }) => {
+const IntroHeader = () => {
   const classes = useStyles();
   const { lang } = useLang();
   return (
     <>
       <Grid container direction="column" justify="center" alignItems="center">
-        <Grid item>
-          <Typography variant={mainHeadingVariant} className={classes.heading}>
-            PERSONAL PORTFOLIO™
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography align="center" variant={secondaryHeadingVariant} className={classes.first}>
-            {lang.subtitle}
-          </Typography>
+        <Grid item style={{ width: '100%' }}>
+          <img
+            style={{ maxWidth: '90%', minWidth: '45%' }}
+            src="/images/ingles.png"
+            alt="Personal Portfolio Title and Logo"
+          />
         </Grid>
         <Grid item>
           <Link href="/auth/signin" passHref>
@@ -37,11 +33,6 @@ const IntroHeader = ({ mainHeadingVariant, secondaryHeadingVariant }) => {
       </Grid>
     </>
   );
-};
-
-IntroHeader.propTypes = {
-  mainHeadingVariant: PropTypes.string.isRequired,
-  secondaryHeadingVariant: PropTypes.string.isRequired,
 };
 
 export default IntroHeader;

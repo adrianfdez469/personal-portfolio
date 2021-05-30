@@ -9,6 +9,7 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content="#ff9100" />
+          <link rel="shortcut icon" href="/images/logoorange.png" />
           <script>
             window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function ()
             {}
