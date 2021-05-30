@@ -6,14 +6,14 @@ import { useLang } from '../../../../store/contexts/langContext';
 
 const IntroHeader = () => {
   const classes = useStyles();
-  const { lang } = useLang();
+  const { lang, locale } = useLang();
   return (
     <>
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item style={{ width: '100%' }}>
           <img
             style={{ maxWidth: '90%', minWidth: '45%' }}
-            src="/images/ingles.png"
+            src={locale === 'es' ? '/images/espanol.png' : '/images/ingles.png'}
             alt="Personal Portfolio Title and Logo"
           />
         </Grid>

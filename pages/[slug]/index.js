@@ -72,6 +72,7 @@ export const getStaticProps = async (context) => {
         revalidate: revalidationErrorTime,
       };
     }
+    delete profileData.emailVerified;
     const { createdAt, updatedAt, Project, birthday, ...userData } = profileData;
     const projects = Project.map((p) => {
       const { initialDate, finalDate, skills, ...projectData } = p;
